@@ -1,0 +1,39 @@
+{
+  "name": "koto-cms",
+  "version": "1.0.0",
+  "description": "Payload CMS for blog content management",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts nodemon",
+    "build:payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload build",
+    "build:server": "tsc",
+    "build": "npm run build:payload && npm run build:server",
+    "serve": "cross-env PAYLOAD_CONFIG_PATH=dist/payload.config.js NODE_ENV=production node dist/server.js",
+    "start": "cross-env PAYLOAD_CONFIG_PATH=dist/payload.config.js NODE_ENV=production node dist/server.js",
+    "generate:types": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types",
+    "generate:graphQLSchema": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:graphQLSchema"
+  },
+  "dependencies": {
+    "payload": "^3.11.0",
+    "@payloadcms/db-postgres": "^3.11.0",
+    "@payloadcms/richtext-lexical": "^3.11.0",
+    "@payloadcms/storage-vercel-blob": "^3.11.0",
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "sharp": "^0.32.6",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@types/pg": "^8.10.9",
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 
