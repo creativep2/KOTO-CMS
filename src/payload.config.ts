@@ -1,77 +1,64 @@
-import { buildConfig } from 'payload'
-import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
-import path from 'path'
+// storage-adapter-import-placeholder
+import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 
-// Import collections
+import sharp from 'sharp' // sharp-import
+import path from 'path'
+import { buildConfig, PayloadRequest } from 'payload'
+import { fileURLToPath } from 'url'
+
 import { Blogs } from './collections/Blogs'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
+// Website-specific globals removed for API-only usage
+// import { Footer } from './Footer/config'
+// import { Header } from './Header/config'
+import { plugins } from './plugins'
+import { defaultLexical } from '@/fields/defaultLexical'
+import { getServerSideURL } from './utilities/getURL'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 export default buildConfig({
-  // Database adapter
-  db: postgresAdapter({
+  admin: {
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+    user: Users.slug,
+    // Removed website-specific components and live preview for API-only usage
+  },
+  // This config helps us configure global or default features that the other editors can inherit
+  editor: defaultLexical,
+  db: vercelPostgresAdapter({
     pool: {
-      connectionString: process.env.POSTGRES_URL || process.env.DATABASE_URL,
+      connectionString: process.env.POSTGRES_URL || '',
     },
   }),
-
-  // Rich text editor
-  editor: lexicalEditor({}),
-
-  // Collections
-  collections: [
-    Blogs,
-    Media,
-    Users,
-  ],
-
-  // Globals (site-wide settings)
-  globals: [
-    // Add global settings here if needed
-  ],
-
-  // Admin configuration
-  admin: {
-    user: 'users',
-    meta: {
-      titleSuffix: ' - KOTO CMS',
-    },
-  },
-
-  // Server configuration
-  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
-
-  // Security
-  secret: process.env.PAYLOAD_SECRET || 'your-secret-key-here',
-
-  // TypeScript configuration
-  typescript: {
-    outputFile: path.resolve(__dirname, 'payload-types.ts'),
-  },
-
-  // CORS configuration
-  cors: [
-    process.env.FRONTEND_URL || 'http://localhost:3001',
-    'http://localhost:3000',
-  ],
-
-  // File upload configuration
-  upload: {
-    limits: {
-      fileSize: 5000000, // 5MB
-    },
-  },
-
-  // Storage plugins
+  collections: [Blogs, Media, Users],
+  cors: [getServerSideURL()].filter(Boolean),
+  // globals: [Header, Footer], // Removed for API-only usage
   plugins: [
-    vercelBlobStorage({
-      enabled: true,
-      collections: {
-        media: true,
-      },
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    }),
+    ...plugins,
+    // storage-adapter-placeholder
   ],
+  secret: process.env.PAYLOAD_SECRET,
+  sharp,
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
+  jobs: {
+    access: {
+      run: ({ req }: { req: PayloadRequest }): boolean => {
+        // Allow logged in users to execute this endpoint (default)
+        if (req.user) return true
+
+        // If there is no logged in user, then check
+        // for the Vercel Cron secret to be present as an
+        // Authorization header:
+        const authHeader = req.headers.get('authorization')
+        return authHeader === `Bearer ${process.env.CRON_SECRET}`
+      },
+    },
+    tasks: [],
+  },
 })
