@@ -109,7 +109,7 @@ export const Blogs: CollectionConfig = {
       },
       hooks: {
         beforeValidate: [
-          ({ value, originalDoc, data }) => {
+          ({ value, data }) => {
             if (data?.title && !value) {
               return data.title
                 .toLowerCase()
@@ -140,4 +140,4 @@ export const Blogs: CollectionConfig = {
     },
   ],
   timestamps: true,
-} 
+}
