@@ -1,0 +1,32 @@
+{
+  "buildCommand": "pnpm build",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "src/app/(payload)/admin/[[...segments]]/page.tsx": {
+      "maxDuration": 30
+    },
+    "src/app/(payload)/api/[...slug]/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/admin/:path*",
+      "destination": "/admin/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ]
+}
