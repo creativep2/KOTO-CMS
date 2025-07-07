@@ -59,4 +59,15 @@ CRON_SECRET=your_cron_secret_here
 3. Test API endpoints: `/api/blogs`, `/api/media`, `/api/users`
 4. Access admin panel: `/admin`
 
+### Package Manager Issues:
+
+If you encounter pnpm version compatibility issues (like "ERR_PNPM_UNSUPPORTED_ENGINE"), the project has been configured to use npm instead of pnpm for Vercel deployments. This is handled automatically by the vercel.json configuration.
+
+### Build Configuration:
+
+The project is configured to use npm for Vercel deployments:
+- `installCommand`: `npm install`
+- `buildCommand`: `npm run build`
+- `devCommand`: `npm run dev`
+
 If you continue experiencing issues, check the Vercel function logs for specific error messages. 
