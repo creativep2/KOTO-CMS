@@ -33,6 +33,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.POSTGRES_URL || '',
     },
+    // Use push mode for development to automatically handle schema changes
+    push: process.env.NODE_ENV === 'development',
   }),
   collections: [Blogs, Media, Users],
   cors: [getServerSideURL()].filter(Boolean),

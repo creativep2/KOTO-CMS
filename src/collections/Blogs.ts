@@ -1,5 +1,10 @@
 import type { CollectionConfig } from 'payload'
 
+import { admins } from '../access/admins'
+import { editors } from '../access/editors'
+import { authors } from '../access/authors'
+import { authenticated } from '../access/authenticated'
+
 export const Blogs: CollectionConfig = {
   slug: 'blogs',
   admin: {
@@ -8,9 +13,21 @@ export const Blogs: CollectionConfig = {
   },
   access: {
     read: () => true, // Public read access for frontend
-    create: ({ req: { user } }) => !!user, // Only logged-in users can create
-    update: ({ req: { user } }) => !!user, // Only logged-in users can update
-    delete: ({ req: { user } }) => !!user, // Only logged-in users can delete
+    create: authors, // Authors and above can create
+    update: ({ req: { user }, id }) => {
+      // Admins and editors can update any blog
+      if (user?.role === 'admin' || user?.role === 'editor') return true
+
+      // Authors can only update their own blogs
+      if (user?.role === 'author') {
+        return {
+          author: { equals: user.id },
+        }
+      }
+
+      return false
+    },
+    delete: editors, // Only editors and admins can delete
   },
   fields: [
     {
@@ -19,6 +36,17 @@ export const Blogs: CollectionConfig = {
       required: true,
       admin: {
         description: 'The title of the blog post',
+      },
+    },
+    {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      defaultValue: ({ user }) => user?.id,
+      admin: {
+        description: 'Author of the blog post',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
       },
     },
     {
@@ -69,6 +97,39 @@ export const Blogs: CollectionConfig = {
       ],
       admin: {
         description: 'Select the category for this blog post',
+      },
+    },
+    {
+      name: 'status',
+      type: 'select',
+      required: true,
+      defaultValue: 'draft',
+      options: [
+        {
+          label: 'Draft',
+          value: 'draft',
+        },
+        {
+          label: 'In Review',
+          value: 'review',
+        },
+        {
+          label: 'Published',
+          value: 'published',
+        },
+        {
+          label: 'Archived',
+          value: 'archived',
+        },
+      ],
+      admin: {
+        description: 'Publication status of the blog post',
+      },
+      access: {
+        update: ({ req: { user } }) => {
+          // Only editors and admins can change status to published
+          return user?.role === 'admin' || user?.role === 'editor'
+        },
       },
     },
     {
@@ -136,6 +197,16 @@ export const Blogs: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: 'Mark this blog post as featured',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+      },
+    },
+    {
+      name: 'tags',
+      type: 'text',
+      hasMany: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Tags for categorizing and searching',
       },
     },
   ],

@@ -126,6 +126,10 @@ export interface Blog {
    */
   title: string;
   /**
+   * Author of the blog post
+   */
+  author?: (number | null) | User;
+  /**
    * Select the category for this blog post
    */
   category:
@@ -139,6 +143,10 @@ export interface Blog {
     | 'education'
     | 'entertainment'
     | 'other';
+  /**
+   * Publication status of the blog post
+   */
+  status: 'draft' | 'review' | 'published' | 'archived';
   /**
    * Header image for the blog post
    */
@@ -177,6 +185,10 @@ export interface Blog {
    * Mark this blog post as featured
    */
   featured?: boolean | null;
+  /**
+   * Tags for categorizing and searching
+   */
+  tags?: string[] | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -186,11 +198,50 @@ export interface Blog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name: string;
+  /**
+   * User role determines what actions they can perform
+   */
+  role: 'admin' | 'editor' | 'author' | 'viewer';
+  /**
+   * Whether the user account is active
+   */
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
+  /**
+   * Alternative text for accessibility
+   */
   alt?: string | null;
+  /**
+   * Caption or description for the media
+   */
   caption?: {
     root: {
       type: string;
@@ -206,6 +257,18 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * User who uploaded this media
+   */
+  uploadedBy?: (number | null) | User;
+  /**
+   * Category to help organize media files
+   */
+  category?: ('blog-images' | 'profiles' | 'marketing' | 'documents' | 'other') | null;
+  /**
+   * Whether this media is publicly accessible
+   */
+  isPublic?: boolean | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -278,31 +341,6 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -368,13 +406,16 @@ export interface PayloadMigration {
  */
 export interface BlogsSelect<T extends boolean = true> {
   title?: T;
+  author?: T;
   category?: T;
+  status?: T;
   header_image?: T;
   paragraph?: T;
   upload_date?: T;
   slug?: T;
   meta_description?: T;
   featured?: T;
+  tags?: T;
   meta?:
     | T
     | {
@@ -391,6 +432,9 @@ export interface BlogsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  uploadedBy?: T;
+  category?: T;
+  isPublic?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -483,6 +527,8 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

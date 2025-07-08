@@ -9,7 +9,8 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
+import { authors } from '../access/authors'
+import { editors } from '../access/editors'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -17,16 +18,30 @@ const dirname = path.dirname(filename)
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    create: authors, // Authors and above can upload
+    delete: editors, // Only editors and admins can delete
+    read: anyone, // Public read access
+    update: ({ req: { user }, id }) => {
+      // Admins and editors can update any media
+      if (user?.role === 'admin' || user?.role === 'editor') return true
+
+      // Authors can only update their own uploads
+      if (user?.role === 'author') {
+        return {
+          uploadedBy: { equals: user.id },
+        }
+      }
+
+      return false
+    },
   },
   fields: [
     {
       name: 'alt',
       type: 'text',
-      //required: true,
+      admin: {
+        description: 'Alternative text for accessibility',
+      },
     },
     {
       name: 'caption',
@@ -36,6 +51,58 @@ export const Media: CollectionConfig = {
           return [...rootFeatures, FixedToolbarFeature(), InlineToolbarFeature()]
         },
       }),
+      admin: {
+        description: 'Caption or description for the media',
+      },
+    },
+    {
+      name: 'uploadedBy',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      defaultValue: ({ user }) => user?.id,
+      admin: {
+        description: 'User who uploaded this media',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+      },
+    },
+    {
+      name: 'category',
+      type: 'select',
+      options: [
+        {
+          label: 'Blog Images',
+          value: 'blog-images',
+        },
+        {
+          label: 'Profile Pictures',
+          value: 'profiles',
+        },
+        {
+          label: 'Marketing Assets',
+          value: 'marketing',
+        },
+        {
+          label: 'Documents',
+          value: 'documents',
+        },
+        {
+          label: 'Other',
+          value: 'other',
+        },
+      ],
+      admin: {
+        description: 'Category to help organize media files',
+      },
+    },
+    {
+      name: 'isPublic',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        description: 'Whether this media is publicly accessible',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+      },
     },
   ],
   upload: {
