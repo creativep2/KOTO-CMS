@@ -1,9 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
-import { admins } from '../access/admins'
 import { editors } from '../access/editors'
 import { authors } from '../access/authors'
-import { authenticated } from '../access/authenticated'
 
 export const Blogs: CollectionConfig = {
   slug: 'blogs',
@@ -14,7 +12,7 @@ export const Blogs: CollectionConfig = {
   access: {
     read: () => true, // Public read access for frontend
     create: authors, // Authors and above can create
-    update: ({ req: { user }, id }) => {
+    update: ({ req: { user }, id: _id }) => {
       // Admins and editors can update any blog
       if (user?.role === 'admin' || user?.role === 'editor') return true
 

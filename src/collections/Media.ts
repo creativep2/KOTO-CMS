@@ -21,7 +21,7 @@ export const Media: CollectionConfig = {
     create: authors, // Authors and above can upload
     delete: editors, // Only editors and admins can delete
     read: anyone, // Public read access
-    update: ({ req: { user }, id }) => {
+    update: ({ req: { user }, id: _id }) => {
       // Admins and editors can update any media
       if (user?.role === 'admin' || user?.role === 'editor') return true
 
