@@ -37,7 +37,7 @@ export default buildConfig({
     push: process.env.NODE_ENV === 'development',
   }),
   collections: [Blogs, Media, Users],
-  cors: [getServerSideURL()].filter(Boolean),
+  cors: [getServerSideURL(), 'https://koto-website.wstd.io'].filter(Boolean),
   // globals: [Header, Footer], // Removed for API-only usage
   plugins: [
     ...plugins,
