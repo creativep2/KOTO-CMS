@@ -132,17 +132,7 @@ export interface Blog {
   /**
    * Select the category for this blog post
    */
-  category:
-    | 'technology'
-    | 'design'
-    | 'business'
-    | 'lifestyle'
-    | 'travel'
-    | 'food'
-    | 'health'
-    | 'education'
-    | 'entertainment'
-    | 'other';
+  category: 'taste-the-story' | 'jimmys-letters' | 'jimmys-bio' | 'behind-the-bar' | 'her-turn' | 'koto-foundation';
   /**
    * Publication status of the blog post
    */
