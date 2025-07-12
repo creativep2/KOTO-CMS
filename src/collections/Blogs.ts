@@ -53,44 +53,28 @@ export const Blogs: CollectionConfig = {
       required: true,
       options: [
         {
-          label: 'Technology',
-          value: 'technology',
+          label: 'Taste the story',
+          value: 'taste-the-story',
         },
         {
-          label: 'Design',
-          value: 'design',
+          label: "Jimmy's letters",
+          value: 'jimmys-letters',
         },
         {
-          label: 'Business',
-          value: 'business',
+          label: "Jimmy's bio",
+          value: 'jimmys-bio',
         },
         {
-          label: 'Lifestyle',
-          value: 'lifestyle',
+          label: 'Behind the bar',
+          value: 'behind-the-bar',
         },
         {
-          label: 'Travel',
-          value: 'travel',
+          label: 'Her turn',
+          value: 'her-turn',
         },
         {
-          label: 'Food',
-          value: 'food',
-        },
-        {
-          label: 'Health',
-          value: 'health',
-        },
-        {
-          label: 'Education',
-          value: 'education',
-        },
-        {
-          label: 'Entertainment',
-          value: 'entertainment',
-        },
-        {
-          label: 'Other',
-          value: 'other',
+          label: 'KOTO Foundation',
+          value: 'koto-foundation',
         },
       ],
       admin: {
