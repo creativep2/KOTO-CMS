@@ -7,7 +7,7 @@ export const Blogs: CollectionConfig = {
   slug: 'blogs',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'upload_date', 'updatedAt'],
+    defaultColumns: ['title', 'category', 'featured', 'upload_date', 'updatedAt'],
   },
   access: {
     read: () => true, // Public read access for frontend
@@ -195,7 +195,6 @@ export const Blogs: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: 'Mark this blog post as featured',
-        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
       },
     },
     {
