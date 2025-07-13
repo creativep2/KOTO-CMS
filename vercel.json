@@ -16,6 +16,10 @@
     {
       "source": "/admin/:path*",
       "destination": "/admin/:path*"
+    },
+    {
+      "source": "/api/media/file/:path*",
+      "destination": "/api/media/file/:path*"
     }
   ],
   "headers": [
@@ -25,15 +29,6 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex"
-        }
-      ]
-    },
-    {
-      "source": "/media/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
         }
       ]
     }
