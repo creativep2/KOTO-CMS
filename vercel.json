@@ -16,10 +16,6 @@
     {
       "source": "/admin/:path*",
       "destination": "/admin/:path*"
-    },
-    {
-      "source": "/api/media/file/:path*",
-      "destination": "/api/media/file/:path*"
     }
   ],
   "headers": [

@@ -1,5 +1,7 @@
-// storage-adapter-import-placeholder
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
+import { vercelBlobAdapter } from 'payload-cloud-storage-vercel-adapter'
+import { s3Storage } from '@payloadcms/storage-s3'
 
 import sharp from 'sharp' // sharp-import
 import path from 'path'
@@ -18,6 +20,56 @@ import { getServerSideURL } from './utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Storage configuration based on environment
+const getStoragePlugin = () => {
+  // Use Supabase if configured
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    return s3Storage({
+      collections: {
+        [Media.slug]: {
+          prefix: 'media',
+        },
+      },
+      bucket: process.env.SUPABASE_BUCKET || 'media',
+      config: {
+        endpoint: `${process.env.SUPABASE_URL}/storage/v1/s3`,
+        credentials: {
+          accessKeyId: process.env.SUPABASE_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.SUPABASE_SECRET_ACCESS_KEY || '',
+        },
+        region: process.env.SUPABASE_REGION || 'us-east-1',
+        forcePathStyle: true,
+      },
+    })
+  }
+
+  // Use Vercel Blob if configured
+  if (process.env.BLOB_READ_WRITE_TOKEN && process.env.BLOB_STORE_ID) {
+    return cloudStoragePlugin({
+      collections: {
+        [Media.slug]: {
+          adapter: vercelBlobAdapter({
+            token: process.env.BLOB_READ_WRITE_TOKEN,
+            storeId: process.env.BLOB_STORE_ID,
+            uploadOptions: {
+              access: 'public',
+              addRandomSuffix: false,
+              cacheControlMaxAge: 31536000, // 1 year
+            },
+          }),
+          disableLocalStorage: true,
+          disablePayloadAccessControl: true,
+        },
+      },
+    })
+  }
+
+  // Fallback to no storage plugin (filesystem) for development
+  return null
+}
+
+const storagePlugin = getStoragePlugin()
 
 export default buildConfig({
   admin: {
@@ -39,10 +91,7 @@ export default buildConfig({
   collections: [Blogs, Media, Users],
   cors: [getServerSideURL(), 'https://koto-website.wstd.io'].filter(Boolean),
   // globals: [Header, Footer], // Removed for API-only usage
-  plugins: [
-    ...plugins,
-    // storage-adapter-placeholder
-  ],
+  plugins: [...plugins, ...(storagePlugin ? [storagePlugin] : [])],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
