@@ -317,9 +317,12 @@
     </div>
 
     <script>
-        const fmt = d => new Date(d).toLocaleDateString('en-US', {
-            year: 'numeric', month: 'long', day: 'numeric'
-        });
+        const fmt = d => {
+            if (!d) return 'Draft';
+            return new Date(d).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+        };
 
         const getParagraphHTML = (root) => {
             if (!root?.children) return '';
@@ -414,7 +417,7 @@
 
             const imgUrl = blog.header_image?.url || 'https://via.placeholder.com/800x500?text=No+Image';
             const category = blog.category ? `<span class="tag">${blog.category.replace(/-/g, ' ')}</span>` : '';
-            const date = `<span class="date">${fmt(blog.upload_date || blog.createdAt)}</span>`;
+            const date = `<span class="date">${fmt(blog.publishedAt)}</span>`;
             const paragraphs = getParagraphHTML(blog.paragraph?.root);
 
             container.innerHTML = `
@@ -460,7 +463,17 @@
             // Fetch 3 other posts excluding current
             const otherRes = await fetch('https://koto-cms.vercel.app/api/blogs?limit=100');
             const { docs: allPosts = [] } = await otherRes.json();
-            const otherPosts = allPosts.filter(p => p.id !== blog.id).slice(0, 3);
+            
+            // Sort posts by publishedAt in descending order (latest first)
+            // Posts with null publishedAt (drafts) will be placed at the end
+            const sortedPosts = allPosts.sort((a, b) => {
+                if (!a.publishedAt && !b.publishedAt) return 0;
+                if (!a.publishedAt) return 1; // Draft posts go to the end
+                if (!b.publishedAt) return -1;
+                return new Date(b.publishedAt) - new Date(a.publishedAt);
+            });
+            
+            const otherPosts = sortedPosts.filter(p => p.id !== blog.id).slice(0, 3);
 
             const moreEl = document.getElementById('more-posts');
             moreEl.innerHTML = otherPosts.map(post => {
@@ -472,7 +485,7 @@
                         </div>
                         <div class="blog-content">
                             <div class="blog-content-top">
-                                <p><strong>${fmt(post.upload_date || post.createdAt)}</strong></p>
+                                <p><strong>${fmt(post.publishedAt)}</strong></p>
                                 <h3><strong>${post.title}</strong></h3>
                             </div>
                             <div class="blog-content-bottom">

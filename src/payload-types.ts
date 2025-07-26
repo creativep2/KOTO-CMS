@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     blogs: Blog;
+    'job-posts': JobPost;
     media: Media;
     users: User;
     'youtube-embeds': YoutubeEmbed;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     blogs: BlogsSelect<false> | BlogsSelect<true>;
+    'job-posts': JobPostsSelect<false> | JobPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'youtube-embeds': YoutubeEmbedsSelect<false> | YoutubeEmbedsSelect<true>;
@@ -336,6 +338,57 @@ export interface Media {
   };
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-posts".
+ */
+export interface JobPost {
+  id: number;
+  /**
+   * Job title
+   */
+  title: string;
+  /**
+   * Job location (e.g., "Remote", "New York, NY", "London, UK")
+   */
+  location: string;
+  /**
+   * Brief summary for job listing display
+   */
+  summary: string;
+  /**
+   * Detailed job description with rich content (requirements, benefits, etc.)
+   */
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Date when the job post was published to the public
+   */
+  publishedAt?: string | null;
+  /**
+   * Current status of the job post
+   */
+  status: 'draft' | 'published';
+  /**
+   * Header image for the job post
+   */
+  header_image?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Create YouTube embeds that can be inserted into blog posts
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -372,6 +425,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blogs';
         value: number | Blog;
+      } | null)
+    | ({
+        relationTo: 'job-posts';
+        value: number | JobPost;
       } | null)
     | ({
         relationTo: 'media';
@@ -450,6 +507,21 @@ export interface BlogsSelect<T extends boolean = true> {
         title?: T;
         description?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-posts_select".
+ */
+export interface JobPostsSelect<T extends boolean = true> {
+  title?: T;
+  location?: T;
+  summary?: T;
+  description?: T;
+  publishedAt?: T;
+  status?: T;
+  header_image?: T;
   updatedAt?: T;
   createdAt?: T;
 }

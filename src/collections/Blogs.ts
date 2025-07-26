@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { editors } from '../access/editors'
 import { authors } from '../access/authors'
 import { blogsLexical } from '../fields/blogsLexical'
+import { populateYouTubeEmbeds } from '../hooks/populateYouTubeEmbeds'
 
 export const Blogs: CollectionConfig = {
   slug: 'blogs',
@@ -29,46 +30,7 @@ export const Blogs: CollectionConfig = {
     delete: editors, // Only editors and admins can delete
   },
   hooks: {
-    afterRead: [
-      async ({ doc, req }) => {
-        // Check if this is a request that wants populated YouTube embeds
-        const shouldPopulate =
-          req.query?.populate === 'true' ||
-          req.query?.depth === '1' ||
-          req.query?.depth === 1 ||
-          // Only populate for API calls that specifically request it
-          req.headers.get('accept')?.includes('application/json')
-
-        if (!shouldPopulate) {
-          return doc // Don't populate by default
-        }
-
-        // Auto-populate YouTube embeds in rich text
-        if (doc.paragraph?.root?.children) {
-          const updatedChildren = await Promise.all(
-            doc.paragraph.root.children.map(async (child: any) => {
-              if (child.type === 'relationship' && child.relationTo === 'youtube-embeds') {
-                if (typeof child.value === 'number' || typeof child.value === 'string') {
-                  try {
-                    // Fetch the YouTube embed data
-                    const youtubeEmbed = await req.payload.findByID({
-                      collection: 'youtube-embeds',
-                      id: child.value,
-                    })
-                    child.value = youtubeEmbed
-                  } catch (error) {
-                    console.error('Failed to populate YouTube embed:', error)
-                  }
-                }
-              }
-              return child
-            }),
-          )
-          doc.paragraph.root.children = updatedChildren
-        }
-        return doc
-      },
-    ],
+    afterRead: [populateYouTubeEmbeds],
   },
   fields: [
     {

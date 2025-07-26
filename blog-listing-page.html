@@ -1,0 +1,603 @@
+<style>
+  /* ——— General ——— */
+  body { font-family: 'Helvetica Neue', sans-serif; }
+
+  /* ——— Featured (hero) ——— */
+  .featured-post {
+    display: flex;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    max-width: 1500px;
+    margin: 40px auto 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+  .featured-image-wrapper {
+    flex: 0 0 55%; /* 55% width for image */
+    overflow: hidden;
+  }
+  .featured-image {
+    width: 100%;
+    height: 100%;
+    max-height: 553px;
+    object-fit: cover;
+  }
+  .featured-info {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 👈 push content to the bottom */
+    position: relative;
+    gap: 8px;
+  }
+  .featured-illu{
+    position:absolute;
+    top:0;
+    right:200px;
+    width:180px;
+    height:180px;
+    pointer-events:none;
+    z-index:0}
+  .featured-illu img{
+    width:100%;
+    height:auto}
+  
+  .featured-label {
+    background: #B13906;
+    color: #fff;
+    font-size: 16px;
+    padding: 12px 24px;
+    border-radius: 99px;
+    display: inline-block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    width: fit-content;
+  }
+  .featured-date {
+    font-size: 16px;
+    color: #777;
+    z-index: 1;
+    position: relative;
+  }
+
+  .featured-title {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin: 0;
+    z-index: 1;
+    position: relative;
+  }
+
+  .featured-info-middle {
+  z-index: 1;
+  position: relative;
+  text-align: left;
+  }
+
+  .featured-readmore {
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    color: #000;
+    z-index: 1;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .featured-mobile {
+    display: none;
+  }
+
+  .featured-meta-row {
+    display: none;
+  }
+
+  /* ——— Tabs ——— */
+  .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 12px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    max-width: 1000px;
+    margin: 40px auto;
+    gap: 24px;
+    background: #fff;
+    scrollbar-width: none; /* Firefox */
+  }
+  .tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  .tab {
+    flex-shrink: 0;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-weight: 400;
+    white-space: nowrap;
+    text-transform: capitalize;
+  }
+  
+  .tab.active {
+    color: #e25420;
+    font-weight: 600;
+  }
+
+
+  /* ——— Grid ——— */
+.blog-grid {
+  display: grid;
+  gap: 24px;
+  padding: 20px;
+  max-width: 1500px;
+  margin: auto;
+  grid-template-columns: 1fr; /* Default: 1 column on small screens */
+}
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 440px;
+  height: 562px; /* Increased height */
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+  transition: 0.2s;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+}
+
+.blog-card img {
+  width: 440px;
+  max-height: 320px;
+  object-fit: cover;
+}
+
+.blog-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  align-items: flex-start;
+  word-wrap: break-word;      /* ✅ allow long words to break */
+  overflow-wrap: break-word;  /* ✅ for cross-browser support */
+  white-space: normal;        /* ✅ allow multiline */
+}
+
+.blog-content-top {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  align-self: stretch;
+}
+
+.blog-content-bottom {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.blog-content p {
+  font-size: 12px;
+  color: #888;
+  margin: 0 0 5px;
+}
+
+.blog-content h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: #222;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;         /* ✅ Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 3.2em;             /* Optional fallback max-height for 2 lines */
+}
+
+
+
+.blog-content a {
+  font-size: 16px;
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ——— Responsive ——— */
+@media(max-width:768px){
+  .featured-post{
+    flex-direction:column;
+    margin: 40px 16px 20px;
+    height: 440px;
+  }
+  .featured-info{
+    padding:20px
+  }
+  .featured-illu{
+    width:120px;
+    height:120px
+  }
+  .blog-grid {
+  grid-template-columns: 1fr; /* One column on small screens */
+  padding: 16px;
+  }
+  .featured-image {
+    max-height: 242px;
+    object-fit: cover;
+  }
+
+    .blog-card {
+    flex-direction: row;
+    height: auto;
+  }
+
+  .blog-card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+    height: 240px;
+  }
+
+  .blog-card-image {
+    width: 55%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .blog-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .blog-content {
+    width: 45%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* ✅ pushes bottom section down */
+    height: 200px;
+  }
+
+  .featured-illu {
+    display: none;
+  }
+
+  .featured-mobile {
+    display: flex;
+  }
+
+  .featured-meta-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+ .featured-info-middle {
+    display: none;
+  }
+  .featured-label-mobile {
+    background: #B13906;
+    color: #fff;
+    font-size: 16px;
+    padding: 4px 24px;
+    border-radius: 99px;
+    display: inline-block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    width: fit-content;
+  }
+  .featured-label {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+  }
+}
+
+@media (min-width: 1024px) {
+  .blog-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on laptops/desktops */
+  }
+}
+
+</style>
+
+<!-- Featured hero -->
+<div id="featured">Loading featured post…</div>
+
+<!-- Category tabs -->
+<div class="tabs" id="tabs"></div>
+
+<!-- Blog cards grid -->
+<div class="blog-grid" id="blog-grid">Loading blog posts…</div>
+
+<script>
+  /* helpers */
+  const resolvePath = p => {
+    if (!p) return null;
+    return p.startsWith('http') ? p : `https://koto-cms.vercel.app${p}`;
+  };
+
+  const fmt = d => {
+    if (!d) return 'Draft';
+    return new Date(d).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+  };
+
+  (async()=>{
+    const r=await fetch('https://koto-cms.vercel.app/api/blogs?limit=100');
+    const {docs=[]}=await r.json();
+    const featuredEl=document.getElementById('featured');
+    const gridEl=document.getElementById('blog-grid');
+    const tabsEl=document.getElementById('tabs');
+    if(!docs.length){featuredEl.innerHTML='<p>No posts.</p>';return;}
+
+    // Sort posts by publishedAt in descending order (latest first)
+    // Posts with null publishedAt (drafts) will be placed at the end
+    const sortedDocs = docs.sort((a, b) => {
+      if (!a.publishedAt && !b.publishedAt) return 0;
+      if (!a.publishedAt) return 1; // Draft posts go to the end
+      if (!b.publishedAt) return -1;
+      return new Date(b.publishedAt) - new Date(a.publishedAt);
+    });
+
+    /* featured post */
+    const featured=sortedDocs.find(d=>d.featured)||sortedDocs[0];
+    const featImg=featured.header_image?.sizes?.small?.url||'https://via.placeholder.com/800x500?text=No+Image';
+    featuredEl.innerHTML=`
+      <div class="featured-post">
+        <div class="featured-image-wrapper">
+          <img class="featured-image" src="${featImg}" alt="${featured.title}">
+        </div>
+        <div class="featured-info">
+          <div class="featured-illu">
+            <svg width="382" height="324" viewBox="0 0 382 324" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <mask id="mask0_10088_23045" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="291" y="-191" width="224" height="224">
+            <circle cx="111.414" cy="111.414" r="111.414" transform="matrix(0.791048 0.611755 0.611755 -0.791048 247 -58.733)" fill="#D9D9D9"/>
+            </mask>
+            <g mask="url(#mask0_10088_23045)">
+            <g filter="url(#filter0_f_10088_23045)">
+            <circle cx="117.019" cy="117.019" r="117.019" transform="matrix(0.791048 0.611755 0.611755 -0.791048 283.46 85.5617)" fill="#FF6D90"/>
+            </g>
+            <g filter="url(#filter1_f_10088_23045)">
+            <circle cx="151.279" cy="151.279" r="151.279" transform="matrix(0.791048 0.611755 0.611755 -0.791048 252.133 47.3781)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter2_f_10088_23045)">
+            <circle cx="151.279" cy="151.279" r="151.279" transform="matrix(0.791048 0.611755 0.611755 -0.791048 372.629 -230.231)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter3_f_10088_23045)">
+            <circle cx="151.279" cy="151.279" r="151.279" transform="matrix(0.791048 0.611755 0.611755 -0.791048 372.629 -230.231)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter4_f_10088_23045)">
+            <circle cx="99.3555" cy="99.3555" r="99.3555" transform="matrix(0.791048 0.611755 0.611755 -0.791048 165.755 2.71814)" fill="#DE204E"/>
+            </g>
+            </g>
+            <mask id="mask1_10088_23045" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="205" y="-278" width="397" height="397">
+            <circle cx="198.17" cy="198.17" r="155" transform="matrix(-0.580077 -0.814562 -0.814562 0.580077 680 -33.0234)" stroke="black" stroke-width="86.3391"/>
+            </mask>
+            <g mask="url(#mask1_10088_23045)">
+            <circle cx="128.158" cy="128.158" r="128.158" transform="matrix(-0.580077 -0.814562 -0.814562 0.580077 602.497 -221.114)" fill="#FF6D90"/>
+            <g filter="url(#filter6_f_10088_23045)">
+            <circle cx="110.975" cy="110.975" r="110.975" transform="matrix(-0.580077 -0.814562 -0.814562 0.580077 442.179 -145.047)" fill="white"/>
+            </g>
+            <g filter="url(#filter7_f_10088_23045)">
+            <circle cx="110.975" cy="110.975" r="110.975" transform="matrix(-0.580077 -0.814562 -0.814562 0.580077 410.11 -53.6625)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter8_f_10088_23045)">
+            <circle cx="110.975" cy="110.975" r="110.975" transform="matrix(-0.580077 -0.814562 -0.814562 0.580077 667.914 3.5564)" fill="#FF6D90"/>
+            </g>
+            <g filter="url(#filter9_f_10088_23045)">
+            <circle cx="158.724" cy="158.724" r="158.724" transform="matrix(-0.580077 -0.814562 -0.814562 0.580077 803.343 -120.863)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter10_f_10088_23045)">
+            <circle cx="110.975" cy="110.975" r="110.975" transform="matrix(-0.580077 -0.814562 -0.814562 0.580077 346.54 -33.209)" fill="#7926BA"/>
+            </g>
+            </g>
+            <mask id="mask2_10088_23045" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="83" y="-398" width="639" height="639">
+            <circle cx="318.875" cy="318.875" r="257.875" transform="matrix(-0.310983 0.950415 0.950415 0.310983 199 -481)" stroke="black" stroke-width="122"/>
+            </mask>
+            <g mask="url(#mask2_10088_23045)">
+            <g filter="url(#filter11_f_10088_23045)">
+            <circle cx="161.572" cy="161.572" r="161.572" transform="matrix(-0.310983 0.950415 0.950415 0.310983 -23.5078 -312)" fill="#FF6D90"/>
+            </g>
+            <g filter="url(#filter12_f_10088_23045)">
+            <circle cx="110.664" cy="110.664" r="110.664" transform="matrix(-0.310983 0.950415 0.950415 0.310983 433.486 76.6571)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter13_f_10088_23045)">
+            <circle cx="178.57" cy="178.57" r="178.57" transform="matrix(-0.310983 0.950415 0.950415 0.310983 463.064 -86.9996)" fill="#7926BA"/>
+            </g>
+            <circle cx="178.57" cy="178.57" r="178.57" transform="matrix(-0.310983 0.950415 0.950415 0.310983 257.91 -500.302)" fill="#FF6D90"/>
+            <g filter="url(#filter15_f_10088_23045)">
+            <circle cx="141.514" cy="141.514" r="141.514" transform="matrix(-0.310983 0.950415 0.950415 0.310983 33.5488 -352.722)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter16_f_10088_23045)">
+            <circle cx="105.591" cy="105.591" r="105.591" transform="matrix(-0.310983 0.950415 0.950415 0.310983 264.826 -345.323)" fill="#7926BA"/>
+            </g>
+            <g filter="url(#filter17_f_10088_23045)">
+            <circle cx="178.57" cy="178.57" r="178.57" transform="matrix(-0.310983 0.950415 0.950415 0.310983 525.466 -295.004)" fill="#7926BA"/>
+            </g>
+            </g>
+            <defs>
+            <filter id="filter0_f_10088_23045" x="261.119" y="-121.915" width="372.992" height="372.992" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="34.7355" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter1_f_10088_23045" x="182.658" y="-261.435" width="563.379" height="563.379" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="65.2016" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter2_f_10088_23045" x="303.154" y="-539.044" width="563.379" height="563.379" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="65.2016" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter3_f_10088_23045" x="303.154" y="-539.044" width="563.379" height="563.379" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="65.2016" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter4_f_10088_23045" x="93.0439" y="-227.182" width="424.174" height="424.174" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="56.3633" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter6_f_10088_23045" x="-3.29097" y="-461.769" width="581.399" height="581.399" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="89.8579" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter7_f_10088_23045" x="-139.582" y="-474.606" width="789.844" height="789.844" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="141.969" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter8_f_10088_23045" x="304.653" y="-230.956" width="416.982" height="416.981" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="48.7535" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter9_f_10088_23045" x="156.717" y="-583.345" width="850.527" height="850.527" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="133.264" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter10_f_10088_23045" x="-16.7209" y="-267.722" width="416.982" height="416.981" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="48.7535" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter11_f_10088_23045" x="-179.317" y="-367.316" width="518.246" height="518.246" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="48.7535" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter12_f_10088_23045" x="213.839" y="-74.1613" width="580.818" height="580.819" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="89.8579" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter13_f_10088_23045" x="114.692" y="-324.308" width="925.113" height="925.113" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="141.969" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter15_f_10088_23045" x="-319.767" y="-618.021" width="887.609" height="887.608" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="151.126" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter16_f_10088_23045" x="-38.5502" y="-583.025" width="741.79" height="741.789" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="132.637" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            <filter id="filter17_f_10088_23045" x="363.524" y="-345.881" width="552.25" height="552.25" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feGaussianBlur stdDeviation="48.7535" result="effect1_foregroundBlur_10088_23045"/>
+            </filter>
+            </defs>
+            </svg>
+
+          </div>
+
+          <div class="featured-meta-row">
+            <p class="featured-date">${fmt(featured.publishedAt)}</p>
+            ${featured.featured ? '<span class="featured-label-mobile">Featured</span>' : ''}
+          </div>
+          <div class="featured-mobile">
+            <h2 class="featured-title">${featured.title}</h2>
+          </div>
+          ${featured.featured?'<span class="featured-label">Featured</span>':''}
+          <div class="featured-info-middle">
+            <p class="featured-date">${fmt(featured.publishedAt)}</p>
+            <h2 class="featured-title">${featured.title}</h2>
+          </div>
+          <a class="featured-readmore" href="/blogs/${featured.id}">Read more →</a>
+        </div>
+      </div>`;
+
+    // Categories tabs
+    const cats = [...new Set(sortedDocs.map(d => d.category).filter(Boolean))];
+    tabsEl.innerHTML =
+      `<div class="tab active" data-cat="">All post</div>` +
+      cats
+        .map(
+          c =>
+            `<div class="tab" data-cat="${c}">${c.replace(/-/g, ' ')}</div>`
+        )
+        .join('');
+    
+      // Render function
+      const card = post => {
+        const img = post.header_image?.sizes?.small?.url || 'https://via.placeholder.com/600x400?text=No+Image';
+        return `
+          <div class="blog-card">
+            <div class="blog-card-image">
+              <img src="${img}" alt="${post.header_image?.alt || ''}">
+            </div>
+            <div class="blog-content">
+              <div class="blog-content-top">
+                <p><strong>${fmt(post.publishedAt)}</strong></p>
+                <h3><strong>${post.title}</strong></h3>
+              </div>
+              <div class="blog-content-bottom">
+                <a href="/blogs/${post.id}">Read more →</a>
+              </div>
+            </div>
+          </div>
+        `;
+      };
+
+
+    const render = g => {
+      gridEl.innerHTML =
+        g.map(card).join('') ||
+        '<p style="text-align:center">No posts in this category.</p>';
+    };
+
+    render(sortedDocs); // Default render with sorted posts
+
+    // Tab click handling
+    tabsEl.addEventListener('click', e => {
+      const t = e.target.closest('.tab');
+      if (!t) return;
+      tabsEl.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const cat = t.dataset.cat;
+      render(cat ? sortedDocs.filter(d => d.category === cat) : sortedDocs);
+    });
+  })();
+</script> 
