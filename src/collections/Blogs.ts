@@ -8,7 +8,7 @@ export const Blogs: CollectionConfig = {
   slug: 'blogs',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'featured', 'upload_date', 'updatedAt'],
+    defaultColumns: ['title', 'category', 'featured', 'status', 'publishedAt', 'updatedAt'],
   },
   access: {
     read: () => true, // Public read access for frontend
@@ -183,6 +183,17 @@ export const Blogs: CollectionConfig = {
       defaultValue: () => new Date().toISOString(),
       admin: {
         description: 'Date when the blog post was uploaded',
+        date: {
+          pickerAppearance: 'dayAndTime',
+        },
+      },
+    },
+    {
+      name: 'publishedAt',
+      type: 'date',
+      admin: {
+        position: 'sidebar',
+        description: 'Date when the blog post was published to the public',
         date: {
           pickerAppearance: 'dayAndTime',
         },

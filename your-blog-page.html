@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+            color: #111;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #333;
+            border: 1px solid #000;
+            border-radius: 999px;
+            padding: 8px 18px;
+            background-color: white;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .back-button:hover {
+            background: #f3f3f3;
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #9E63CD, #C92C70);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .date {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            line-height: 1.4;
+            margin: 16px 0 24px;
+        }
+
+        .header-img {
+            width: 100%;
+            max-height: 520px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 32px 0 20px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .paragraph {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-justify {
+            text-align: justify;
+        }
+
+        .share-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 48px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .share-label {
+            color: #111;
+        }
+
+        .share-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            fill: #333;
+        }
+
+        .share-icon:hover {
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+        }
+
+        .more-posts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 80px 0 24px;
+        }
+
+        .more-posts-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+            color: #111;
+        }
+
+        .view-all-btn {
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            color: #000;
+            padding: 6px 18px;
+            border: 1px solid #000;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s ease;
+        }
+
+        .view-all-btn:hover {
+            background: #f3f3f3;
+        }
+
+        .blog-grid {
+            display: grid;
+            gap: 24px;
+            padding: 20px;
+            max-width: 1500px;
+            margin: auto;
+            grid-template-columns: 1fr;
+        }
+
+        .blog-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            width: 440px;
+            height: 562px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+            transition: 0.2s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .blog-card-image {
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+        }
+
+        .blog-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            align-items: flex-start;
+            justify-content: space-between;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            height: 240px;
+        }
+
+        .blog-content-top {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .blog-content-bottom {
+            margin-top: auto;
+        }
+
+        .blog-content p {
+            font-size: 12px;
+            color: #888;
+            margin: 0;
+        }
+
+        .blog-content h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            color: #222;
+            line-height: 1.4;
+        }
+
+        .blog-content a {
+            font-size: 16px;
+            color: #000;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (min-width: 600px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .blog-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media(max-width:768px){
+            .blog-grid {
+                grid-template-columns: 1fr;
+                padding: 16px;
+            }
+
+            .blog-card {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                max-width: 100%;
+                height: 240px;
+            }
+
+            .blog-card-image {
+                width: 55%;
+                height: 100%;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+            }
+
+            .blog-card-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .blog-content {
+                width: 45%;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                height: 200px;
+            }
+        }
+
+        .more-posts-wrapper {
+            width: 90%;
+            margin: 80px auto 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-button" href="/media-center">← Back</a>
+        <div id="blog-content">Loading blog post…</div>
+    </div>
+
+    <div class="more-posts-wrapper">
+        <div class="more-posts-header">
+            <p class="more-posts-title">Read other posts</p>
+            <a class="view-all-btn" href="/media-center">View all →</a>
+        </div>
+        <div class="blog-grid" id="more-posts">Loading…</div>
+    </div>
+
+    <script>
+        const fmt = d => new Date(d).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        const getParagraphHTML = (root) => {
+            if (!root?.children) return '';
+
+            return root.children.map(block => {
+                // Paragraph blocks
+                if (block.type === 'paragraph' && block.children?.length) {
+                    const textContent = block.children.map(child => {
+                        let text = child.text || '';
+                        
+                        // Handle different text formats
+                        if (child.format) {
+                            // Bold (format: 1)
+                            if (child.format & 1) {
+                                text = `<strong>${text}</strong>`;
+                            }
+                            // Italic (format: 2) 
+                            if (child.format & 2) {
+                                text = `<em>${text}</em>`;
+                            }
+                            // Underline (format: 4)
+                            if (child.format & 4) {
+                                text = `<u>${text}</u>`;
+                            }
+                            // Link (format: 8)
+                            if (child.format & 8) {
+                                // This will be handled by the link node type
+                                return text;
+                            }
+                        }
+                        
+                        // Handle link nodes
+                        if (child.type === 'link' && child.fields?.url) {
+                            const url = child.fields.url;
+                            const linkText = child.children?.[0]?.text || url;
+                            const target = child.fields?.newTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                            return `<a href="${url}"${target}>${linkText}</a>`;
+                        }
+                        
+                        return text;
+                    }).join('');
+                    
+                    // Handle paragraph alignment
+                    let paragraphClass = 'paragraph';
+                    if (block.format === 'center') {
+                        paragraphClass += ' text-center';
+                    } else if (block.format === 'right') {
+                        paragraphClass += ' text-right';
+                    } else if (block.format === 'justify') {
+                        paragraphClass += ' text-justify';
+                    }
+                    
+                    return `<p class="${paragraphClass}">${textContent}</p>`;
+                }
+
+                // YouTube embed
+                if (block.type === 'relationship' && block.relationTo === 'youtube-embeds') {
+                    const videoId = block.value?.videoId;
+                    if (videoId) {
+                        return `
+                            <div class="paragraph" style="margin: 32px 0;">
+                                <iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoId}" 
+                                    frameborder="0" allowfullscreen 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                                </iframe>
+                            </div>`;
+                    }
+                }
+
+                // Image block
+                if (block.type === 'upload' && block.relationTo === 'media') {
+                    const imageUrl = block.value?.sizes?.small?.url || block.value?.url;
+                    if (imageUrl) {
+                        return `
+                            <div class="paragraph" style="margin: 32px 0;">
+                                <img src="${imageUrl}" alt="${block.value?.alt || ''}" 
+                                    style="max-width:100%; border-radius:12px; box-shadow:0 4px 14px rgba(0,0,0,0.08);" />
+                            </div>`;
+                    }
+                }
+
+                return '';
+            }).join('');
+        };
+
+        (async () => {
+            const id = window.location.pathname.split('/').pop();
+            const res = await fetch(`https://koto-cms.vercel.app/api/blogs/${id}?depth=1`);
+            const blog = await res.json();
+
+            const container = document.getElementById('blog-content');
+
+            const imgUrl = blog.header_image?.url || 'https://via.placeholder.com/800x500?text=No+Image';
+            const category = blog.category ? `<span class="tag">${blog.category.replace(/-/g, ' ')}</span>` : '';
+            const date = `<span class="date">${fmt(blog.upload_date || blog.createdAt)}</span>`;
+            const paragraphs = getParagraphHTML(blog.paragraph?.root);
+
+            container.innerHTML = `
+                <h1>${blog.title}</h1>
+                <div class="meta-row">
+                    ${category}
+                    ${date}
+                </div>
+                <img class="header-img" src="${imgUrl}" alt="${blog.title}">
+                ${paragraphs}
+
+                <div class="share-row">
+                    <span class="share-label">Share this post</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_9310_23977)">
+                            <path d="M24 12C24 5.37264 18.6274 0 12 0C5.37264 0 0 5.37264 0 12C0 17.6275 3.87456 22.3498 9.10128 23.6467V15.6672H6.62688V12H9.10128V10.4198C9.10128 6.33552 10.9498 4.4424 14.9597 4.4424C15.72 4.4424 17.0318 4.59168 17.5685 4.74048V8.06448C17.2853 8.03472 16.7933 8.01984 16.1822 8.01984C14.2147 8.01984 13.4544 8.76528 13.4544 10.703V12H17.3741L16.7006 15.6672H13.4544V23.9122C19.3963 23.1946 24.0005 18.1354 24.0005 12H24Z" fill="#0866FF"/>
+                            <path d="M16.6997 15.6672L17.3732 12H13.4535V10.703C13.4535 8.76526 14.2138 8.01982 16.1813 8.01982C16.7924 8.01982 17.2844 8.0347 17.5676 8.06446V4.74046C17.0309 4.59118 15.7191 4.44238 14.9588 4.44238C10.9489 4.44238 9.10038 6.3355 9.10038 10.4198V12H6.62598V15.6672H9.10038V23.6467C10.0287 23.8771 10.9997 24 11.9991 24C12.4911 24 12.9764 23.9697 13.453 23.9121V15.6672H16.6993H16.6997Z" fill="white"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_9310_23977">
+                                <rect width="24" height="24" fill="white"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18.3263 1.90381H21.6998L14.3297 10.3273L23 21.7898H16.2112L10.894 14.8378L4.80995 21.7898H1.43443L9.31743 12.7799L1 1.90381H7.96111L12.7674 8.25814L18.3263 1.90381ZM17.1423 19.7706H19.0116L6.94539 3.81694H4.93946L17.1423 19.7706Z" fill="black"/>
+                    </svg>
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_9310_23979)">
+                            <path d="M22.2283 0H1.77167C1.30179 0 0.851161 0.186657 0.518909 0.518909C0.186657 0.851161 0 1.30179 0 1.77167V22.2283C0 22.6982 0.186657 23.1488 0.518909 23.4811C0.851161 23.8133 1.30179 24 1.77167 24H22.2283C22.6982 24 23.1488 23.8133 23.4811 23.4811C23.8133 23.1488 24 22.6982 24 22.2283V1.77167C24 1.30179 23.8133 0.851161 23.4811 0.518909C23.1488 0.186657 22.6982 0 22.2283 0ZM7.15333 20.445H3.545V8.98333H7.15333V20.445ZM5.34667 7.395C4.93736 7.3927 4.53792 7.2692 4.19873 7.04009C3.85955 6.81098 3.59584 6.48653 3.44088 6.10769C3.28591 5.72885 3.24665 5.31259 3.32803 4.91145C3.40941 4.51032 3.6078 4.14228 3.89816 3.85378C4.18851 3.56529 4.55782 3.36927 4.95947 3.29046C5.36112 3.21165 5.77711 3.25359 6.15495 3.41099C6.53279 3.56838 6.85554 3.83417 7.08247 4.17481C7.30939 4.51546 7.43032 4.91569 7.43 5.325C7.43386 5.59903 7.38251 5.87104 7.27901 6.1248C7.17551 6.37857 7.02198 6.6089 6.82757 6.80207C6.63316 6.99523 6.40185 7.14728 6.14742 7.24915C5.893 7.35102 5.62067 7.40062 5.34667 7.395ZM20.4533 20.455H16.8467V14.1933C16.8467 12.3467 16.0617 11.7767 15.0483 11.7767C13.9783 11.7767 12.9283 12.5833 12.9283 14.24V20.455H9.32V8.99167H12.79V10.58H12.8367C13.185 9.875 14.405 8.67 16.2667 8.67C18.28 8.67 20.455 9.865 20.455 13.365L20.4533 20.455Z" fill="#0A66C2"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_9310_23979">
+                                <rect width="24" height="24" fill="white"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </div>
+            `;
+
+            // Fetch 3 other posts excluding current
+            const otherRes = await fetch('https://koto-cms.vercel.app/api/blogs?limit=100');
+            const { docs: allPosts = [] } = await otherRes.json();
+            const otherPosts = allPosts.filter(p => p.id !== blog.id).slice(0, 3);
+
+            const moreEl = document.getElementById('more-posts');
+            moreEl.innerHTML = otherPosts.map(post => {
+                const img = post.header_image?.sizes?.small?.url || 'https://via.placeholder.com/600x400?text=No+Image';
+                return `
+                    <div class="blog-card">
+                        <div class="blog-card-image">
+                            <img src="${img}" alt="${post.title}">
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-content-top">
+                                <p><strong>${fmt(post.upload_date || post.createdAt)}</strong></p>
+                                <h3><strong>${post.title}</strong></h3>
+                            </div>
+                            <div class="blog-content-bottom">
+                                <a href="/blogs/${post.id}">Read more →</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+        })();
+    </script>
+</body>
+</html> 

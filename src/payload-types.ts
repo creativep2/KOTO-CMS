@@ -166,6 +166,10 @@ export interface Blog {
    */
   upload_date: string;
   /**
+   * Date when the blog post was published to the public
+   */
+  publishedAt?: string | null;
+  /**
    * URL-friendly version of the title
    */
   slug?: string | null;
@@ -435,6 +439,7 @@ export interface BlogsSelect<T extends boolean = true> {
   header_image?: T;
   paragraph?: T;
   upload_date?: T;
+  publishedAt?: T;
   slug?: T;
   meta_description?: T;
   featured?: T;
