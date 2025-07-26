@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 import { Blogs } from './collections/Blogs'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
+import { YouTubeEmbeds } from './collections/YouTubeEmbeds'
 // Website-specific globals removed for API-only usage
 // import { Footer } from './Footer/config'
 // import { Header } from './Header/config'
@@ -88,7 +89,7 @@ export default buildConfig({
     // Use push mode for development to automatically handle schema changes
     push: process.env.NODE_ENV === 'development',
   }),
-  collections: [Blogs, Media, Users],
+  collections: [Blogs, Media, Users, YouTubeEmbeds],
   cors: [getServerSideURL(), 'https://koto-website.wstd.io'].filter(Boolean),
   // globals: [Header, Footer], // Removed for API-only usage
   plugins: [...plugins, ...(storagePlugin ? [storagePlugin] : [])],

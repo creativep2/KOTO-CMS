@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { editors } from '../access/editors'
 import { authors } from '../access/authors'
+import { blogsLexical } from '../fields/blogsLexical'
 
 export const Blogs: CollectionConfig = {
   slug: 'blogs',
@@ -26,6 +27,36 @@ export const Blogs: CollectionConfig = {
       return false
     },
     delete: editors, // Only editors and admins can delete
+  },
+  hooks: {
+    afterRead: [
+      async ({ doc, req }) => {
+        // Auto-populate YouTube embeds in rich text
+        if (doc.paragraph?.root?.children) {
+          const updatedChildren = await Promise.all(
+            doc.paragraph.root.children.map(async (child: any) => {
+              if (child.type === 'relationship' && child.relationTo === 'youtube-embeds') {
+                if (typeof child.value === 'number' || typeof child.value === 'string') {
+                  try {
+                    // Fetch the YouTube embed data
+                    const youtubeEmbed = await req.payload.findByID({
+                      collection: 'youtube-embeds',
+                      id: child.value,
+                    })
+                    child.value = youtubeEmbed
+                  } catch (error) {
+                    console.error('Failed to populate YouTube embed:', error)
+                  }
+                }
+              }
+              return child
+            }),
+          )
+          doc.paragraph.root.children = updatedChildren
+        }
+        return doc
+      },
+    ],
   },
   fields: [
     {
@@ -126,9 +157,11 @@ export const Blogs: CollectionConfig = {
     {
       name: 'paragraph',
       type: 'richText',
+      editor: blogsLexical,
       required: true,
       admin: {
-        description: 'The main content of the blog post',
+        description:
+          'The main content of the blog post. Use the + button to add images and the relationship button to insert YouTube videos at any position.',
       },
     },
     {

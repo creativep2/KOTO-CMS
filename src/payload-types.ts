@@ -70,6 +70,7 @@ export interface Config {
     blogs: Blog;
     media: Media;
     users: User;
+    'youtube-embeds': YoutubeEmbed;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -79,6 +80,7 @@ export interface Config {
     blogs: BlogsSelect<false> | BlogsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'youtube-embeds': YoutubeEmbedsSelect<false> | YoutubeEmbedsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -142,7 +144,7 @@ export interface Blog {
    */
   header_image: number | Media;
   /**
-   * The main content of the blog post
+   * The main content of the blog post. Use the + button to add images and the relationship button to insert YouTube videos at any position.
    */
   paragraph: {
     root: {
@@ -330,6 +332,33 @@ export interface Media {
   };
 }
 /**
+ * Create YouTube embeds that can be inserted into blog posts
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "youtube-embeds".
+ */
+export interface YoutubeEmbed {
+  id: number;
+  /**
+   * Title for this YouTube embed (for identification in the admin)
+   */
+  title: string;
+  /**
+   * YouTube video ID (e.g., "dQw4w9WgXcQ" from https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+   */
+  videoId: string;
+  /**
+   * Optional title to display above the video
+   */
+  videoTitle?: string | null;
+  /**
+   * Optional description for internal use
+   */
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
@@ -347,6 +376,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'youtube-embeds';
+        value: number | YoutubeEmbed;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -535,6 +568,18 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "youtube-embeds_select".
+ */
+export interface YoutubeEmbedsSelect<T extends boolean = true> {
+  title?: T;
+  videoId?: T;
+  videoTitle?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
