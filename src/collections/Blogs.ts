@@ -30,8 +30,20 @@ export const Blogs: CollectionConfig = {
   },
   hooks: {
     afterRead: [
-      async ({ doc, req }) => {
-        // Auto-populate YouTube embeds in rich text
+      async ({ doc, req, context }) => {
+        // Only populate for API calls, not admin panel
+        // Admin panel calls have context.source === 'admin' or specific headers
+        const isAdminPanel =
+          context?.source === 'admin' ||
+          req.headers.get('user-agent')?.includes('Mozilla') ||
+          req.url?.includes('/admin/') ||
+          context?.draft === true
+
+        if (isAdminPanel) {
+          return doc // Don't populate for admin panel
+        }
+
+        // Auto-populate YouTube embeds in rich text for frontend API calls
         if (doc.paragraph?.root?.children) {
           const updatedChildren = await Promise.all(
             doc.paragraph.root.children.map(async (child: any) => {
