@@ -380,8 +380,8 @@
       return new Date(b.publishedAt) - new Date(a.publishedAt);
     });
 
-    /* featured post */
-    const featured=sortedDocs.find(d=>d.featured)||sortedDocs[0];
+    /* featured post - always use the newest post (first in sorted array) */
+    const featured = sortedDocs[0];
     const featImg=featured.header_image?.sizes?.small?.url||'https://via.placeholder.com/800x500?text=No+Image';
     featuredEl.innerHTML=`
       <div class="featured-post">
@@ -544,12 +544,12 @@
 
           <div class="featured-meta-row">
             <p class="featured-date">${fmt(featured.publishedAt)}</p>
-            ${featured.featured ? '<span class="featured-label-mobile">Featured</span>' : ''}
+            <span class="featured-label-mobile">Featured</span>
           </div>
           <div class="featured-mobile">
             <h2 class="featured-title">${featured.title}</h2>
           </div>
-          ${featured.featured?'<span class="featured-label">Featured</span>':''}
+          <span class="featured-label">Featured</span>
           <div class="featured-info-middle">
             <p class="featured-date">${fmt(featured.publishedAt)}</p>
             <h2 class="featured-title">${featured.title}</h2>
