@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { populatePublishedAt } from '../hooks/populatePublishedAt'
 import { populateYouTubeEmbeds } from '../hooks/populateYouTubeEmbeds'
+import { slugField } from '../fields/slug'
 
 export const JobPosts: CollectionConfig = {
   slug: 'job-posts',
@@ -101,6 +102,15 @@ export const JobPosts: CollectionConfig = {
         description: 'Header image for the job post',
       },
     },
+    ...slugField('title', {
+      slugOverrides: {
+        unique: true,
+        admin: {
+          description:
+            'URL-friendly version of the job title. Auto-generated from title but can be edited manually.',
+        },
+      },
+    }),
   ],
   timestamps: true,
 }

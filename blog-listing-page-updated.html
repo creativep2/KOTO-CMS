@@ -226,6 +226,58 @@
   gap: 6px;
 }
 
+/* ——— Pagination ——— */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 40px auto;
+  padding: 20px;
+  max-width: 1500px;
+}
+
+.pagination-button {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-button:hover:not(.disabled) {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.pagination-button.active {
+  background: #e25420;
+  color: #fff;
+}
+
+.pagination-button.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pagination-arrow {
+  font-size: 18px;
+  color: #666;
+}
+
+.pagination-button.disabled .pagination-arrow {
+  color: #ccc;
+}
+
 /* ——— Responsive ——— */
 @media(max-width:768px){
   .featured-post{
@@ -317,6 +369,21 @@
   .featured-label {
     display: none;
   }
+
+  .pagination {
+    padding: 16px;
+    gap: 8px;
+  }
+
+  .pagination-button {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .pagination-arrow {
+    font-size: 16px;
+  }
 }
 
 @media (min-width: 600px) {
@@ -342,6 +409,9 @@
 <!-- Blog cards grid -->
 <div class="blog-grid" id="blog-grid">Loading blog posts…</div>
 
+<!-- Pagination -->
+<div class="pagination" id="pagination"></div>
+
 <script>
   /* helpers */
   const resolvePath = p => {
@@ -363,6 +433,100 @@
     return `/blogs/${post.id}`;
   };
 
+  // Pagination state
+  let currentPage = 1;
+  const postsPerPage = 6;
+  let currentPosts = [];
+  let filteredPosts = [];
+
+  // Pagination functions
+  const getTotalPages = () => Math.ceil(filteredPosts.length / postsPerPage);
+
+  const getCurrentPagePosts = () => {
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    return filteredPosts.slice(startIndex, endIndex);
+  };
+
+  const renderPagination = () => {
+    const paginationEl = document.getElementById('pagination');
+    const totalPages = getTotalPages();
+    
+    if (totalPages <= 1) {
+      paginationEl.style.display = 'none';
+      return;
+    }
+    
+    paginationEl.style.display = 'flex';
+    
+    let paginationHTML = '';
+    
+    // Previous button
+    paginationHTML += `
+      <button class="pagination-button ${currentPage === 1 ? 'disabled' : ''}" data-page="${currentPage - 1}">
+        <span class="pagination-arrow">←</span>
+      </button>
+    `;
+    
+    // Page numbers - show up to 5 pages
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    // Adjust start page if we're near the end
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    // Page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      paginationHTML += `
+        <button class="pagination-button ${currentPage === i ? 'active' : ''}" data-page="${i}">
+          ${i}
+        </button>
+      `;
+    }
+    
+    // Next button
+    paginationHTML += `
+      <button class="pagination-button ${currentPage === totalPages ? 'disabled' : ''}" data-page="${currentPage + 1}">
+        <span class="pagination-arrow">→</span>
+      </button>
+    `;
+    
+    paginationEl.innerHTML = paginationHTML;
+    
+    // Add event listeners to pagination buttons
+    paginationEl.querySelectorAll('.pagination-button:not(.disabled)').forEach(button => {
+      button.addEventListener('click', () => {
+        const page = parseInt(button.dataset.page);
+        if (page && page !== currentPage) {
+          changePage(page);
+        }
+      });
+    });
+  };
+
+  // Global render function
+  let render;
+
+  const changePage = (page) => {
+    const totalPages = getTotalPages();
+    if (page < 1 || page > totalPages) return;
+    
+    currentPage = page;
+    render(getCurrentPagePosts());
+    renderPagination();
+    
+    // Scroll to top of blog grid
+    document.getElementById('blog-grid').scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
+
+
   (async()=>{
     const r=await fetch('https://koto-cms.vercel.app/api/blogs?limit=100');
     const {docs=[]}=await r.json();
@@ -379,6 +543,10 @@
       if (!b.publishedAt) return -1;
       return new Date(b.publishedAt) - new Date(a.publishedAt);
     });
+
+    // Initialize pagination with all posts (excluding featured)
+    filteredPosts = sortedDocs.slice(1); // Remove featured post from pagination
+    currentPage = 1;
 
     /* featured post - always use the newest post (first in sorted array) */
     const featured = sortedDocs[0];
@@ -559,7 +727,7 @@
       </div>`;
 
     // Categories tabs
-    const cats = [...new Set(sortedDocs.map(d => d.category).filter(Boolean))];
+    const cats = [...new Set(sortedDocs.slice(1).map(d => d.category).filter(Boolean))];
     tabsEl.innerHTML =
       `<div class="tab active" data-cat="">All post</div>` +
       cats
@@ -591,13 +759,15 @@
       };
 
 
-    const render = g => {
+    render = g => {
       gridEl.innerHTML =
         g.map(card).join('') ||
         '<p style="text-align:center">No posts in this category.</p>';
     };
 
-    render(sortedDocs); // Default render with sorted posts
+    // Initial render with first page
+    render(getCurrentPagePosts());
+    renderPagination();
 
     // Tab click handling
     tabsEl.addEventListener('click', e => {
@@ -606,7 +776,18 @@
       tabsEl.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
       t.classList.add('active');
       const cat = t.dataset.cat;
-      render(cat ? sortedDocs.filter(d => d.category === cat) : sortedDocs);
+      
+      // Update filtered posts based on category
+      if (cat) {
+        filteredPosts = sortedDocs.slice(1).filter(d => d.category === cat);
+      } else {
+        filteredPosts = sortedDocs.slice(1); // All posts except featured
+      }
+      
+      // Reset to first page when changing category
+      currentPage = 1;
+      render(getCurrentPagePosts());
+      renderPagination();
     });
   })();
 </script> 

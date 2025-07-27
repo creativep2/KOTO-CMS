@@ -12,6 +12,7 @@ import { Blogs } from './collections/Blogs'
 import { JobPosts } from './collections/JobPosts'
 import { Media } from './collections/Media'
 import { Merchandise } from './collections/Merchandise'
+import { Partners } from './collections/Partners'
 import { Users } from './collections/Users'
 import { YouTubeEmbeds } from './collections/YouTubeEmbeds'
 // Website-specific globals removed for API-only usage
@@ -91,7 +92,7 @@ export default buildConfig({
     // Use push mode for development to automatically handle schema changes
     push: process.env.NODE_ENV === 'development',
   }),
-  collections: [Blogs, JobPosts, Media, Merchandise, Users, YouTubeEmbeds],
+  collections: [Blogs, JobPosts, Media, Merchandise, Partners, Users, YouTubeEmbeds],
   cors: '*', // Temporary wildcard for testing - replace with specific domains later
   // globals: [Header, Footer], // Removed for API-only usage
   plugins: [...plugins, ...(storagePlugin ? [storagePlugin] : [])],
