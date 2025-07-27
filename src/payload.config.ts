@@ -92,13 +92,7 @@ export default buildConfig({
     push: process.env.NODE_ENV === 'development',
   }),
   collections: [Blogs, JobPosts, Media, Merchandise, Users, YouTubeEmbeds],
-  cors: [
-    getServerSideURL(),
-    'https://koto-website.wstd.io',
-    'https://www.koto-website.wstd.io',
-    'http://localhost:3000',
-    'http://localhost:3001',
-  ].filter(Boolean),
+  cors: '*', // Temporary wildcard for testing - replace with specific domains later
   // globals: [Header, Footer], // Removed for API-only usage
   plugins: [...plugins, ...(storagePlugin ? [storagePlugin] : [])],
   secret: process.env.PAYLOAD_SECRET,
