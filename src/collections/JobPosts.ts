@@ -1,4 +1,4 @@
-import { CollectionConfig } from 'payload/types'
+import type { CollectionConfig } from 'payload'
 import { populatePublishedAt } from '../hooks/populatePublishedAt'
 import { populateYouTubeEmbeds } from '../hooks/populateYouTubeEmbeds'
 

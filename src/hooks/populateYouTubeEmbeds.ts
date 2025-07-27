@@ -1,6 +1,6 @@
-import type { AfterReadHook } from 'payload/types'
+import type { CollectionAfterReadHook } from 'payload'
 
-export const populateYouTubeEmbeds: AfterReadHook = async ({ doc, req }) => {
+export const populateYouTubeEmbeds: CollectionAfterReadHook = async ({ doc, req }) => {
   // Check if this is a request that wants populated YouTube embeds
   const shouldPopulate =
     req.query?.populate === 'true' ||
@@ -19,7 +19,7 @@ export const populateYouTubeEmbeds: AfterReadHook = async ({ doc, req }) => {
   for (const fieldName of richTextFields) {
     if (doc[fieldName]?.root?.children) {
       const updatedChildren = await Promise.all(
-        doc[fieldName].root.children.map(async (child: any) => {
+        doc[fieldName].root.children.map(async (child: Record<string, unknown>) => {
           if (child.type === 'relationship' && child.relationTo === 'youtube-embeds') {
             if (typeof child.value === 'number' || typeof child.value === 'string') {
               try {
