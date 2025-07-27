@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url'
 import { Blogs } from './collections/Blogs'
 import { JobPosts } from './collections/JobPosts'
 import { Media } from './collections/Media'
+import { Merchandise } from './collections/Merchandise'
 import { Users } from './collections/Users'
 import { YouTubeEmbeds } from './collections/YouTubeEmbeds'
 // Website-specific globals removed for API-only usage
@@ -90,7 +91,7 @@ export default buildConfig({
     // Use push mode for development to automatically handle schema changes
     push: process.env.NODE_ENV === 'development',
   }),
-  collections: [Blogs, JobPosts, Media, Users, YouTubeEmbeds],
+  collections: [Blogs, JobPosts, Media, Merchandise, Users, YouTubeEmbeds],
   cors: [getServerSideURL(), 'https://koto-website.wstd.io'].filter(Boolean),
   // globals: [Header, Footer], // Removed for API-only usage
   plugins: [...plugins, ...(storagePlugin ? [storagePlugin] : [])],

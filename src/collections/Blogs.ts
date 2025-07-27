@@ -4,6 +4,7 @@ import { editors } from '../access/editors'
 import { authors } from '../access/authors'
 import { blogsLexical } from '../fields/blogsLexical'
 import { populateYouTubeEmbeds } from '../hooks/populateYouTubeEmbeds'
+import { slugField } from '../fields/slug'
 
 export const Blogs: CollectionConfig = {
   slug: 'blogs',
@@ -161,27 +162,15 @@ export const Blogs: CollectionConfig = {
         },
       },
     },
-    {
-      name: 'slug',
-      type: 'text',
-      admin: {
-        position: 'sidebar',
-        description: 'URL-friendly version of the title',
+    ...slugField('title', {
+      slugOverrides: {
+        unique: true,
+        admin: {
+          description:
+            'URL-friendly version of the title. Auto-generated from title but can be edited manually.',
+        },
       },
-      hooks: {
-        beforeValidate: [
-          ({ value, data }) => {
-            if (data?.title && !value) {
-              return data.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
-            }
-            return value
-          },
-        ],
-      },
-    },
+    }),
     {
       name: 'meta_description',
       type: 'textarea',

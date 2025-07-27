@@ -70,6 +70,7 @@ export interface Config {
     blogs: Blog;
     'job-posts': JobPost;
     media: Media;
+    merchandise: Merchandise;
     users: User;
     'youtube-embeds': YoutubeEmbed;
     'payload-locked-documents': PayloadLockedDocument;
@@ -81,6 +82,7 @@ export interface Config {
     blogs: BlogsSelect<false> | BlogsSelect<true>;
     'job-posts': JobPostsSelect<false> | JobPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'youtube-embeds': YoutubeEmbedsSelect<false> | YoutubeEmbedsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -172,9 +174,10 @@ export interface Blog {
    */
   publishedAt?: string | null;
   /**
-   * URL-friendly version of the title
+   * URL-friendly version of the title. Auto-generated from title but can be edited manually.
    */
   slug?: string | null;
+  slugLock?: boolean | null;
   /**
    * Brief description for SEO purposes
    */
@@ -389,6 +392,39 @@ export interface JobPost {
   createdAt: string;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "merchandise".
+ */
+export interface Merchandise {
+  id: number;
+  /**
+   * Tên tổ chức (để grouping vào đúng nhóm trên trang)
+   */
+  organization_name: string;
+  /**
+   * Tên sản phẩm
+   */
+  product_name: string;
+  /**
+   * Hình ảnh sản phẩm
+   */
+  product_image: number | Media;
+  /**
+   * Giá sản phẩm (VND)
+   */
+  price: number;
+  /**
+   * Mô tả chi tiết sản phẩm (tùy chọn)
+   */
+  description?: string | null;
+  /**
+   * Trạng thái sản phẩm
+   */
+  status: 'available' | 'out_of_stock' | 'discontinued';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Create YouTube embeds that can be inserted into blog posts
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -433,6 +469,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'merchandise';
+        value: number | Merchandise;
       } | null)
     | ({
         relationTo: 'users';
@@ -498,6 +538,7 @@ export interface BlogsSelect<T extends boolean = true> {
   upload_date?: T;
   publishedAt?: T;
   slug?: T;
+  slugLock?: T;
   meta_description?: T;
   featured?: T;
   tags?: T;
@@ -620,6 +661,20 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "merchandise_select".
+ */
+export interface MerchandiseSelect<T extends boolean = true> {
+  organization_name?: T;
+  product_name?: T;
+  product_image?: T;
+  price?: T;
+  description?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
