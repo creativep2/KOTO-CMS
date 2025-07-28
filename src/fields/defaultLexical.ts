@@ -6,15 +6,58 @@ import {
   ParagraphFeature,
   lexicalEditor,
   UnderlineFeature,
+  HeadingFeature,
+  AlignFeature,
+  OrderedListFeature,
+  UnorderedListFeature,
+  IndentFeature,
+  BlockquoteFeature,
+  InlineCodeFeature,
+  StrikethroughFeature,
+  SubscriptFeature,
+  SuperscriptFeature,
+  HorizontalRuleFeature,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
   type LinkFields,
 } from '@payloadcms/richtext-lexical'
 
 export const defaultLexical = lexicalEditor({
-  features: [
+  features: ({ rootFeatures }) => [
+    ...rootFeatures,
+
+    // Toolbars - Visual formatting bars for editors
+    FixedToolbarFeature(),
+    InlineToolbarFeature(),
+
+    // Text Structure
     ParagraphFeature(),
-    UnderlineFeature(),
+    HeadingFeature({
+      enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+    }),
+
+    // Text Styling
     BoldFeature(),
     ItalicFeature(),
+    UnderlineFeature(),
+    StrikethroughFeature(),
+    SubscriptFeature(),
+    SuperscriptFeature(),
+    InlineCodeFeature(),
+
+    // Alignment
+    AlignFeature(),
+
+    // Lists and Indentation
+    OrderedListFeature(),
+    UnorderedListFeature(),
+    IndentFeature(),
+
+    // Blocks
+    BlockquoteFeature(),
+    HorizontalRuleFeature(),
+
+    // Links
     LinkFeature({
       enabledCollections: ['blogs'],
       fields: ({ defaultFields }) => {

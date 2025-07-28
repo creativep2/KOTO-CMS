@@ -71,6 +71,7 @@ export interface Config {
     'job-posts': JobPost;
     media: Media;
     merchandise: Merchandise;
+    partners: Partner;
     users: User;
     'youtube-embeds': YoutubeEmbed;
     'payload-locked-documents': PayloadLockedDocument;
@@ -83,6 +84,7 @@ export interface Config {
     'job-posts': JobPostsSelect<false> | JobPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'youtube-embeds': YoutubeEmbedsSelect<false> | YoutubeEmbedsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -388,6 +390,11 @@ export interface JobPost {
    * Header image for the job post
    */
   header_image?: (number | null) | Media;
+  /**
+   * URL-friendly version of the job title. Auto-generated from title but can be edited manually.
+   */
+  slug?: string | null;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -421,6 +428,48 @@ export interface Merchandise {
    * Trạng thái sản phẩm
    */
   status: 'available' | 'out_of_stock' | 'discontinued';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  /**
+   * The name of the partner organization
+   */
+  name: string;
+  /**
+   * Partner logo image
+   */
+  logo: number | Media;
+  /**
+   * Partner website URL (optional)
+   */
+  website?: string | null;
+  /**
+   * Brief description of the partner (optional)
+   */
+  description?: string | null;
+  /**
+   * Partner status
+   */
+  status: 'active' | 'inactive';
+  /**
+   * User who created this partner entry
+   */
+  createdBy?: (number | null) | User;
+  /**
+   * Feature this partner on the website
+   */
+  featured?: boolean | null;
+  /**
+   * URL-friendly version of the partner name. Auto-generated from name but can be edited manually.
+   */
+  slug?: string | null;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -473,6 +522,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'merchandise';
         value: number | Merchandise;
+      } | null)
+    | ({
+        relationTo: 'partners';
+        value: number | Partner;
       } | null)
     | ({
         relationTo: 'users';
@@ -563,6 +616,8 @@ export interface JobPostsSelect<T extends boolean = true> {
   publishedAt?: T;
   status?: T;
   header_image?: T;
+  slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -673,6 +728,23 @@ export interface MerchandiseSelect<T extends boolean = true> {
   price?: T;
   description?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
+  website?: T;
+  description?: T;
+  status?: T;
+  createdBy?: T;
+  featured?: T;
+  slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
 }
