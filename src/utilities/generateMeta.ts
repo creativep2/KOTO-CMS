@@ -12,8 +12,15 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
 
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = image.sizes?.og?.url
+    const imageUrl = ogUrl || image.url
 
-    url = ogUrl ? serverUrl + ogUrl : serverUrl + image.url
+    // Check if the URL is already a full URL (starts with http/https)
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      url = imageUrl
+    } else if (imageUrl) {
+      // Otherwise prepend the server URL
+      url = serverUrl + imageUrl
+    }
   }
 
   return url

@@ -103,7 +103,7 @@ export const Media: CollectionConfig = {
   upload: {
     // Fallback to filesystem for development when no cloud storage is configured
     staticDir: 'public/media',
-    adminThumbnail: 'thumbnail',
+    adminThumbnail: 'url',
     focalPoint: true,
     imageSizes: [
       {
