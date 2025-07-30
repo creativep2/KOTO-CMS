@@ -413,9 +413,9 @@
                 // Provide helpful guidance for common errors
                 if (error.message.includes('Failed to fetch')) {
                     errorMessage += '\n\n💡 Troubleshooting:\n';
-                    errorMessage += '1. Make sure your development server is running (npm run dev)\n';
-                    errorMessage += '2. Check that the server is accessible at http://localhost:3000\n';
-                    errorMessage += '3. If using file:// protocol, ensure the server is running\n';
+                    errorMessage += '1. Check that the production server is accessible at https://koto-cms.vercel.app\n';
+                    errorMessage += '2. Verify the API endpoints are deployed and working\n';
+                    errorMessage += '3. Check browser console for detailed error information\n';
                 }
                 
                 resultDiv.textContent = errorMessage;
@@ -438,26 +438,9 @@
                 href: window.location.href
             });
             
-            // If we're on file:// protocol, use localhost:3000
-            if (protocol === 'file:') {
-                console.log('Detected file:// protocol, using http://localhost:3000');
-                return 'http://localhost:3000';
-            }
-            
-            // If we're already on localhost with a port, use that
-            if (hostname === 'localhost' && port) {
-                console.log('Detected localhost with port, using current origin');
-                return '';
-            }
-            
-            // If we're on localhost without port, assume 3000
-            if (hostname === 'localhost' && !port) {
-                console.log('Detected localhost without port, using http://localhost:3000');
-                return 'http://localhost:3000';
-            }
-            
-            console.log('Using empty base URL (same origin)');
-            return '';
+            // Always use the production URL for testing
+            console.log('Using production URL: https://koto-cms.vercel.app');
+            return 'https://koto-cms.vercel.app';
         }
         
         const baseUrl = getBaseUrl();
