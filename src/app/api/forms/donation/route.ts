@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import payload from 'payload'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+
+// CORS headers helper function
+function addCorsHeaders(response: NextResponse): NextResponse {
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+  return response
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,31 +22,35 @@ export async function POST(request: NextRequest) {
       !body.paymentMethod ||
       !body.howDidYouHearAboutUs
     ) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         {
           error:
             'Missing required fields: fullName, email, donationAmount, paymentMethod, and howDidYouHearAboutUs are required',
         },
         { status: 400 },
       )
+      return addCorsHeaders(response)
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(body.email)) {
-      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Validate donation amount
     const donationAmount = parseFloat(body.donationAmount)
     if (isNaN(donationAmount) || donationAmount <= 0) {
-      return NextResponse.json({ error: 'Invalid donation amount' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid donation amount' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Validate payment method
     const validPaymentMethods = ['credit-card', 'paypal', 'bank-transfer', 'check', 'cash', 'other']
     if (!validPaymentMethods.includes(body.paymentMethod)) {
-      return NextResponse.json({ error: 'Invalid payment method' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid payment method' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Validate how did you hear about us
@@ -51,8 +64,12 @@ export async function POST(request: NextRequest) {
       'other',
     ]
     if (!validSources.includes(body.howDidYouHearAboutUs)) {
-      return NextResponse.json({ error: 'Invalid source selection' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid source selection' }, { status: 400 })
+      return addCorsHeaders(response)
     }
+
+    // Initialize Payload
+    const payload = await getPayload({ config: configPromise })
 
     // Create the donation form submission
     const donationForm = await payload.create({
@@ -67,7 +84,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         message: 'Donation form submitted successfully',
@@ -75,20 +92,15 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     )
+    return addCorsHeaders(response)
   } catch (error) {
     console.error('Donation form submission error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const response = NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return addCorsHeaders(response)
   }
 }
 
 // Handle CORS preflight requests
 export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  })
+  return addCorsHeaders(new NextResponse(null, { status: 200 }))
 }

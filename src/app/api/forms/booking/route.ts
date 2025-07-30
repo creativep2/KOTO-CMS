@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import payload from 'payload'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
+
+// CORS headers helper function
+function addCorsHeaders(response: NextResponse): NextResponse {
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+  return response
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,25 +25,28 @@ export async function POST(request: NextRequest) {
       !body.reservationTime ||
       !body.numberOfGuests
     ) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         {
           error:
             'Missing required fields: fullName, email, phoneNumber, nationality, restaurant, reservationDate, reservationTime, and numberOfGuests are required',
         },
         { status: 400 },
       )
+      return addCorsHeaders(response)
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(body.email)) {
-      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Validate restaurant
     const validRestaurants = ['koto-restaurant', 'koto-cafe', 'koto-bar', 'koto-rooftop', 'other']
     if (!validRestaurants.includes(body.restaurant)) {
-      return NextResponse.json({ error: 'Invalid restaurant selection' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid restaurant selection' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Validate reservation date (must be in the future)
@@ -42,7 +54,11 @@ export async function POST(request: NextRequest) {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     if (reservationDate < today) {
-      return NextResponse.json({ error: 'Reservation date must be in the future' }, { status: 400 })
+      const response = NextResponse.json(
+        { error: 'Reservation date must be in the future' },
+        { status: 400 },
+      )
+      return addCorsHeaders(response)
     }
 
     // Validate reservation time
@@ -72,16 +88,18 @@ export async function POST(request: NextRequest) {
       '22:00',
     ]
     if (!validTimes.includes(body.reservationTime)) {
-      return NextResponse.json({ error: 'Invalid reservation time' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid reservation time' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Validate number of guests
     const numberOfGuests = parseInt(body.numberOfGuests)
     if (isNaN(numberOfGuests) || numberOfGuests < 1 || numberOfGuests > 10) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: 'Invalid number of guests (must be between 1 and 10)' },
         { status: 400 },
       )
+      return addCorsHeaders(response)
     }
 
     // Validate special occasion type if special occasion is checked
@@ -95,9 +113,16 @@ export async function POST(request: NextRequest) {
         'other',
       ]
       if (!validOccasionTypes.includes(body.specialOccasionType)) {
-        return NextResponse.json({ error: 'Invalid special occasion type' }, { status: 400 })
+        const response = NextResponse.json(
+          { error: 'Invalid special occasion type' },
+          { status: 400 },
+        )
+        return addCorsHeaders(response)
       }
     }
+
+    // Initialize Payload
+    const payload = await getPayload({ config: configPromise })
 
     // Create the booking form submission
     const bookingForm = await payload.create({
@@ -118,7 +143,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         message: 'Booking form submitted successfully',
@@ -126,20 +151,15 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     )
+    return addCorsHeaders(response)
   } catch (error) {
     console.error('Booking form submission error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const response = NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return addCorsHeaders(response)
   }
 }
 
 // Handle CORS preflight requests
 export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  })
+  return addCorsHeaders(new NextResponse(null, { status: 200 }))
 }

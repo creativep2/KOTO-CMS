@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOTO CMS Form Testing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-section h2 {
+            color: #333;
+            margin-top: 0;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .loading {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .endpoint-info {
+            background-color: #e2e3e5;
+            border: 1px solid #d6d8db;
+            color: #383d41;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>KOTO CMS Form Testing Dashboard</h1>
+    <p>Test all form endpoints with this comprehensive testing interface.</p>
+    
+    <div class="container">
+        <!-- Contact Form -->
+        <div class="form-section">
+            <h2>Contact Form</h2>
+            <div class="endpoint-info">
+                <strong>Endpoint:</strong> POST /api/forms/contact<br>
+                <strong>Required:</strong> fullName, email, message
+            </div>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="contactFullName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="contactFullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email <span class="required">*</span></label>
+                    <input type="email" id="contactEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactMessage">Message <span class="required">*</span></label>
+                    <textarea id="contactMessage" name="message" required></textarea>
+                </div>
+                <button type="submit">Submit Contact Form</button>
+            </form>
+            <div id="contactResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Donation Form -->
+        <div class="form-section">
+            <h2>Donation Form</h2>
+            <div class="endpoint-info">
+                <strong>Endpoint:</strong> POST /api/forms/donation<br>
+                <strong>Required:</strong> fullName, email, donationAmount, paymentMethod, howDidYouHearAboutUs
+            </div>
+            <form id="donationForm">
+                <div class="form-group">
+                    <label for="donationFullName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="donationFullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="donationEmail">Email <span class="required">*</span></label>
+                    <input type="email" id="donationEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="donationAmount">Donation Amount ($) <span class="required">*</span></label>
+                    <input type="number" id="donationAmount" name="donationAmount" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method <span class="required">*</span></label>
+                    <select id="paymentMethod" name="paymentMethod" required>
+                        <option value="">Select payment method</option>
+                        <option value="credit-card">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                        <option value="check">Check</option>
+                        <option value="cash">Cash</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="howDidYouHearAboutUs">How did you hear about us? <span class="required">*</span></label>
+                    <select id="howDidYouHearAboutUs" name="howDidYouHearAboutUs" required>
+                        <option value="">Select option</option>
+                        <option value="social-media">Social Media</option>
+                        <option value="website">Website</option>
+                        <option value="friend-family">Friend/Family</option>
+                        <option value="search-engine">Search Engine</option>
+                        <option value="advertisement">Advertisement</option>
+                        <option value="event">Event</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button type="submit">Submit Donation Form</button>
+            </form>
+            <div id="donationResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- In-Kind Support Form -->
+        <div class="form-section">
+            <h2>In-Kind Support Form</h2>
+            <div class="endpoint-info">
+                <strong>Endpoint:</strong> POST /api/forms/in-kind-support<br>
+                <strong>Required:</strong> fullName, email, phoneNumber, deliveryPreference, message
+            </div>
+            <form id="inKindForm">
+                <div class="form-group">
+                    <label for="inKindFullName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="inKindFullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="inKindEmail">Email <span class="required">*</span></label>
+                    <input type="email" id="inKindEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryPreference">Delivery Preference <span class="required">*</span></label>
+                    <select id="deliveryPreference" name="deliveryPreference" required>
+                        <option value="">Select preference</option>
+                        <option value="delivery">Delivery</option>
+                        <option value="pickup">Pickup</option>
+                        <option value="either">Either</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemType">Item Type (Optional)</label>
+                    <input type="text" id="itemType" name="itemType">
+                </div>
+                <div class="form-group">
+                    <label for="estimatedValue">Estimated Value ($) (Optional)</label>
+                    <input type="number" id="estimatedValue" name="estimatedValue" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="inKindMessage">Message <span class="required">*</span></label>
+                    <textarea id="inKindMessage" name="message" required></textarea>
+                </div>
+                <button type="submit">Submit In-Kind Support Form</button>
+            </form>
+            <div id="inKindResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="form-section">
+            <h2>Booking Form</h2>
+            <div class="endpoint-info">
+                <strong>Endpoint:</strong> POST /api/forms/booking<br>
+                <strong>Required:</strong> fullName, email, phoneNumber, nationality, restaurant, reservationDate, reservationTime, numberOfGuests
+            </div>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="bookingFullName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="bookingFullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingEmail">Email <span class="required">*</span></label>
+                    <input type="email" id="bookingEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingPhone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="bookingPhone" name="phoneNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="nationality">Nationality <span class="required">*</span></label>
+                    <input type="text" id="nationality" name="nationality" required>
+                </div>
+                <div class="form-group">
+                    <label for="restaurant">Restaurant <span class="required">*</span></label>
+                    <select id="restaurant" name="restaurant" required>
+                        <option value="">Select restaurant</option>
+                        <option value="koto-restaurant">Koto Restaurant</option>
+                        <option value="koto-cafe">Koto Cafe</option>
+                        <option value="koto-bar">Koto Bar</option>
+                        <option value="koto-rooftop">Koto Rooftop</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reservationDate">Reservation Date <span class="required">*</span></label>
+                    <input type="date" id="reservationDate" name="reservationDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="reservationTime">Reservation Time <span class="required">*</span></label>
+                    <select id="reservationTime" name="reservationTime" required>
+                        <option value="">Select time</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="11:30">11:30 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="12:30">12:30 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="13:30">1:30 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="14:30">2:30 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="15:30">3:30 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="16:30">4:30 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="17:30">5:30 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="18:30">6:30 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="19:30">7:30 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                        <option value="20:30">8:30 PM</option>
+                        <option value="21:00">9:00 PM</option>
+                        <option value="21:30">9:30 PM</option>
+                        <option value="22:00">10:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="numberOfGuests">Number of Guests <span class="required">*</span></label>
+                    <select id="numberOfGuests" name="numberOfGuests" required>
+                        <option value="">Select number</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="specialOccasion" name="specialOccasion">
+                        Special Occasion
+                    </label>
+                </div>
+                <div class="form-group" id="specialOccasionTypeGroup" style="display: none;">
+                    <label for="specialOccasionType">Special Occasion Type</label>
+                    <select id="specialOccasionType" name="specialOccasionType">
+                        <option value="">Select type</option>
+                        <option value="birthday">Birthday</option>
+                        <option value="anniversary">Anniversary</option>
+                        <option value="business-meeting">Business Meeting</option>
+                        <option value="date-night">Date Night</option>
+                        <option value="family-gathering">Family Gathering</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="specialRequests">Special Requests (Optional)</label>
+                    <textarea id="specialRequests" name="specialRequests"></textarea>
+                </div>
+                <button type="submit">Submit Booking Form</button>
+            </form>
+            <div id="bookingResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date to today for booking form
+        document.getElementById('reservationDate').min = new Date().toISOString().split('T')[0];
+
+        // Toggle special occasion type field
+        document.getElementById('specialOccasion').addEventListener('change', function() {
+            const typeGroup = document.getElementById('specialOccasionTypeGroup');
+            typeGroup.style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Generic form submission function
+        async function submitForm(formId, endpoint, resultId) {
+            const form = document.getElementById(formId);
+            const resultDiv = document.getElementById(resultId);
+            const submitButton = form.querySelector('button[type="submit"]');
+            
+            // Show loading state
+            resultDiv.className = 'result loading';
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Submitting form...';
+            submitButton.disabled = true;
+
+            try {
+                const formData = new FormData(form);
+                const data = {};
+                
+                // Convert FormData to object
+                for (let [key, value] of formData.entries()) {
+                    if (key === 'specialOccasion') {
+                        data[key] = value === 'on';
+                    } else if (key === 'donationAmount' || key === 'estimatedValue') {
+                        data[key] = parseFloat(value);
+                    } else if (key === 'donationAmount') {
+                        data[key] = parseFloat(value);
+                    } else {
+                        data[key] = value;
+                    }
+                }
+
+                // Remove empty optional fields
+                Object.keys(data).forEach(key => {
+                    if (data[key] === '' || data[key] === null || data[key] === undefined) {
+                        delete data[key];
+                    }
+                });
+
+                console.log('Submitting data:', data);
+                console.log('Using endpoint:', endpoint);
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Success!\nStatus: ${response.status}\nResponse: ${JSON.stringify(result, null, 2)}`;
+                    form.reset();
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Error!\nStatus: ${response.status}\nResponse: ${JSON.stringify(result, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                let errorMessage = `❌ Network Error!\n${error.message}`;
+                
+                // Provide helpful guidance for common errors
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += '\n\n💡 Troubleshooting:\n';
+                    errorMessage += '1. Make sure your development server is running (npm run dev)\n';
+                    errorMessage += '2. Check that the server is accessible at http://localhost:3000\n';
+                    errorMessage += '3. If using file:// protocol, ensure the server is running\n';
+                }
+                
+                resultDiv.textContent = errorMessage;
+                console.error('Form submission error:', error);
+            } finally {
+                submitButton.disabled = false;
+            }
+        }
+
+        // Base URL for API endpoints - with debugging
+        function getBaseUrl() {
+            const protocol = window.location.protocol;
+            const hostname = window.location.hostname;
+            const port = window.location.port;
+            
+            console.log('Current location:', {
+                protocol: protocol,
+                hostname: hostname,
+                port: port,
+                href: window.location.href
+            });
+            
+            // If we're on file:// protocol, use localhost:3000
+            if (protocol === 'file:') {
+                console.log('Detected file:// protocol, using http://localhost:3000');
+                return 'http://localhost:3000';
+            }
+            
+            // If we're already on localhost with a port, use that
+            if (hostname === 'localhost' && port) {
+                console.log('Detected localhost with port, using current origin');
+                return '';
+            }
+            
+            // If we're on localhost without port, assume 3000
+            if (hostname === 'localhost' && !port) {
+                console.log('Detected localhost without port, using http://localhost:3000');
+                return 'http://localhost:3000';
+            }
+            
+            console.log('Using empty base URL (same origin)');
+            return '';
+        }
+        
+        const baseUrl = getBaseUrl();
+        console.log('Final base URL:', baseUrl);
+
+        // Form event listeners
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const endpoint = baseUrl + '/api/forms/contact';
+            console.log('Contact form endpoint:', endpoint);
+            submitForm('contactForm', endpoint, 'contactResult');
+        });
+
+        document.getElementById('donationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const endpoint = baseUrl + '/api/forms/donation';
+            console.log('Donation form endpoint:', endpoint);
+            submitForm('donationForm', endpoint, 'donationResult');
+        });
+
+        document.getElementById('inKindForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const endpoint = baseUrl + '/api/forms/in-kind-support';
+            console.log('In-kind form endpoint:', endpoint);
+            submitForm('inKindForm', endpoint, 'inKindResult');
+        });
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const endpoint = baseUrl + '/api/forms/booking';
+            console.log('Booking form endpoint:', endpoint);
+            submitForm('bookingForm', endpoint, 'bookingResult');
+        });
+
+        // Auto-fill test data function
+        function fillTestData() {
+            const testData = {
+                contact: {
+                    fullName: 'John Doe',
+                    email: 'john.doe@example.com',
+                    message: 'This is a test message for the contact form.'
+                },
+                donation: {
+                    fullName: 'Jane Smith',
+                    email: 'jane.smith@example.com',
+                    donationAmount: 50.00,
+                    paymentMethod: 'credit-card',
+                    howDidYouHearAboutUs: 'social-media'
+                },
+                inKind: {
+                    fullName: 'Bob Johnson',
+                    email: 'bob.johnson@example.com',
+                    phoneNumber: '+1234567890',
+                    deliveryPreference: 'delivery',
+                    itemType: 'Kitchen Equipment',
+                    estimatedValue: 500.00,
+                    message: 'I would like to donate kitchen equipment to support your cause.'
+                },
+                booking: {
+                    fullName: 'Alice Brown',
+                    email: 'alice.brown@example.com',
+                    phoneNumber: '+1234567890',
+                    nationality: 'American',
+                    restaurant: 'koto-restaurant',
+                    reservationDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+                    reservationTime: '19:00',
+                    numberOfGuests: '4',
+                    specialOccasion: true,
+                    specialOccasionType: 'birthday',
+                    specialRequests: 'Window seat preferred, gluten-free options needed'
+                }
+            };
+
+            // Fill contact form
+            Object.keys(testData.contact).forEach(key => {
+                const element = document.querySelector(`#contactForm [name="${key}"]`);
+                if (element) element.value = testData.contact[key];
+            });
+
+            // Fill donation form
+            Object.keys(testData.donation).forEach(key => {
+                const element = document.querySelector(`#donationForm [name="${key}"]`);
+                if (element) element.value = testData.donation[key];
+            });
+
+            // Fill in-kind form
+            Object.keys(testData.inKind).forEach(key => {
+                const element = document.querySelector(`#inKindForm [name="${key}"]`);
+                if (element) element.value = testData.inKind[key];
+            });
+
+            // Fill booking form
+            Object.keys(testData.booking).forEach(key => {
+                const element = document.querySelector(`#bookingForm [name="${key}"]`);
+                if (element) {
+                    if (key === 'specialOccasion') {
+                        element.checked = testData.booking[key];
+                        // Trigger the change event to show/hide special occasion type
+                        element.dispatchEvent(new Event('change'));
+                    } else {
+                        element.value = testData.booking[key];
+                    }
+                }
+            });
+        }
+
+        // Add test data button
+        const testButton = document.createElement('button');
+        testButton.textContent = 'Fill Test Data';
+        testButton.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; z-index: 1000;';
+        testButton.onclick = fillTestData;
+        document.body.appendChild(testButton);
+    </script>
+</body>
+</html> 
