@@ -9,6 +9,11 @@ import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Blogs } from './collections/Blogs'
+import { BookingForm } from './collections/BookingForm'
+import { ContactForm } from './collections/ContactForm'
+import { DonationForm } from './collections/DonationForm'
+import { HeroBanner } from './collections/HeroBanner'
+import { InKindSupportForm } from './collections/InKindSupportForm'
 import { JobPosts } from './collections/JobPosts'
 import { Media } from './collections/Media'
 import { Merchandise } from './collections/Merchandise'
@@ -92,7 +97,20 @@ export default buildConfig({
     // Use push mode for development to automatically handle schema changes
     push: process.env.NODE_ENV === 'development',
   }),
-  collections: [Blogs, JobPosts, Media, Merchandise, Partners, Users, YouTubeEmbeds],
+  collections: [
+    Blogs,
+    BookingForm,
+    ContactForm,
+    DonationForm,
+    HeroBanner,
+    InKindSupportForm,
+    JobPosts,
+    Media,
+    Merchandise,
+    Partners,
+    Users,
+    YouTubeEmbeds,
+  ],
   cors: '*', // Temporary wildcard for testing - replace with specific domains later
   // globals: [Header, Footer], // Removed for API-only usage
   plugins: [...plugins, ...(storagePlugin ? [storagePlugin] : [])],

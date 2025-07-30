@@ -7,6 +7,8 @@ export const Merchandise: CollectionConfig = {
   admin: {
     useAsTitle: 'product_name',
     defaultColumns: ['product_name', 'organization_name', 'price', 'updatedAt'],
+    group: 'E-commerce',
+    description: 'Merchandise and product catalog',
   },
   access: {
     read: anyone, // Public read access for frontend

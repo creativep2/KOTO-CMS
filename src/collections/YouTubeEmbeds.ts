@@ -8,6 +8,7 @@ export const YouTubeEmbeds: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'videoId', 'createdAt'],
     description: 'Create YouTube embeds that can be inserted into blog posts',
+    group: 'Content Management',
   },
   access: {
     read: () => true, // Public read access for frontend

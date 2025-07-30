@@ -8,6 +8,8 @@ export const JobPosts: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'location', 'status', 'publishedAt', 'updatedAt'],
+    group: 'Content Management',
+    description: 'Job postings and career opportunities',
   },
   access: {
     read: () => true, // Public read access for frontend

@@ -12,6 +12,10 @@ import { editors } from '../access/editors'
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: {
+    group: 'Media & Assets',
+    description: 'Images, videos, and other media files',
+  },
   access: {
     create: authors, // Authors and above can upload
     delete: editors, // Only editors and admins can delete
@@ -85,6 +89,10 @@ export const Media: CollectionConfig = {
           label: 'Other',
           value: 'other',
         },
+        {
+          label: 'Hero Banner Images',
+          value: 'hero-banners',
+        },
       ],
       admin: {
         description: 'Category to help organize media files',
@@ -97,6 +105,87 @@ export const Media: CollectionConfig = {
       admin: {
         description: 'Whether this media is publicly accessible',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+      },
+    },
+    // Preserve existing database columns to prevent data loss
+    {
+      name: 'folder',
+      type: 'text',
+      admin: {
+        description: 'Folder path for organizing media files',
+        condition: () => false, // Hide from admin but preserve in schema
+      },
+    },
+    {
+      name: 'metadata_photographer',
+      type: 'text',
+      admin: {
+        description: 'Photographer metadata',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'metadata_copyright',
+      type: 'text',
+      admin: {
+        description: 'Copyright metadata',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'metadata_license',
+      type: 'text',
+      admin: {
+        description: 'License metadata',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'sizes_hero_url',
+      type: 'text',
+      admin: {
+        description: 'Hero size URL',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'sizes_hero_width',
+      type: 'number',
+      admin: {
+        description: 'Hero size width',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'sizes_hero_height',
+      type: 'number',
+      admin: {
+        description: 'Hero size height',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'sizes_hero_mime_type',
+      type: 'text',
+      admin: {
+        description: 'Hero size MIME type',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'sizes_hero_filesize',
+      type: 'number',
+      admin: {
+        description: 'Hero size file size',
+        condition: () => false,
+      },
+    },
+    {
+      name: 'sizes_hero_filename',
+      type: 'text',
+      admin: {
+        description: 'Hero size filename',
+        condition: () => false,
       },
     },
   ],

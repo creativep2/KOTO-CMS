@@ -11,6 +11,8 @@ export const Blogs: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'featured', 'status', 'publishedAt', 'updatedAt'],
+    group: 'Content Management',
+    description: 'Blog posts and articles for the website',
   },
   access: {
     read: () => true, // Public read access for frontend

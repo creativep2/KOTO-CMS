@@ -68,6 +68,11 @@ export interface Config {
   blocks: {};
   collections: {
     blogs: Blog;
+    'booking-forms': BookingForm;
+    'contact-forms': ContactForm;
+    'donation-forms': DonationForm;
+    'hero-banners': HeroBanner;
+    'in-kind-support-forms': InKindSupportForm;
     'job-posts': JobPost;
     media: Media;
     merchandise: Merchandise;
@@ -81,6 +86,11 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     blogs: BlogsSelect<false> | BlogsSelect<true>;
+    'booking-forms': BookingFormsSelect<false> | BookingFormsSelect<true>;
+    'contact-forms': ContactFormsSelect<false> | ContactFormsSelect<true>;
+    'donation-forms': DonationFormsSelect<false> | DonationFormsSelect<true>;
+    'hero-banners': HeroBannersSelect<false> | HeroBannersSelect<true>;
+    'in-kind-support-forms': InKindSupportFormsSelect<false> | InKindSupportFormsSelect<true>;
     'job-posts': JobPostsSelect<false> | JobPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
@@ -124,6 +134,8 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Blog posts and articles for the website
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blogs".
  */
@@ -200,6 +212,8 @@ export interface Blog {
   createdAt: string;
 }
 /**
+ * User accounts and authentication
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -233,6 +247,8 @@ export interface User {
   password?: string | null;
 }
 /**
+ * Images, videos, and other media files
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -267,11 +283,51 @@ export interface Media {
   /**
    * Category to help organize media files
    */
-  category?: ('blog-images' | 'profiles' | 'marketing' | 'documents' | 'other') | null;
+  category?: ('blog-images' | 'profiles' | 'marketing' | 'documents' | 'other' | 'hero-banners') | null;
   /**
    * Whether this media is publicly accessible
    */
   isPublic?: boolean | null;
+  /**
+   * Folder path for organizing media files
+   */
+  folder?: string | null;
+  /**
+   * Photographer metadata
+   */
+  metadata_photographer?: string | null;
+  /**
+   * Copyright metadata
+   */
+  metadata_copyright?: string | null;
+  /**
+   * License metadata
+   */
+  metadata_license?: string | null;
+  /**
+   * Hero size URL
+   */
+  sizes_hero_url?: string | null;
+  /**
+   * Hero size width
+   */
+  sizes_hero_width?: number | null;
+  /**
+   * Hero size height
+   */
+  sizes_hero_height?: number | null;
+  /**
+   * Hero size MIME type
+   */
+  sizes_hero_mime_type?: string | null;
+  /**
+   * Hero size file size
+   */
+  sizes_hero_filesize?: number | null;
+  /**
+   * Hero size filename
+   */
+  sizes_hero_filename?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -343,6 +399,271 @@ export interface Media {
   };
 }
 /**
+ * Restaurant reservation bookings and table management
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "booking-forms".
+ */
+export interface BookingForm {
+  id: number;
+  /**
+   * Full name of the person making the reservation
+   */
+  fullName: string;
+  /**
+   * Email address for reservation confirmation
+   */
+  email: string;
+  /**
+   * Phone number for contact regarding the reservation
+   */
+  phoneNumber: string;
+  /**
+   * Nationality of the person making the reservation
+   */
+  nationality: string;
+  /**
+   * Restaurant location for the reservation
+   */
+  restaurant: 'koto-restaurant' | 'koto-cafe' | 'koto-bar' | 'koto-rooftop' | 'other';
+  /**
+   * Date of the reservation
+   */
+  reservationDate: string;
+  /**
+   * Preferred reservation time
+   */
+  reservationTime:
+    | '11:00'
+    | '11:30'
+    | '12:00'
+    | '12:30'
+    | '13:00'
+    | '13:30'
+    | '14:00'
+    | '14:30'
+    | '15:00'
+    | '15:30'
+    | '16:00'
+    | '16:30'
+    | '17:00'
+    | '17:30'
+    | '18:00'
+    | '18:30'
+    | '19:00'
+    | '19:30'
+    | '20:00'
+    | '20:30'
+    | '21:00'
+    | '21:30'
+    | '22:00';
+  /**
+   * Number of guests for the reservation
+   */
+  numberOfGuests: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10';
+  /**
+   * Is this a special occasion?
+   */
+  specialOccasion?: boolean | null;
+  /**
+   * Type of special occasion (if applicable)
+   */
+  specialOccasionType?:
+    | ('birthday' | 'anniversary' | 'business-meeting' | 'date-night' | 'family-gathering' | 'other')
+    | null;
+  /**
+   * Any special requests or dietary requirements
+   */
+  specialRequests?: string | null;
+  /**
+   * Status of the reservation
+   */
+  status: 'pending' | 'confirmed' | 'seated' | 'completed' | 'cancelled' | 'no-show';
+  /**
+   * Reservation confirmation number
+   */
+  confirmationNumber?: string | null;
+  /**
+   * Internal notes about this reservation
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Contact form submissions from website visitors
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-forms".
+ */
+export interface ContactForm {
+  id: number;
+  /**
+   * Full name of the person submitting the form
+   */
+  fullName: string;
+  /**
+   * Email address of the person submitting the form
+   */
+  email: string;
+  /**
+   * Message content from the contact form
+   */
+  message: string;
+  /**
+   * Status of the contact form submission
+   */
+  status: 'new' | 'in-progress' | 'replied' | 'closed';
+  /**
+   * Internal notes about this submission
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Donation form submissions and payment tracking
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-forms".
+ */
+export interface DonationForm {
+  id: number;
+  /**
+   * Full name of the donor
+   */
+  fullName: string;
+  /**
+   * Email address of the donor
+   */
+  email: string;
+  /**
+   * Donation amount in dollars
+   */
+  donationAmount: number;
+  /**
+   * Preferred payment method
+   */
+  paymentMethod: 'credit-card' | 'paypal' | 'bank-transfer' | 'check' | 'cash' | 'other';
+  /**
+   * How did you hear about our cause?
+   */
+  howDidYouHearAboutUs:
+    | 'social-media'
+    | 'website'
+    | 'friend-family'
+    | 'search-engine'
+    | 'advertisement'
+    | 'event'
+    | 'other';
+  /**
+   * Status of the donation
+   */
+  status: 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
+  /**
+   * Payment transaction ID (if applicable)
+   */
+  transactionId?: string | null;
+  /**
+   * Internal notes about this donation
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Hero banner content for website homepage and landing pages
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-banners".
+ */
+export interface HeroBanner {
+  id: number;
+  /**
+   * The main title of the hero banner
+   */
+  title: string;
+  /**
+   * A short tagline or subtitle for the hero banner
+   */
+  tagline?: string | null;
+  /**
+   * Detailed description or content for the hero banner
+   */
+  description?: string | null;
+  /**
+   * Hero banner background image
+   */
+  image: number | Media;
+  /**
+   * Hero banner status
+   */
+  status: 'active' | 'inactive' | 'draft';
+  /**
+   * User who created this hero banner
+   */
+  createdBy?: (number | null) | User;
+  /**
+   * Feature this hero banner prominently
+   */
+  featured?: boolean | null;
+  /**
+   * Display order (lower numbers appear first)
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * In-kind support and donation offers
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "in-kind-support-forms".
+ */
+export interface InKindSupportForm {
+  id: number;
+  /**
+   * Full name of the person offering in-kind support
+   */
+  fullName: string;
+  /**
+   * Email address of the person offering in-kind support
+   */
+  email: string;
+  /**
+   * Phone number for contact
+   */
+  phoneNumber: string;
+  /**
+   * Preferred delivery or pickup method
+   */
+  deliveryPreference: 'delivery' | 'pickup' | 'either';
+  /**
+   * Details about the in-kind support being offered
+   */
+  message: string;
+  /**
+   * Status of the in-kind support request
+   */
+  status: 'new' | 'contacted' | 'arranged' | 'completed' | 'declined';
+  /**
+   * Type of item or service being offered
+   */
+  itemType?: string | null;
+  /**
+   * Estimated value of the in-kind donation (if applicable)
+   */
+  estimatedValue?: number | null;
+  /**
+   * Internal notes about this in-kind support request
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Job postings and career opportunities
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-posts".
  */
@@ -399,6 +720,8 @@ export interface JobPost {
   createdAt: string;
 }
 /**
+ * Merchandise and product catalog
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "merchandise".
  */
@@ -432,6 +755,8 @@ export interface Merchandise {
   createdAt: string;
 }
 /**
+ * Partner organizations and collaborations
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "partners".
  */
@@ -510,6 +835,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blogs';
         value: number | Blog;
+      } | null)
+    | ({
+        relationTo: 'booking-forms';
+        value: number | BookingForm;
+      } | null)
+    | ({
+        relationTo: 'contact-forms';
+        value: number | ContactForm;
+      } | null)
+    | ({
+        relationTo: 'donation-forms';
+        value: number | DonationForm;
+      } | null)
+    | ({
+        relationTo: 'hero-banners';
+        value: number | HeroBanner;
+      } | null)
+    | ({
+        relationTo: 'in-kind-support-forms';
+        value: number | InKindSupportForm;
       } | null)
     | ({
         relationTo: 'job-posts';
@@ -606,6 +951,90 @@ export interface BlogsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "booking-forms_select".
+ */
+export interface BookingFormsSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  phoneNumber?: T;
+  nationality?: T;
+  restaurant?: T;
+  reservationDate?: T;
+  reservationTime?: T;
+  numberOfGuests?: T;
+  specialOccasion?: T;
+  specialOccasionType?: T;
+  specialRequests?: T;
+  status?: T;
+  confirmationNumber?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-forms_select".
+ */
+export interface ContactFormsSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  message?: T;
+  status?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donation-forms_select".
+ */
+export interface DonationFormsSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  donationAmount?: T;
+  paymentMethod?: T;
+  howDidYouHearAboutUs?: T;
+  status?: T;
+  transactionId?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-banners_select".
+ */
+export interface HeroBannersSelect<T extends boolean = true> {
+  title?: T;
+  tagline?: T;
+  description?: T;
+  image?: T;
+  status?: T;
+  createdBy?: T;
+  featured?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "in-kind-support-forms_select".
+ */
+export interface InKindSupportFormsSelect<T extends boolean = true> {
+  fullName?: T;
+  email?: T;
+  phoneNumber?: T;
+  deliveryPreference?: T;
+  message?: T;
+  status?: T;
+  itemType?: T;
+  estimatedValue?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "job-posts_select".
  */
 export interface JobPostsSelect<T extends boolean = true> {
@@ -631,6 +1060,16 @@ export interface MediaSelect<T extends boolean = true> {
   uploadedBy?: T;
   category?: T;
   isPublic?: T;
+  folder?: T;
+  metadata_photographer?: T;
+  metadata_copyright?: T;
+  metadata_license?: T;
+  sizes_hero_url?: T;
+  sizes_hero_width?: T;
+  sizes_hero_height?: T;
+  sizes_hero_mime_type?: T;
+  sizes_hero_filesize?: T;
+  sizes_hero_filename?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

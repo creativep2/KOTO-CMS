@@ -5,6 +5,12 @@ import { admins } from '../../access/admins'
 
 export const Users: CollectionConfig = {
   slug: 'users',
+  admin: {
+    defaultColumns: ['name', 'email', 'role'],
+    useAsTitle: 'name',
+    group: 'System & Users',
+    description: 'User accounts and authentication',
+  },
   access: {
     admin: authenticated,
     create: admins,
@@ -16,10 +22,6 @@ export const Users: CollectionConfig = {
         id: { equals: user?.id },
       }
     },
-  },
-  admin: {
-    defaultColumns: ['name', 'email', 'role'],
-    useAsTitle: 'name',
   },
   auth: true,
   fields: [
