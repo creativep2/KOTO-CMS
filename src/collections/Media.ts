@@ -116,6 +116,16 @@ export const Media: CollectionConfig = {
         condition: () => false, // Hide from admin but preserve in schema
       },
     },
+    // Preserve folders_id relationship if it exists in the database
+    {
+      name: 'folders_id',
+      type: 'relationship',
+      relationTo: 'media',
+      admin: {
+        description: 'Parent folder relationship (preserved for compatibility)',
+        condition: () => false, // Hide from admin but preserve in schema
+      },
+    },
     {
       name: 'metadata_photographer',
       type: 'text',

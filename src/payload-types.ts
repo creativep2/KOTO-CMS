@@ -293,6 +293,10 @@ export interface Media {
    */
   folder?: string | null;
   /**
+   * Parent folder relationship (preserved for compatibility)
+   */
+  folders_id?: (number | null) | Media;
+  /**
    * Photographer metadata
    */
   metadata_photographer?: string | null;
@@ -1061,6 +1065,7 @@ export interface MediaSelect<T extends boolean = true> {
   category?: T;
   isPublic?: T;
   folder?: T;
+  folders_id?: T;
   metadata_photographer?: T;
   metadata_copyright?: T;
   metadata_license?: T;
