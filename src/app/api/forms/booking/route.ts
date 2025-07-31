@@ -135,8 +135,8 @@ export async function POST(request: NextRequest) {
         restaurant: body.restaurant,
         reservationDate: body.reservationDate,
         reservationTime: body.reservationTime,
-        numberOfGuests: body.numberOfGuests,
-        specialOccasion: body.specialOccasion || false,
+        numberOfGuests: numberOfGuests.toString(), // Convert back to string for text field
+        specialOccasion: body.specialOccasion ? 'true' : 'false', // Convert boolean to string for text field
         specialOccasionType: body.specialOccasionType || undefined,
         specialRequests: body.specialRequests || '',
         status: 'pending', // Default status - cannot be changed via API

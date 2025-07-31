@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
         itemType: body.itemType || '',
         estimatedValue:
           body.estimatedValue && !isNaN(parseFloat(body.estimatedValue))
-            ? parseFloat(body.estimatedValue)
+            ? parseFloat(body.estimatedValue).toString() // Convert back to string for text field
             : undefined,
         status: 'new', // Default status - cannot be changed via API
       },

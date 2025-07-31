@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       data: {
         fullName: body.fullName,
         email: body.email,
-        donationAmount: donationAmount,
+        donationAmount: donationAmount.toString(), // Convert back to string for text field
         paymentMethod: body.paymentMethod,
         howDidYouHearAboutUs: body.howDidYouHearAboutUs,
         status: 'pending', // Default status - cannot be changed via API
