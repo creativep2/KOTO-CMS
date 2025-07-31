@@ -46,6 +46,7 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the person offering in-kind support',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -54,6 +55,7 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Email address of the person offering in-kind support',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -62,6 +64,7 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Phone number for contact',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -70,6 +73,7 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Preferred delivery or pickup method',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -78,6 +82,7 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Details about the in-kind support being offered',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -117,6 +122,7 @@ export const InKindSupportForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Type of item or service being offered',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -124,6 +130,7 @@ export const InKindSupportForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Estimated value of the in-kind donation (if applicable)',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -132,6 +139,7 @@ export const InKindSupportForm: CollectionConfig = {
       admin: {
         description: 'Internal notes about this in-kind support request',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
   ],

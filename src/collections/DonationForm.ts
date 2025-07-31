@@ -39,6 +39,7 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the donor',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -47,6 +48,7 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Email address of the donor',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -55,6 +57,7 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Donation amount in dollars',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -63,6 +66,7 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Preferred payment method',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -71,6 +75,7 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'How did you hear about our cause?',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -111,6 +116,7 @@ export const DonationForm: CollectionConfig = {
       admin: {
         description: 'Payment transaction ID (if applicable)',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -119,6 +125,7 @@ export const DonationForm: CollectionConfig = {
       admin: {
         description: 'Internal notes about this donation',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
   ],

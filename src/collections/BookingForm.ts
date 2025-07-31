@@ -48,6 +48,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the person making the reservation',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -56,6 +57,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Email address for reservation confirmation',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -64,6 +66,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Phone number for contact regarding the reservation',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -72,6 +75,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Nationality of the person making the reservation',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -80,6 +84,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Restaurant location for the reservation',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -88,6 +93,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Date of the reservation',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -96,6 +102,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Preferred reservation time',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -104,6 +111,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Number of guests for the reservation',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -112,6 +120,7 @@ export const BookingForm: CollectionConfig = {
       defaultValue: false,
       admin: {
         description: 'Is this a special occasion?',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -119,6 +128,7 @@ export const BookingForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Type of special occasion (if applicable)',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -126,6 +136,7 @@ export const BookingForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Any special requests or dietary requirements',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -170,6 +181,7 @@ export const BookingForm: CollectionConfig = {
       admin: {
         description: 'Reservation confirmation number',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -178,6 +190,7 @@ export const BookingForm: CollectionConfig = {
       admin: {
         description: 'Internal notes about this reservation',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
   ],
