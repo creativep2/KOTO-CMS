@@ -53,6 +53,26 @@ export const HeroBanner: CollectionConfig = {
       },
     },
     {
+      name: 'button',
+      type: 'text',
+      admin: {
+        description: 'Button text (e.g., Apply, Register, Learn More)',
+      },
+    },
+    {
+      name: 'buttonLink',
+      type: 'text',
+      admin: {
+        description: 'URL for the button link',
+      },
+      validate: (val: unknown) => {
+        if (typeof val === 'string' && val && !/^https?:\/\/.+/.test(val)) {
+          return 'Please enter a valid URL starting with http:// or https://'
+        }
+        return true
+      },
+    },
+    {
       name: 'image',
       type: 'upload',
       relationTo: 'media',

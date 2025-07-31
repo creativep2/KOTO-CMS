@@ -88,6 +88,32 @@ export const Partners: CollectionConfig = {
       },
     },
     {
+      name: 'category',
+      type: 'select',
+      required: true,
+      options: [
+        {
+          label: 'Strategic Partners',
+          value: 'strategic',
+        },
+        {
+          label: 'Key Partners',
+          value: 'key',
+        },
+        {
+          label: 'Education Partners',
+          value: 'education',
+        },
+        {
+          label: 'Tourism and Hospitality Partners',
+          value: 'tourism-hospitality',
+        },
+      ],
+      admin: {
+        description: 'Category of the partner organization',
+      },
+    },
+    {
       name: 'createdBy',
       type: 'relationship',
       relationTo: 'users',
