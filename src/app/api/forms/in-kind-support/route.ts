@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import payload from 'payload'
 
+// CORS headers helper function
+function addCorsHeaders(response: NextResponse): NextResponse {
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+  return response
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -13,25 +21,28 @@ export async function POST(request: NextRequest) {
       !body.deliveryPreference ||
       !body.message
     ) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         {
           error:
             'Missing required fields: fullName, email, phoneNumber, deliveryPreference, and message are required',
         },
         { status: 400 },
       )
+      return addCorsHeaders(response)
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(body.email)) {
-      return NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid email format' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Validate delivery preference
     const validDeliveryPreferences = ['delivery', 'pickup', 'either']
     if (!validDeliveryPreferences.includes(body.deliveryPreference)) {
-      return NextResponse.json({ error: 'Invalid delivery preference' }, { status: 400 })
+      const response = NextResponse.json({ error: 'Invalid delivery preference' }, { status: 400 })
+      return addCorsHeaders(response)
     }
 
     // Create the in-kind support form submission
@@ -49,7 +60,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         message: 'In-kind support form submitted successfully',
@@ -57,20 +68,15 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     )
+    return addCorsHeaders(response)
   } catch (error) {
     console.error('In-kind support form submission error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    const response = NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return addCorsHeaders(response)
   }
 }
 
 // Handle CORS preflight requests
 export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  })
+  return addCorsHeaders(new NextResponse(null, { status: 200 }))
 }
