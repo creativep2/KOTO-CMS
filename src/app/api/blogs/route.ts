@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { REST_POST } from '@payloadcms/next/routes'
+import { REST_POST, REST_PUT, REST_DELETE } from '@payloadcms/next/routes'
 
 // Helper function to add CORS headers
 const addCorsHeaders = (response: NextResponse) => {
@@ -81,3 +81,9 @@ export async function GET(request: NextRequest) {
 
 // POST method - delegate to Payload's built-in API
 export const POST = REST_POST(configPromise)
+
+// PUT method - delegate to Payload's built-in API
+export const PUT = REST_PUT(configPromise)
+
+// DELETE method - delegate to Payload's built-in API
+export const DELETE = REST_DELETE(configPromise)
