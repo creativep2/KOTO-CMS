@@ -15,10 +15,19 @@ export const DonationForm: CollectionConfig = {
     description: 'Donation form submissions and payment tracking',
   },
   access: {
-    read: editors, // Only editors and admins can read submissions
+    read: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to read
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
     create: () => true, // Public can submit forms
-    update: formUpdateAccess, // All authenticated users can update (but only status field due to readOnly constraints)
-    delete: editors, // Only editors and admins can delete
+    update: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to update (but hook will restrict what they can edit)
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
+    delete: ({ req: { user } }) => {
+      // Only editors and admins can delete
+      return user?.role === 'admin' || user?.role === 'editor'
+    },
   },
   hooks: {
     beforeChange: [restrictFieldUpdates],
@@ -30,7 +39,6 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the donor',
-        readOnly: true,
       },
     },
     {
@@ -39,7 +47,6 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Email address of the donor',
-        readOnly: true,
       },
     },
     {
@@ -48,7 +55,6 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Donation amount in dollars',
-        readOnly: true,
       },
     },
     {
@@ -57,7 +63,6 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Preferred payment method',
-        readOnly: true,
       },
     },
     {
@@ -66,7 +71,6 @@ export const DonationForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'How did you hear about our cause?',
-        readOnly: true,
       },
     },
     {
@@ -107,7 +111,6 @@ export const DonationForm: CollectionConfig = {
       admin: {
         description: 'Payment transaction ID (if applicable)',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
-        readOnly: true,
       },
     },
     {
@@ -116,7 +119,6 @@ export const DonationForm: CollectionConfig = {
       admin: {
         description: 'Internal notes about this donation',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
-        readOnly: true,
       },
     },
   ],

@@ -24,10 +24,19 @@ export const BookingForm: CollectionConfig = {
     description: 'Restaurant reservation bookings and table management',
   },
   access: {
-    read: editors, // Only editors and admins can read submissions
+    read: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to read
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
     create: () => true, // Public can submit forms
-    update: formUpdateAccess, // All authenticated users can update (but only status field due to readOnly constraints)
-    delete: editors, // Only editors and admins can delete
+    update: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to update (but hook will restrict what they can edit)
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
+    delete: ({ req: { user } }) => {
+      // Only editors and admins can delete
+      return user?.role === 'admin' || user?.role === 'editor'
+    },
   },
   hooks: {
     beforeChange: [restrictFieldUpdates],
@@ -39,16 +48,14 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the person making the reservation',
-        readOnly: true,
       },
     },
     {
       name: 'email',
-      type: 'email',
+      type: 'text',
       required: true,
       admin: {
         description: 'Email address for reservation confirmation',
-        readOnly: true,
       },
     },
     {
@@ -57,7 +64,6 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Phone number for contact regarding the reservation',
-        readOnly: true,
       },
     },
     {
@@ -66,7 +72,6 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Nationality of the person making the reservation',
-        readOnly: true,
       },
     },
     {
@@ -75,7 +80,6 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Restaurant location for the reservation',
-        readOnly: true,
       },
     },
     {
@@ -84,7 +88,6 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Date of the reservation',
-        readOnly: true,
       },
     },
     {
@@ -93,7 +96,6 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Preferred reservation time',
-        readOnly: true,
       },
     },
     {
@@ -102,7 +104,6 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Number of guests for the reservation',
-        readOnly: true,
       },
     },
     {
@@ -111,7 +112,6 @@ export const BookingForm: CollectionConfig = {
       defaultValue: false,
       admin: {
         description: 'Is this a special occasion?',
-        readOnly: true,
       },
     },
     {
@@ -119,7 +119,6 @@ export const BookingForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Type of special occasion (if applicable)',
-        readOnly: true,
       },
     },
     {
@@ -127,7 +126,6 @@ export const BookingForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Any special requests or dietary requirements',
-        readOnly: true,
       },
     },
     {
@@ -172,7 +170,6 @@ export const BookingForm: CollectionConfig = {
       admin: {
         description: 'Reservation confirmation number',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
-        readOnly: true,
       },
     },
     {
@@ -181,7 +178,6 @@ export const BookingForm: CollectionConfig = {
       admin: {
         description: 'Internal notes about this reservation',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
-        readOnly: true,
       },
     },
   ],

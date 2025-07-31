@@ -22,10 +22,19 @@ export const InKindSupportForm: CollectionConfig = {
     description: 'In-kind support and donation offers',
   },
   access: {
-    read: editors, // Only editors and admins can read submissions
+    read: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to read
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
     create: () => true, // Public can submit forms
-    update: formUpdateAccess, // All authenticated users can update (but only status field due to readOnly constraints)
-    delete: editors, // Only editors and admins can delete
+    update: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to update (but hook will restrict what they can edit)
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
+    delete: ({ req: { user } }) => {
+      // Only editors and admins can delete
+      return user?.role === 'admin' || user?.role === 'editor'
+    },
   },
   hooks: {
     beforeChange: [restrictFieldUpdates],
@@ -37,7 +46,6 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the person offering in-kind support',
-        readOnly: true,
       },
     },
     {
@@ -46,7 +54,6 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Email address of the person offering in-kind support',
-        readOnly: true,
       },
     },
     {
@@ -55,7 +62,6 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Phone number for contact',
-        readOnly: true,
       },
     },
     {
@@ -64,7 +70,6 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Preferred delivery or pickup method',
-        readOnly: true,
       },
     },
     {
@@ -73,7 +78,6 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Details about the in-kind support being offered',
-        readOnly: true,
       },
     },
     {
@@ -113,7 +117,6 @@ export const InKindSupportForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Type of item or service being offered',
-        readOnly: true,
       },
     },
     {
@@ -121,7 +124,6 @@ export const InKindSupportForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Estimated value of the in-kind donation (if applicable)',
-        readOnly: true,
       },
     },
     {
@@ -130,7 +132,6 @@ export const InKindSupportForm: CollectionConfig = {
       admin: {
         description: 'Internal notes about this in-kind support request',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
-        readOnly: true,
       },
     },
   ],

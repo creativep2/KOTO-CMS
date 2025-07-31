@@ -15,10 +15,19 @@ export const ContactForm: CollectionConfig = {
     description: 'Contact form submissions from website visitors',
   },
   access: {
-    read: editors, // Only editors and admins can read submissions
+    read: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to read
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
     create: () => true, // Public can submit forms
-    update: formUpdateAccess, // All authenticated users can update (but only status field due to readOnly constraints)
-    delete: editors, // Only editors and admins can delete
+    update: ({ req: { user } }) => {
+      // Allow editors, authors, and admins to update (but hook will restrict what they can edit)
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+    },
+    delete: ({ req: { user } }) => {
+      // Only editors and admins can delete
+      return user?.role === 'admin' || user?.role === 'editor'
+    },
   },
   hooks: {
     beforeChange: [restrictFieldUpdates],
@@ -30,7 +39,7 @@ export const ContactForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the person submitting the form',
-        readOnly: true,
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -39,7 +48,7 @@ export const ContactForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Email address of the person submitting the form',
-        readOnly: true,
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -48,7 +57,7 @@ export const ContactForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Message content from the contact form',
-        readOnly: true,
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
     {
@@ -85,7 +94,7 @@ export const ContactForm: CollectionConfig = {
       admin: {
         description: 'Internal notes about this submission',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
-        readOnly: true,
+        readOnly: true, // Read-only for all users - only admin can edit via hook
       },
     },
   ],
