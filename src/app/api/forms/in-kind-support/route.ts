@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import payload from 'payload'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
 
 // CORS headers helper function
 function addCorsHeaders(response: NextResponse): NextResponse {
@@ -45,6 +46,9 @@ export async function POST(request: NextRequest) {
       return addCorsHeaders(response)
     }
 
+    // Initialize Payload
+    const payload = await getPayload({ config: configPromise })
+
     // Create the in-kind support form submission
     const inKindSupportForm = await payload.create({
       collection: 'in-kind-support-forms',
@@ -55,7 +59,10 @@ export async function POST(request: NextRequest) {
         deliveryPreference: body.deliveryPreference,
         message: body.message,
         itemType: body.itemType || '',
-        estimatedValue: body.estimatedValue ? parseFloat(body.estimatedValue) : undefined,
+        estimatedValue:
+          body.estimatedValue && !isNaN(parseFloat(body.estimatedValue))
+            ? parseFloat(body.estimatedValue)
+            : undefined,
         status: 'new', // Default status
       },
     })
@@ -71,6 +78,13 @@ export async function POST(request: NextRequest) {
     return addCorsHeaders(response)
   } catch (error) {
     console.error('In-kind support form submission error:', error)
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+      })
+    }
     const response = NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     return addCorsHeaders(response)
   }
