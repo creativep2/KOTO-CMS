@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 import { editors } from '../access/editors'
 import { authors } from '../access/authors'
+import { admins } from '../access/admins'
+import { formUpdateAccess } from '../access/formUpdateAccess'
+import { restrictFieldUpdates } from '../hooks/formFieldAccess'
 
 export const InKindSupportForm: CollectionConfig = {
   slug: 'in-kind-support-forms',
@@ -21,8 +24,11 @@ export const InKindSupportForm: CollectionConfig = {
   access: {
     read: editors, // Only editors and admins can read submissions
     create: () => true, // Public can submit forms
-    update: editors, // Only editors and admins can update
+    update: formUpdateAccess, // All authenticated users can update (but only status field due to readOnly constraints)
     delete: editors, // Only editors and admins can delete
+  },
+  hooks: {
+    beforeChange: [restrictFieldUpdates],
   },
   fields: [
     {
@@ -31,14 +37,16 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the person offering in-kind support',
+        readOnly: true,
       },
     },
     {
       name: 'email',
-      type: 'email',
+      type: 'text',
       required: true,
       admin: {
         description: 'Email address of the person offering in-kind support',
+        readOnly: true,
       },
     },
     {
@@ -47,36 +55,25 @@ export const InKindSupportForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Phone number for contact',
+        readOnly: true,
       },
     },
     {
       name: 'deliveryPreference',
-      type: 'select',
+      type: 'text',
       required: true,
-      options: [
-        {
-          label: 'Delivery',
-          value: 'delivery',
-        },
-        {
-          label: 'Pickup',
-          value: 'pickup',
-        },
-        {
-          label: 'Either',
-          value: 'either',
-        },
-      ],
       admin: {
         description: 'Preferred delivery or pickup method',
+        readOnly: true,
       },
     },
     {
       name: 'message',
-      type: 'textarea',
+      type: 'text',
       required: true,
       admin: {
         description: 'Details about the in-kind support being offered',
+        readOnly: true,
       },
     },
     {
@@ -108,6 +105,7 @@ export const InKindSupportForm: CollectionConfig = {
       ],
       admin: {
         description: 'Status of the in-kind support request',
+        // Status field is editable by all authenticated users
       },
     },
     {
@@ -115,22 +113,24 @@ export const InKindSupportForm: CollectionConfig = {
       type: 'text',
       admin: {
         description: 'Type of item or service being offered',
+        readOnly: true,
       },
     },
     {
       name: 'estimatedValue',
-      type: 'number',
-      min: 0,
+      type: 'text',
       admin: {
         description: 'Estimated value of the in-kind donation (if applicable)',
+        readOnly: true,
       },
     },
     {
       name: 'notes',
-      type: 'textarea',
+      type: 'text',
       admin: {
         description: 'Internal notes about this in-kind support request',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true,
       },
     },
   ],

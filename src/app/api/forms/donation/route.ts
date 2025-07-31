@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     // Initialize Payload
     const payload = await getPayload({ config: configPromise })
 
-    // Create the donation form submission
+    // Create the donation form submission with only allowed fields
     const donationForm = await payload.create({
       collection: 'donation-forms',
       data: {
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         donationAmount: donationAmount,
         paymentMethod: body.paymentMethod,
         howDidYouHearAboutUs: body.howDidYouHearAboutUs,
-        status: 'pending', // Default status
+        status: 'pending', // Default status - cannot be changed via API
       },
     })
 

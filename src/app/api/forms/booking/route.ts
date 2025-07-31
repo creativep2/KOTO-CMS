@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
     // Initialize Payload
     const payload = await getPayload({ config: configPromise })
 
-    // Create the booking form submission
+    // Create the booking form submission with only allowed fields
     const bookingForm = await payload.create({
       collection: 'booking-forms',
       data: {
@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
         specialOccasion: body.specialOccasion || false,
         specialOccasionType: body.specialOccasionType || undefined,
         specialRequests: body.specialRequests || '',
-        status: 'pending', // Default status
+        status: 'pending', // Default status - cannot be changed via API
       },
     })
 

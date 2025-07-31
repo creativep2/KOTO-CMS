@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 import { editors } from '../access/editors'
 import { authors } from '../access/authors'
+import { admins } from '../access/admins'
+import { formUpdateAccess } from '../access/formUpdateAccess'
+import { restrictFieldUpdates } from '../hooks/formFieldAccess'
 
 export const BookingForm: CollectionConfig = {
   slug: 'booking-forms',
@@ -23,8 +26,11 @@ export const BookingForm: CollectionConfig = {
   access: {
     read: editors, // Only editors and admins can read submissions
     create: () => true, // Public can submit forms
-    update: editors, // Only editors and admins can update
+    update: formUpdateAccess, // All authenticated users can update (but only status field due to readOnly constraints)
     delete: editors, // Only editors and admins can delete
+  },
+  hooks: {
+    beforeChange: [restrictFieldUpdates],
   },
   fields: [
     {
@@ -33,6 +39,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Full name of the person making the reservation',
+        readOnly: true,
       },
     },
     {
@@ -41,6 +48,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Email address for reservation confirmation',
+        readOnly: true,
       },
     },
     {
@@ -49,6 +57,7 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Phone number for contact regarding the reservation',
+        readOnly: true,
       },
     },
     {
@@ -57,248 +66,68 @@ export const BookingForm: CollectionConfig = {
       required: true,
       admin: {
         description: 'Nationality of the person making the reservation',
+        readOnly: true,
       },
     },
     {
       name: 'restaurant',
-      type: 'select',
+      type: 'text',
       required: true,
-      options: [
-        {
-          label: 'KOTO Restaurant',
-          value: 'koto-restaurant',
-        },
-        {
-          label: 'KOTO Café',
-          value: 'koto-cafe',
-        },
-        {
-          label: 'KOTO Bar',
-          value: 'koto-bar',
-        },
-        {
-          label: 'KOTO Rooftop',
-          value: 'koto-rooftop',
-        },
-        {
-          label: 'Other',
-          value: 'other',
-        },
-      ],
       admin: {
         description: 'Restaurant location for the reservation',
+        readOnly: true,
       },
     },
     {
       name: 'reservationDate',
-      type: 'date',
+      type: 'text',
       required: true,
       admin: {
         description: 'Date of the reservation',
-        date: {
-          pickerAppearance: 'dayOnly',
-        },
+        readOnly: true,
       },
     },
     {
       name: 'reservationTime',
-      type: 'select',
+      type: 'text',
       required: true,
-      options: [
-        {
-          label: '11:00 AM',
-          value: '11:00',
-        },
-        {
-          label: '11:30 AM',
-          value: '11:30',
-        },
-        {
-          label: '12:00 PM',
-          value: '12:00',
-        },
-        {
-          label: '12:30 PM',
-          value: '12:30',
-        },
-        {
-          label: '1:00 PM',
-          value: '13:00',
-        },
-        {
-          label: '1:30 PM',
-          value: '13:30',
-        },
-        {
-          label: '2:00 PM',
-          value: '14:00',
-        },
-        {
-          label: '2:30 PM',
-          value: '14:30',
-        },
-        {
-          label: '3:00 PM',
-          value: '15:00',
-        },
-        {
-          label: '3:30 PM',
-          value: '15:30',
-        },
-        {
-          label: '4:00 PM',
-          value: '16:00',
-        },
-        {
-          label: '4:30 PM',
-          value: '16:30',
-        },
-        {
-          label: '5:00 PM',
-          value: '17:00',
-        },
-        {
-          label: '5:30 PM',
-          value: '17:30',
-        },
-        {
-          label: '6:00 PM',
-          value: '18:00',
-        },
-        {
-          label: '6:30 PM',
-          value: '18:30',
-        },
-        {
-          label: '7:00 PM',
-          value: '19:00',
-        },
-        {
-          label: '7:30 PM',
-          value: '19:30',
-        },
-        {
-          label: '8:00 PM',
-          value: '20:00',
-        },
-        {
-          label: '8:30 PM',
-          value: '20:30',
-        },
-        {
-          label: '9:00 PM',
-          value: '21:00',
-        },
-        {
-          label: '9:30 PM',
-          value: '21:30',
-        },
-        {
-          label: '10:00 PM',
-          value: '22:00',
-        },
-      ],
       admin: {
         description: 'Preferred reservation time',
+        readOnly: true,
       },
     },
     {
       name: 'numberOfGuests',
-      type: 'select',
+      type: 'text',
       required: true,
-      options: [
-        {
-          label: '1 Guest',
-          value: '1',
-        },
-        {
-          label: '2 Guests',
-          value: '2',
-        },
-        {
-          label: '3 Guests',
-          value: '3',
-        },
-        {
-          label: '4 Guests',
-          value: '4',
-        },
-        {
-          label: '5 Guests',
-          value: '5',
-        },
-        {
-          label: '6 Guests',
-          value: '6',
-        },
-        {
-          label: '7 Guests',
-          value: '7',
-        },
-        {
-          label: '8 Guests',
-          value: '8',
-        },
-        {
-          label: '9 Guests',
-          value: '9',
-        },
-        {
-          label: '10+ Guests',
-          value: '10',
-        },
-      ],
       admin: {
         description: 'Number of guests for the reservation',
+        readOnly: true,
       },
     },
     {
       name: 'specialOccasion',
-      type: 'checkbox',
+      type: 'text',
       defaultValue: false,
       admin: {
         description: 'Is this a special occasion?',
+        readOnly: true,
       },
     },
     {
       name: 'specialOccasionType',
-      type: 'select',
-      options: [
-        {
-          label: 'Birthday',
-          value: 'birthday',
-        },
-        {
-          label: 'Anniversary',
-          value: 'anniversary',
-        },
-        {
-          label: 'Business Meeting',
-          value: 'business-meeting',
-        },
-        {
-          label: 'Date Night',
-          value: 'date-night',
-        },
-        {
-          label: 'Family Gathering',
-          value: 'family-gathering',
-        },
-        {
-          label: 'Other',
-          value: 'other',
-        },
-      ],
+      type: 'text',
       admin: {
         description: 'Type of special occasion (if applicable)',
-        condition: (data) => data.specialOccasion === true,
+        readOnly: true,
       },
     },
     {
       name: 'specialRequests',
-      type: 'textarea',
+      type: 'text',
       admin: {
         description: 'Any special requests or dietary requirements',
+        readOnly: true,
       },
     },
     {
@@ -334,6 +163,7 @@ export const BookingForm: CollectionConfig = {
       ],
       admin: {
         description: 'Status of the reservation',
+        // Status field is editable by all authenticated users
       },
     },
     {
@@ -342,14 +172,16 @@ export const BookingForm: CollectionConfig = {
       admin: {
         description: 'Reservation confirmation number',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true,
       },
     },
     {
       name: 'notes',
-      type: 'textarea',
+      type: 'text',
       admin: {
         description: 'Internal notes about this reservation',
         condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        readOnly: true,
       },
     },
   ],

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import { REST_POST } from '@payloadcms/next/routes'
 
 // Helper function to add CORS headers
 const addCorsHeaders = (response: NextResponse) => {
@@ -15,6 +16,7 @@ export async function OPTIONS(request: NextRequest) {
   return addCorsHeaders(new NextResponse(null, { status: 200 }))
 }
 
+// GET method for fetching blogs with custom filtering and pagination
 export async function GET(request: NextRequest) {
   try {
     const payload = await getPayload({ config: configPromise })
@@ -76,3 +78,6 @@ export async function GET(request: NextRequest) {
     return addCorsHeaders(response)
   }
 }
+
+// POST method - delegate to Payload's built-in API
+export const POST = REST_POST(configPromise)

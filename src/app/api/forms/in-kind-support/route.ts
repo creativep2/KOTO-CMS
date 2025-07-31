@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Initialize Payload
     const payload = await getPayload({ config: configPromise })
 
-    // Create the in-kind support form submission
+    // Create the in-kind support form submission with only allowed fields
     const inKindSupportForm = await payload.create({
       collection: 'in-kind-support-forms',
       data: {
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
           body.estimatedValue && !isNaN(parseFloat(body.estimatedValue))
             ? parseFloat(body.estimatedValue)
             : undefined,
-        status: 'new', // Default status
+        status: 'new', // Default status - cannot be changed via API
       },
     })
 

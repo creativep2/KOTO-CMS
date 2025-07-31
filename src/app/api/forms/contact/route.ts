@@ -33,14 +33,14 @@ export async function POST(request: NextRequest) {
     // Initialize Payload
     const payload = await getPayload({ config: configPromise })
 
-    // Create the contact form submission
+    // Create the contact form submission with only allowed fields
     const contactForm = await payload.create({
       collection: 'contact-forms',
       data: {
         fullName: body.fullName,
         email: body.email,
         message: body.message,
-        status: 'new', // Default status
+        status: 'new', // Default status - cannot be changed via API
       },
     })
 

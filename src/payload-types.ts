@@ -429,7 +429,7 @@ export interface BookingForm {
   /**
    * Restaurant location for the reservation
    */
-  restaurant: 'koto-restaurant' | 'koto-cafe' | 'koto-bar' | 'koto-rooftop' | 'other';
+  restaurant: string;
   /**
    * Date of the reservation
    */
@@ -437,44 +437,19 @@ export interface BookingForm {
   /**
    * Preferred reservation time
    */
-  reservationTime:
-    | '11:00'
-    | '11:30'
-    | '12:00'
-    | '12:30'
-    | '13:00'
-    | '13:30'
-    | '14:00'
-    | '14:30'
-    | '15:00'
-    | '15:30'
-    | '16:00'
-    | '16:30'
-    | '17:00'
-    | '17:30'
-    | '18:00'
-    | '18:30'
-    | '19:00'
-    | '19:30'
-    | '20:00'
-    | '20:30'
-    | '21:00'
-    | '21:30'
-    | '22:00';
+  reservationTime: string;
   /**
    * Number of guests for the reservation
    */
-  numberOfGuests: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10';
+  numberOfGuests: string;
   /**
    * Is this a special occasion?
    */
-  specialOccasion?: boolean | null;
+  specialOccasion?: string | null;
   /**
    * Type of special occasion (if applicable)
    */
-  specialOccasionType?:
-    | ('birthday' | 'anniversary' | 'business-meeting' | 'date-night' | 'family-gathering' | 'other')
-    | null;
+  specialOccasionType?: string | null;
   /**
    * Any special requests or dietary requirements
    */
@@ -544,22 +519,15 @@ export interface DonationForm {
   /**
    * Donation amount in dollars
    */
-  donationAmount: number;
+  donationAmount: string;
   /**
    * Preferred payment method
    */
-  paymentMethod: 'credit-card' | 'paypal' | 'bank-transfer' | 'check' | 'cash' | 'other';
+  paymentMethod: string;
   /**
    * How did you hear about our cause?
    */
-  howDidYouHearAboutUs:
-    | 'social-media'
-    | 'website'
-    | 'friend-family'
-    | 'search-engine'
-    | 'advertisement'
-    | 'event'
-    | 'other';
+  howDidYouHearAboutUs: string;
   /**
    * Status of the donation
    */
@@ -641,7 +609,7 @@ export interface InKindSupportForm {
   /**
    * Preferred delivery or pickup method
    */
-  deliveryPreference: 'delivery' | 'pickup' | 'either';
+  deliveryPreference: string;
   /**
    * Details about the in-kind support being offered
    */
@@ -657,7 +625,7 @@ export interface InKindSupportForm {
   /**
    * Estimated value of the in-kind donation (if applicable)
    */
-  estimatedValue?: number | null;
+  estimatedValue?: string | null;
   /**
    * Internal notes about this in-kind support request
    */
