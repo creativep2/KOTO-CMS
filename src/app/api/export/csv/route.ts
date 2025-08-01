@@ -73,8 +73,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
+export async function GET(_request: NextRequest) {
+  const { searchParams } = new URL(_request.url)
   const collection = searchParams.get('collection')
 
   if (!collection) {

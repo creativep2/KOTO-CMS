@@ -20,7 +20,7 @@ export async function GET(_request: NextRequest) {
     const payload = await getPayload({ config: configPromise })
 
     // Parse query parameters from the request URL
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = new URL(_request.url)
     const depth = searchParams.get('depth') || '1' // Default to depth 1 for latest job posts
     const limit = searchParams.get('limit') || '5' // Default to 5 latest job posts
     const location = searchParams.get('location')
