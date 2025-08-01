@@ -1,5 +1,6 @@
 import React from 'react'
 import { Download } from 'lucide-react'
+import Link from 'next/link'
 
 export const CSVExportLink: React.FC = () => {
   return (
@@ -9,7 +10,7 @@ export const CSVExportLink: React.FC = () => {
       right: '20px',
       zIndex: 1000
     }}>
-      <a
+      <Link
         href="/admin/csv"
         style={{
           display: 'flex',
@@ -38,7 +39,7 @@ export const CSVExportLink: React.FC = () => {
       >
         <Download size={16} />
         Export CSV
-      </a>
+      </Link>
     </div>
   )
 } 

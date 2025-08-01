@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Download, X } from 'lucide-react'
+import Link from 'next/link'
 
 export const FloatingExportButton: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -12,7 +13,7 @@ export const FloatingExportButton: React.FC = () => {
     { slug: 'in-kind-support-forms', label: 'In-Kind Support', color: '#f97316' },
   ]
 
-  const handleExport = async (collection: string, label: string) => {
+  const handleExport = async (collection: string, _label: string) => {
     setExporting(collection)
     try {
       const response = await fetch('/api/export/csv', {
@@ -146,7 +147,7 @@ export const FloatingExportButton: React.FC = () => {
           ))}
 
           <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid #e5e7eb' }}>
-            <a
+            <Link
               href="/admin/export"
               style={{
                 display: 'block',
@@ -168,7 +169,7 @@ export const FloatingExportButton: React.FC = () => {
               }}
             >
               📊 Export Dashboard
-            </a>
+            </Link>
           </div>
         </div>
       )}

@@ -1,10 +1,11 @@
 import React from 'react'
 import { Download } from 'lucide-react'
+import Link from 'next/link'
 
 export const AdminNavigation: React.FC = () => {
   return (
     <div className="admin-navigation">
-      <a
+      <Link
         href="/admin/forms-export"
         className="admin-nav-link"
         style={{
@@ -26,7 +27,7 @@ export const AdminNavigation: React.FC = () => {
       >
         <Download size={16} />
         <span>CSV Export</span>
-      </a>
+      </Link>
     </div>
   )
 }

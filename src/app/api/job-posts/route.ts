@@ -12,16 +12,16 @@ const addCorsHeaders = (response: NextResponse) => {
 }
 
 // Handle preflight OPTIONS requests
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS(_request: NextRequest) {
   return addCorsHeaders(new NextResponse(null, { status: 200 }))
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const payload = await getPayload({ config: configPromise })
 
     // Parse query parameters from the request URL
-    const { searchParams } = new URL(request.url)
+    const { searchParams } = new URL(_request.url)
     const depth = searchParams.get('depth') || '0'
     const limit = searchParams.get('limit') || '10'
     const page = searchParams.get('page') || '1'

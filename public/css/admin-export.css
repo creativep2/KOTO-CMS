@@ -1,0 +1,97 @@
+/* Admin Export Button Styles */
+
+/* Add export button to collection list headers */
+[data-payload-list-header] {
+  position: relative;
+}
+
+[data-payload-list-header]::after {
+  content: "📥 Export CSV";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #007bff;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+[data-payload-list-header]::after:hover {
+  background-color: #0056b3;
+}
+
+/* Floating export button */
+.floating-export-btn {
+  position: fixed !important;
+  bottom: 20px !important;
+  right: 20px !important;
+  z-index: 1000 !important;
+}
+
+.floating-export-btn button {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background-color: #007bff !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease !important;
+  font-size: 24px !important;
+}
+
+.floating-export-btn button:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Export button in admin actions */
+.admin-export-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 12px !important;
+  background-color: #007bff !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s !important;
+  margin-left: 8px !important;
+  text-decoration: none !important;
+}
+
+.admin-export-btn:hover {
+  background-color: #0056b3 !important;
+}
+
+/* Export dashboard link */
+.export-dashboard-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 8px 16px !important;
+  background-color: #28a745 !important;
+  color: white !important;
+  text-decoration: none !important;
+  border-radius: 4px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s !important;
+}
+
+.export-dashboard-link:hover {
+  background-color: #218838 !important;
+} 

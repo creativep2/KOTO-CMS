@@ -1,4 +1,4 @@
-import type { PayloadRequest } from 'payload'
+
 
 export interface CSVExportOptions {
   collection: string

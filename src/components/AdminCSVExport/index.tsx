@@ -1,5 +1,4 @@
 import React from 'react'
-import { useConfig } from 'payload/components/utilities'
 import { Button } from '../ui/button'
 import { Download } from 'lucide-react'
 

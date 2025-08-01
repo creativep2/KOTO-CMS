@@ -1,9 +1,5 @@
 import type { CollectionConfig } from 'payload'
 
-import { editors } from '../access/editors'
-import { authors } from '../access/authors'
-import { admins } from '../access/admins'
-import { formUpdateAccess } from '../access/formUpdateAccess'
 import { restrictFieldUpdates } from '../hooks/formFieldAccess'
 
 export const BookingForm: CollectionConfig = {
