@@ -564,6 +564,14 @@ export interface HeroBanner {
    */
   description?: string | null;
   /**
+   * Button text (e.g., Apply, Register, Learn More)
+   */
+  button?: string | null;
+  /**
+   * URL for the button link
+   */
+  buttonLink?: string | null;
+  /**
    * Hero banner background image
    */
   image: number | Media;
@@ -754,6 +762,10 @@ export interface Partner {
    * Partner status
    */
   status: 'active' | 'inactive';
+  /**
+   * Category of the partner organization
+   */
+  category: 'strategic' | 'key' | 'education' | 'tourism-hospitality';
   /**
    * User who created this partner entry
    */
@@ -980,6 +992,8 @@ export interface HeroBannersSelect<T extends boolean = true> {
   title?: T;
   tagline?: T;
   description?: T;
+  button?: T;
+  buttonLink?: T;
   image?: T;
   status?: T;
   createdBy?: T;
@@ -1153,6 +1167,7 @@ export interface PartnersSelect<T extends boolean = true> {
   website?: T;
   description?: T;
   status?: T;
+  category?: T;
   createdBy?: T;
   featured?: T;
   slug?: T;
