@@ -180,6 +180,47 @@ export interface Blog {
     [k: string]: unknown;
   };
   /**
+   * Add a gallery of images to display with the blog post
+   */
+  gallery?:
+    | {
+        images?:
+          | {
+              /**
+               * Select an image for the gallery
+               */
+              image: number | Media;
+              /**
+               * Optional caption for this image
+               */
+              caption?: string | null;
+              /**
+               * Alt text for accessibility
+               */
+              alt?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Choose how the gallery images should be displayed
+         */
+        layout?: ('grid' | 'masonry' | 'carousel') | null;
+        /**
+         * Number of columns for grid layout
+         */
+        columns?: ('2' | '3' | '4' | '5') | null;
+        /**
+         * Display captions below images
+         */
+        showCaptions?: boolean | null;
+        /**
+         * Allow clicking images to view in lightbox
+         */
+        enableLightbox?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Date when the blog post was uploaded
    */
   upload_date: string;
@@ -917,6 +958,23 @@ export interface BlogsSelect<T extends boolean = true> {
   status?: T;
   header_image?: T;
   paragraph?: T;
+  gallery?:
+    | T
+    | {
+        images?:
+          | T
+          | {
+              image?: T;
+              caption?: T;
+              alt?: T;
+              id?: T;
+            };
+        layout?: T;
+        columns?: T;
+        showCaptions?: T;
+        enableLightbox?: T;
+        id?: T;
+      };
   upload_date?: T;
   publishedAt?: T;
   slug?: T;

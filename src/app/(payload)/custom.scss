@@ -1,0 +1,67 @@
+/* Custom styles for KOTO CMS */
+
+/* Gallery component utilities */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+/* Gallery container styles */
+.gallery-container {
+  width: 100%;
+}
+
+/* Lightbox overlay */
+.gallery-lightbox {
+  backdrop-filter: blur(4px);
+}
+
+/* Gallery image hover effects */
+.gallery-image-hover {
+  transition: transform 0.3s ease-in-out;
+}
+
+.gallery-image-hover:hover {
+  transform: scale(1.02);
+}
+
+/* Masonry layout improvements */
+.gallery-masonry {
+  column-gap: 1rem;
+}
+
+.gallery-masonry > * {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+/* Carousel navigation */
+.gallery-carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.gallery-carousel-nav:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.gallery-carousel-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -142,6 +142,128 @@ export const Blogs: CollectionConfig = {
       },
     },
     {
+      name: 'gallery',
+      type: 'array',
+      label: 'Gallery',
+      admin: {
+        description: 'Add a gallery of images to display with the blog post',
+      },
+      fields: [
+        {
+          name: 'images',
+          type: 'array',
+          label: 'Gallery Images',
+          minRows: 1,
+          maxRows: 20,
+          labels: {
+            singular: 'Image',
+            plural: 'Images',
+          },
+          fields: [
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              admin: {
+                description: 'Select an image for the gallery',
+              },
+            },
+            {
+              name: 'caption',
+              type: 'text',
+              admin: {
+                description: 'Optional caption for this image',
+              },
+            },
+            {
+              name: 'alt',
+              type: 'text',
+              admin: {
+                description: 'Alt text for accessibility',
+              },
+            },
+          ],
+          admin: {
+            components: {
+              RowLabel: ({ data, index }: { data: any; index: number }) => {
+                return data?.image?.filename || `Image ${String(index + 1).padStart(2, '0')}`
+              },
+            },
+          },
+        },
+        {
+          name: 'layout',
+          type: 'select',
+          label: 'Gallery Layout',
+          defaultValue: 'grid',
+          options: [
+            {
+              label: 'Grid',
+              value: 'grid',
+            },
+            {
+              label: 'Masonry',
+              value: 'masonry',
+            },
+            {
+              label: 'Carousel',
+              value: 'carousel',
+            },
+          ],
+          admin: {
+            description: 'Choose how the gallery images should be displayed',
+          },
+        },
+        {
+          name: 'columns',
+          type: 'select',
+          label: 'Number of Columns',
+          defaultValue: '3',
+          options: [
+            {
+              label: '2 Columns',
+              value: '2',
+            },
+            {
+              label: '3 Columns',
+              value: '3',
+            },
+            {
+              label: '4 Columns',
+              value: '4',
+            },
+            {
+              label: '5 Columns',
+              value: '5',
+            },
+          ],
+          admin: {
+            description: 'Number of columns for grid layout',
+            condition: (data: any) => data?.layout === 'grid',
+          },
+        },
+        {
+          name: 'showCaptions',
+          type: 'checkbox',
+          label: 'Show Image Captions',
+          defaultValue: true,
+          admin: {
+            description: 'Display captions below images',
+          },
+        },
+        {
+          name: 'enableLightbox',
+          type: 'checkbox',
+          label: 'Enable Lightbox',
+          defaultValue: true,
+          admin: {
+            description: 'Allow clicking images to view in lightbox',
+          },
+        },
+      ],
+    },
+    {
       name: 'upload_date',
       type: 'date',
       required: true,

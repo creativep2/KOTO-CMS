@@ -1,0 +1,63 @@
+{
+  "gallery": [
+    {
+      "images": [
+      {
+        "image": {
+          "id": 1,
+          "filename": "restaurant-interior-1.jpg",
+          "alt": "KOTO restaurant interior showing warm lighting and wooden tables",
+          "width": 1920,
+          "height": 1080,
+          "url": "/media/restaurant-interior-1.jpg",
+          "updatedAt": "2024-01-15T10:30:00.000Z"
+        },
+        "caption": "Our main dining area with warm, inviting atmosphere",
+        "alt": "KOTO restaurant interior"
+      },
+      {
+        "image": {
+          "id": 2,
+          "filename": "chef-cooking.jpg",
+          "alt": "Chef preparing traditional Vietnamese dish",
+          "width": 1600,
+          "height": 1200,
+          "url": "/media/chef-cooking.jpg",
+          "updatedAt": "2024-01-15T10:30:00.000Z"
+        },
+        "caption": "Our head chef preparing signature dishes",
+        "alt": "Chef in action"
+      },
+      {
+        "image": {
+          "id": 3,
+          "filename": "signature-dish.jpg",
+          "alt": "Beautifully plated signature Vietnamese dish",
+          "width": 1200,
+          "height": 800,
+          "url": "/media/signature-dish.jpg",
+          "updatedAt": "2024-01-15T10:30:00.000Z"
+        },
+        "caption": "Our signature pho with fresh herbs and tender beef",
+        "alt": "Signature pho dish"
+      },
+      {
+        "image": {
+          "id": 4,
+          "filename": "team-photo.jpg",
+          "alt": "KOTO team members smiling and posing together",
+          "width": 1920,
+          "height": 1080,
+          "url": "/media/team-photo.jpg",
+          "updatedAt": "2024-01-15T10:30:00.000Z"
+        },
+        "caption": "Our dedicated team working together to serve our community",
+        "alt": "KOTO team"
+      }
+    ],
+    "layout": "grid",
+    "columns": "3",
+    "showCaptions": true,
+    "enableLightbox": true
+  }
+}
