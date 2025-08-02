@@ -186,7 +186,7 @@ export const Blogs: CollectionConfig = {
           ],
           admin: {
             components: {
-              RowLabel: ({ data, index }: { data: any; index: number }) => {
+              RowLabel: ({ data, index }: { data: any; index: number }): string => {
                 return data?.image?.filename || `Image ${String(index + 1).padStart(2, '0')}`
               },
             },
