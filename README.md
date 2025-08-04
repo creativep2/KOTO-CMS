@@ -1,321 +1,625 @@
-# Payload Website Template
+# KOTO CMS - Content Management System
 
-This is the official [Payload Website Template](https://github.com/payloadcms/payload/blob/main/templates/website). Use it to power websites, blogs, or portfolios from small to enterprise. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
+This is a custom Content Management System built with [Payload CMS](https://payloadcms.com) and [Next.js](https://nextjs.org) for KOTO, featuring a comprehensive admin panel, API-first architecture, and specialized content management capabilities.
 
-This template is right for you if you are working on:
+## 🎯 Project Overview
 
-- A personal or enterprise-grade website, blog, or portfolio
-- A content publishing platform with a fully featured publication workflow
-- Exploring the capabilities of Payload
+KOTO CMS is designed for managing a restaurant/foundation website with the following core capabilities:
 
-Core features:
+- **Content Management**: Blog posts, job listings, hero banners, and media
+- **Form Management**: Contact, donation, booking, and in-kind support forms
+- **User Management**: Role-based access control with admin, editor, author, and viewer roles
+- **API-First Architecture**: RESTful APIs for frontend integration
+- **CSV Export**: Comprehensive data export capabilities
+- **Media Management**: Image and video handling with cloud storage support
 
-- [Pre-configured Payload Config](#how-it-works)
-- [Authentication](#users-authentication)
-- [Access Control](#access-control)
-- [Layout Builder](#layout-builder)
-- [Draft Preview](#draft-preview)
-- [Live Preview](#live-preview)
-- [On-demand Revalidation](#on-demand-revalidation)
-- [SEO](#seo)
-- [Search](#search)
-- [Redirects](#redirects)
-- [Jobs and Scheduled Publishing](#jobs-and-scheduled-publish)
-- [Website](#website)
+## 🚀 Quick Start
 
-## Quick Start
+### Prerequisites
 
-To spin up this example locally, follow these steps:
+- Node.js 18.20.2 or >=20.9.0
+- PostgreSQL database (Vercel Postgres recommended)
+- Environment variables configured
 
-### Clone
+### Installation
 
-If you have not done so already, you need to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd KOTO-CMS
+   ```
 
-#### Method 1 (recommended)
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-Go to Payload Cloud and [clone this template](https://payloadcms.com/new/clone/website). This will create a new repository on your GitHub account with this template's code which you can then clone to your own machine.
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Configure the following required environment variables:
+   ```env
+   POSTGRES_URL=your_postgres_connection_string
+   PAYLOAD_SECRET=your_payload_secret
+   BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+   BLOB_STORE_ID=your_vercel_blob_store_id
+   ```
 
-#### Method 2
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-Use the `create-payload-app` CLI to clone this template directly to your machine:
+5. **Access the admin panel**
+   - Open `http://localhost:3000/admin`
+   - Create your first admin user
+   - Start managing content!
+
+## 📁 Project Structure
+
+### Core Collections
+
+#### Content Management
+- **Blogs** (`/admin/blogs`) - Blog posts with categories, authors, and rich content
+  - **Categories**: Taste the story, Jimmy's letters, Jimmy's bio, Behind the bar, Her turn, KOTO Foundation
+  - **Features**: Rich text editor, image galleries, YouTube embeds, SEO fields, featured posts
+  - **Status Workflow**: Draft → In Review → Published → Archived
+  - **Access Control**: Authors can edit their own posts, editors can manage all
+
+- **Job Posts** (`/admin/job-posts`) - Career opportunities and job listings
+  - **Fields**: Title, location, summary, detailed description, header image
+  - **Status**: Draft → Published
+  - **API**: Public read access with filtering and pagination
+
+- **Hero Banners** (`/admin/hero-banners`) - Homepage and landing page banners
+  - **Features**: Title, tagline, description, call-to-action button, background image
+  - **Status**: Active → Inactive → Draft
+  - **Ordering**: Display order control for multiple banners
+
+- **YouTube Embeds** (`/admin/youtube-embeds`) - Video content management
+  - **Features**: Video ID validation, optional titles and descriptions
+  - **Integration**: Auto-populated in blog rich text fields
+  - **Validation**: YouTube video ID format checking
+
+#### Forms & Submissions
+- **Contact Forms** (`/admin/contact-forms`) - "Send us a message" submissions
+  - **Fields**: Full name, email, message
+  - **Status Workflow**: New → In Progress → Replied → Closed
+  - **Security**: Field restrictions prevent unauthorized modifications
+
+- **Donation Forms** (`/admin/donation-forms`) - "Support our cause" donations
+  - **Fields**: Full name, email, donation amount, payment method, source tracking
+  - **Status Workflow**: Pending → Processing → Completed → Failed → Refunded
+  - **Tracking**: Transaction ID and internal notes for admins
+
+- **Booking Forms** (`/admin/booking-forms`) - Restaurant reservation bookings
+  - **Fields**: Full name, email, phone, nationality, restaurant, date/time, guests, special requests
+  - **Status Workflow**: Pending → Confirmed → Seated → Completed → Cancelled → No Show
+  - **Features**: Special occasion tracking, confirmation numbers
+
+- **In-Kind Support Forms** (`/admin/in-kind-support-forms`) - Support offers
+  - **Fields**: Full name, email, phone, delivery preference, message, item type, estimated value
+  - **Status Workflow**: New → Contacted → Arranged → Completed → Declined
+  - **Features**: Item categorization and value estimation
+
+#### Media & Assets
+- **Media** (`/admin/media`) - Images, videos, and file management
+  - **Categories**: Blog images, profiles, marketing assets, documents, hero banners
+  - **Features**: Alt text, captions, focal points, cloud storage integration
+  - **Access Control**: Authors can upload, editors can manage all
+
+- **Partners** (`/admin/partners`) - Partner organizations
+  - **Categories**: Strategic, Key, Education, Tourism and Hospitality
+  - **Features**: Logo upload, website links, descriptions, featured status
+  - **SEO**: Auto-generated slugs for URL-friendly names
+
+- **Merchandise** (`/admin/merchandise`) - Product catalog
+  - **Features**: Product images, pricing in VND, availability status
+  - **Organization**: Grouped by organization name
+  - **Status**: Available → Out of stock → Discontinued
+
+#### System
+- **Users** (`/admin/users`) - User accounts and role management
+  - **Roles**: Super Admin, Editor, Author, Viewer
+  - **Features**: Active/inactive status, role-based permissions
+  - **Security**: Only admins can create/delete users
+
+## 📂 Folder Structure
+
+```
+KOTO-CMS/
+├── 📁 src/                          # Main source code
+│   ├── 📁 access/                   # Access control functions
+│   │   ├── admins.ts               # Admin-only access
+│   │   ├── authors.ts              # Author and above access
+│   │   ├── editors.ts              # Editor and above access
+│   │   ├── authenticated.ts        # Authenticated user access
+│   │   ├── authenticatedOrPublished.ts # Published content access
+│   │   ├── anyone.ts               # Public access
+│   │   ├── fieldAccess.ts          # Field-level access control
+│   │   └── formUpdateAccess.ts     # Form update restrictions
+│   │
+│   ├── 📁 app/                      # Next.js App Router
+│   │   ├── 📁 api/                  # API routes
+│   │   │   ├── 📁 blogs/           # Blog API endpoints
+│   │   │   │   ├── route.ts        # GET/POST blogs
+│   │   │   │   ├── latest/         # Latest blogs
+│   │   │   │   └── slug/[slug]/    # Blog by slug
+│   │   │   ├── 📁 job-posts/       # Job posts API
+│   │   │   │   ├── route.ts        # GET/POST job posts
+│   │   │   │   ├── latest/         # Latest job posts
+│   │   │   │   └── slug/[slug]/    # Job post by slug
+│   │   │   ├── 📁 forms/           # Form submission APIs
+│   │   │   │   ├── contact/        # Contact form
+│   │   │   │   ├── donation/       # Donation form
+│   │   │   │   ├── booking/        # Booking form
+│   │   │   │   └── in-kind-support/ # In-kind support form
+│   │   │   └── 📁 export/          # Export functionality
+│   │   │       └── csv/            # CSV export API
+│   │   │
+│   │   ├── 📁 (payload)/           # Payload CMS integration
+│   │   │   ├── 📁 admin/           # Admin panel pages
+│   │   │   │   ├── export/         # Main export center
+│   │   │   │   ├── csv/            # Simple CSV export
+│   │   │   │   ├── forms-export/   # Advanced form export
+│   │   │   │   ├── csv-export/     # CSV export dashboard
+│   │   │   │   ├── media-library/  # Media management
+│   │   │   │   └── [[...segments]]/ # Dynamic admin routes
+│   │   │   ├── 📁 api/             # Payload API routes
+│   │   │   │   ├── [...slug]/      # Dynamic API routes
+│   │   │   │   ├── graphql/        # GraphQL endpoint
+│   │   │   │   ├── graphql-playground/ # GraphQL playground
+│   │   │   │   └── media/          # Media API
+│   │   │   ├── layout.tsx          # Payload layout
+│   │   │   └── custom.scss         # Admin panel styles
+│   │   │
+│   │   ├── layout.tsx              # Root layout
+│   │   └── page.tsx                # Home page
+│   │
+│   ├── 📁 collections/             # Payload collections
+│   │   ├── 📁 Users/               # User collection
+│   │   │   └── index.ts           # User configuration
+│   │   ├── Blogs.ts               # Blog posts collection
+│   │   ├── JobPosts.ts            # Job posts collection
+│   │   ├── HeroBanner.ts          # Hero banners collection
+│   │   ├── YouTubeEmbeds.ts       # YouTube embeds collection
+│   │   ├── ContactForm.ts         # Contact forms collection
+│   │   ├── DonationForm.ts        # Donation forms collection
+│   │   ├── BookingForm.ts         # Booking forms collection
+│   │   ├── InKindSupportForm.ts   # In-kind support forms
+│   │   ├── Media.ts               # Media collection
+│   │   ├── Partners.ts            # Partners collection
+│   │   ├── Merchandise.ts         # Merchandise collection
+│   │   └── Categories.ts          # Categories collection
+│   │
+│   ├── 📁 components/              # React components
+│   │   ├── 📁 ui/                  # Reusable UI components
+│   │   │   ├── button.tsx         # Button component
+│   │   │   ├── card.tsx           # Card component
+│   │   │   ├── input.tsx          # Input component
+│   │   │   ├── label.tsx          # Label component
+│   │   │   ├── pagination.tsx     # Pagination component
+│   │   │   ├── select.tsx         # Select component
+│   │   │   ├── tabs.tsx           # Tabs component
+│   │   │   ├── textarea.tsx       # Textarea component
+│   │   │   └── checkbox.tsx       # Checkbox component
+│   │   │
+│   │   ├── 📁 AdminCSVExport/     # CSV export components
+│   │   ├── 📁 AdminDashboard/     # Admin dashboard components
+│   │   ├── 📁 AdminExportButton/  # Export button components
+│   │   ├── 📁 AdminNavigation/    # Admin navigation
+│   │   ├── 📁 BeforeDashboard/    # Pre-dashboard components
+│   │   ├── 📁 BeforeLogin/        # Pre-login components
+│   │   ├── 📁 blocks/             # Content blocks
+│   │   │   └── 📁 YouTubeBlock/   # YouTube block component
+│   │   ├── 📁 BulkUpload/         # Bulk upload components
+│   │   ├── 📁 Card/               # Card components
+│   │   ├── 📁 CollectionExportButton/ # Collection export buttons
+│   │   ├── 📁 CSVExport/          # CSV export components
+│   │   ├── 📁 CSVExportButton/    # CSV export buttons
+│   │   ├── 📁 CSVExportLink/      # CSV export links
+│   │   ├── 📁 FloatingExportButton/ # Floating export button
+│   │   ├── 📁 Gallery/            # Gallery components
+│   │   ├── 📁 Link/               # Link components
+│   │   ├── 📁 Logo/               # Logo components
+│   │   ├── 📁 Media/              # Media components
+│   │   │   ├── 📁 ImageMedia/     # Image media component
+│   │   │   └── 📁 VideoMedia/     # Video media component
+│   │   ├── 📁 MediaGrid/          # Media grid components
+│   │   ├── 📁 RichText/           # Rich text components
+│   │   ├── 📁 YouTube/            # YouTube components
+│   │   └── 📁 YouTubeEmbed/       # YouTube embed components
+│   │
+│   ├── 📁 fields/                  # Custom field configurations
+│   │   ├── 📁 slug/               # Slug field configuration
+│   │   │   ├── index.ts           # Slug field setup
+│   │   │   ├── index.scss         # Slug field styles
+│   │   │   └── SlugComponent.tsx  # Slug component
+│   │   ├── blogsLexical.ts        # Blog-specific Lexical editor
+│   │   ├── defaultLexical.ts      # Default Lexical editor
+│   │   ├── link.ts                # Link field configuration
+│   │   └── linkGroup.ts           # Link group field
+│   │
+│   ├── 📁 hooks/                   # Custom hooks and utilities
+│   │   ├── formatSlug.ts          # Slug formatting hook
+│   │   ├── formFieldAccess.ts     # Form field access control
+│   │   ├── populatePublishedAt.ts # Published date population
+│   │   └── populateYouTubeEmbeds.ts # YouTube embed population
+│   │
+│   ├── 📁 migrations/              # Database migrations
+│   │   └── index.ts               # Migration configuration
+│   │
+│   ├── 📁 plugins/                 # Payload plugins
+│   │   └── index.ts               # Plugin configuration
+│   │
+│   ├── 📁 providers/               # React providers
+│   │   ├── 📁 HeaderTheme/        # Header theme provider
+│   │   ├── 📁 Theme/              # Theme provider
+│   │   │   ├── 📁 InitTheme/      # Theme initialization
+│   │   │   ├── 📁 ThemeSelector/  # Theme selector
+│   │   │   └── shared.ts          # Shared theme utilities
+│   │   └── index.tsx              # Provider configuration
+│   │
+│   ├── 📁 utilities/               # Utility functions
+│   │   ├── canUseDOM.ts           # DOM availability check
+│   │   ├── csvExport.ts           # CSV export utilities
+│   │   ├── csvExport.test.ts      # CSV export tests
+│   │   ├── deepMerge.ts           # Deep merge utility
+│   │   ├── formatDateTime.ts      # Date/time formatting
+│   │   ├── generateMeta.ts        # Meta tag generation
+│   │   ├── getDocument.ts         # Document retrieval
+│   │   ├── getGlobals.ts          # Global data retrieval
+│   │   ├── getMediaUrl.ts         # Media URL generation
+│   │   ├── getMeUser.ts           # Current user retrieval
+│   │   ├── getURL.ts              # URL generation
+│   │   ├── mergeOpenGraph.ts      # Open Graph merging
+│   │   ├── toKebabCase.ts         # Kebab case conversion
+│   │   ├── ui.ts                  # UI utilities
+│   │   ├── useClickableCard.ts    # Clickable card hook
+│   │   └── useDebounce.ts         # Debounce hook
+│   │
+│   ├── cssVariables.js            # CSS variables configuration
+│   ├── environment.d.ts           # Environment type definitions
+│   ├── payload-types.ts           # Generated Payload types
+│   └── payload.config.ts          # Main Payload configuration
+│
+├── 📁 public/                      # Static assets
+│   ├── 📁 css/                    # CSS files
+│   │   └── admin-export.css       # Admin export styles
+│   ├── 📁 js/                     # JavaScript files
+│   │   ├── admin-export-button.js # Admin export button script
+│   │   └── media-url-fix.js       # Media URL fix script
+│   ├── 📁 media/                  # Media files
+│   ├── csv-export.html            # Standalone CSV export page
+│   ├── favicon.ico                # Favicon
+│   ├── favicon.svg                # SVG favicon
+│   ├── robots.txt                 # Robots file
+│   ├── sitemap.xml                # Sitemap
+│   └── website-template-OG.webp   # Open Graph image
+│
+├── 📁 tests/                       # Test files
+│   ├── 📁 e2e/                    # End-to-end tests
+│   │   └── frontend.e2e.spec.ts   # Frontend E2E tests
+│   └── 📁 int/                    # Integration tests
+│       └── api.int.spec.ts        # API integration tests
+│
+├── 📁 scraped-data/               # Scraped data (if any)
+│   └── 📁 images/                 # Scraped images
+│
+├── 📁 scripts/                    # Build and utility scripts
+├── 📁 test-results/               # Test results output
+├── 📁 playwright-report/          # Playwright test reports
+│
+├── 📄 Configuration Files
+├── .env.example                   # Environment variables template
+├── .gitignore                     # Git ignore rules
+├── .editorconfig                  # Editor configuration
+├── .npmrc                         # NPM configuration
+├── .prettierignore                # Prettier ignore rules
+├── .prettierrc.json               # Prettier configuration
+├── components.json                # shadcn/ui components config
+├── docker-compose.yml             # Docker Compose configuration
+├── Dockerfile                     # Docker configuration
+├── eslint.config.mjs              # ESLint configuration
+├── next-env.d.ts                  # Next.js environment types
+├── next-sitemap.config.cjs        # Sitemap configuration
+├── next.config.js                 # Next.js configuration
+├── package.json                   # Package dependencies
+├── playwright.config.ts           # Playwright configuration
+├── postcss.config.js              # PostCSS configuration
+├── redirects.js                   # Redirect configuration
+├── tailwind.config.mjs            # Tailwind CSS configuration
+├── test.env                       # Test environment variables
+├── tsconfig.json                  # TypeScript configuration
+├── vercel.json                    # Vercel deployment configuration
+├── vitest.config.mts              # Vitest configuration
+└── vitest.setup.ts                # Vitest setup
+```
+
+### 📋 Key Directory Purposes
+
+#### **`src/access/`** - Access Control
+- Contains role-based access control functions
+- Defines who can read, create, update, delete content
+- Implements field-level security restrictions
+
+#### **`src/collections/`** - Content Models
+- Defines all Payload CMS collections
+- Contains field configurations and validation rules
+- Implements business logic and relationships
+
+#### **`src/components/`** - React Components
+- Reusable UI components for admin panel
+- Export functionality components
+- Media and content display components
+
+#### **`src/hooks/`** - Custom Hooks
+- Form field access control hooks
+- YouTube embed population logic
+- Published date management
+
+#### **`src/utilities/`** - Helper Functions
+- CSV export functionality
+- Media URL generation
+- Date formatting and data processing
+
+#### **`src/app/api/`** - API Endpoints
+- RESTful API routes for frontend integration
+- Form submission endpoints
+- Data export APIs
+
+#### **`src/app/(payload)/admin/`** - Admin Panel
+- Custom admin panel pages
+- Export interfaces and dashboards
+- Media library management
+
+#### **`public/`** - Static Assets
+- CSS and JavaScript files
+- Standalone export pages
+- Media files and images
+
+#### **`tests/`** - Testing
+- End-to-end tests with Playwright
+- Integration tests for API endpoints
+- Unit tests for utilities
+
+### 🔍 Finding What You Need
+
+- **Looking for a collection?** → `src/collections/`
+- **Need to modify access control?** → `src/access/`
+- **Adding new API endpoints?** → `src/app/api/`
+- **Creating admin components?** → `src/components/`
+- **Adding utility functions?** → `src/utilities/`
+- **Configuring Payload?** → `src/payload.config.ts`
+- **Setting up tests?** → `tests/`
+- **Adding static assets?** → `public/`
+
+### API Endpoints
+
+#### Content APIs
+- `GET /api/blogs` - Fetch blog posts with filtering and pagination
+  - **Query Parameters**: `category`, `status`, `featured`, `limit`, `page`, `depth`
+  - **Response**: Paginated results with metadata
+  - **Example**: `/api/blogs?category=taste-the-story&status=published&limit=5`
+
+- `GET /api/blogs/latest` - Get latest blog posts
+- `GET /api/blogs/slug/[slug]` - Get blog by slug
+- `GET /api/job-posts` - Fetch job posts
+- `GET /api/job-posts/latest` - Get latest job posts
+- `GET /api/job-posts/slug/[slug]` - Get job post by slug
+
+#### Form APIs
+- `POST /api/forms/contact` - Submit contact form
+  - **Validation**: Required fields, email format
+  - **Security**: CORS enabled, field restrictions
+  - **Response**: Success confirmation with submission ID
+
+- `POST /api/forms/donation` - Submit donation form
+- `POST /api/forms/booking` - Submit booking form
+- `POST /api/forms/in-kind-support` - Submit in-kind support form
+
+#### Export APIs
+- `POST /api/export/csv` - Export form data to CSV
+  - **Features**: Field selection, filtering, custom date formats
+  - **Collections**: All form types supported
+  - **Security**: Admin-only access
+
+## 👥 User Roles & Access Control
+
+### Role Hierarchy
+1. **Super Admin** - Full system access, user management, all field modifications
+2. **Editor** - Content management, form moderation, status updates
+3. **Author** - Create and edit own content, limited field access
+4. **Viewer** - Read-only access to admin panel
+
+### Access Control Features
+- **Blog Management**: Authors can create/edit their own posts, editors can manage all
+- **Form Moderation**: Editors and admins can update form status and add notes
+- **Field Restrictions**: Non-admin users can only modify status fields via hooks
+- **Media Management**: Authors can upload, editors can manage all
+- **API Access**: Public read access for content, authenticated access for forms
+
+### Security Implementation
+- **Field-Level Security**: `restrictFieldUpdates` hook prevents unauthorized modifications
+- **Role-Based Validation**: Access control functions in `/src/access/`
+- **Form Protection**: Read-only fields for non-admin users
+- **API Validation**: Input validation and CORS protection
+
+## 🎨 Admin Panel Features
+
+### CSV Export System
+Multiple interfaces for data export:
+
+1. **Main Export Center** (`/admin/export`) - Beautiful UI with collection cards
+   - Visual collection selection
+   - Field mapping and filtering
+   - Real-time preview
+
+2. **Floating Action Button** - Quick access from any admin page
+   - Download icon in bottom-right corner
+   - One-click exports
+
+3. **Advanced Export** (`/admin/forms-export`) - Filtering and field selection
+   - Status-based filtering
+   - Custom field selection
+   - Date range filtering
+
+4. **Simple Dashboard** (`/admin/csv`) - Quick export buttons
+   - Collection-specific export cards
+   - Basic filtering options
+
+5. **Standalone Page** (`/csv-export.html`) - External access
+   - No authentication required
+   - Independent interface
+
+### Form Management
+- **Status Tracking**: Comprehensive workflows for each form type
+- **Internal Notes**: Staff communication and follow-up tracking
+- **Field Restrictions**: Prevents unauthorized field modifications via hooks
+- **Validation**: Email format and required field validation
+- **Audit Trail**: Timestamps and user tracking
+
+### Content Features
+- **Rich Text Editor**: Lexical editor with media embedding
+- **YouTube Integration**: Auto-population of video embeds in blog content
+- **Image Galleries**: Configurable layouts (grid, masonry, carousel)
+- **SEO Integration**: Meta tags, titles, and URL generation
+- **Media Management**: Image optimization, focal points, cloud storage
+- **Publication Workflow**: Draft → Published states with review process
+
+## 🔧 Technical Features
+
+### Database & Storage
+- **PostgreSQL**: Primary database with Vercel Postgres adapter
+  - **Development**: Push mode for automatic schema updates
+  - **Production**: Migration-based schema management
+- **Cloud Storage**: Vercel Blob storage for media files
+  - **Features**: Public access, cache control, no random suffixes
+  - **Fallback**: Local filesystem for development
+- **Supabase Support**: Alternative S3-compatible storage option
+
+### Development Tools
+- **TypeScript**: Full type safety with generated payload types
+- **ESLint**: Code quality and consistency
+- **Prettier**: Code formatting
+- **Vitest**: Unit testing with React Testing Library
+- **Playwright**: End-to-end testing
+- **Cross-env**: Cross-platform environment variable handling
+
+### Build & Deployment
+- **Next.js 15**: App Router with API routes
+- **Payload CMS 3.45**: Headless CMS with admin panel
+- **Tailwind CSS**: Utility-first styling
+- **shadcn/ui**: Component library
+- **Sharp**: Image processing and optimization
+
+### Hooks & Utilities
+- **YouTube Embed Population**: Auto-populates video content in rich text
+- **Field Access Control**: Restricts field modifications based on user role
+- **Published Date Population**: Automatic timestamp management
+- **CSV Export Utilities**: Comprehensive data export functionality
+- **Slug Generation**: URL-friendly field generation
+
+## 📚 Additional Documentation
+
+- [CSV Export Guide](./CSV_EXPORT_GUIDE.md) - Complete export functionality documentation
+- [Admin Organization](./ADMIN_ORGANIZATION.md) - Admin panel structure and navigation
+- [Form Integration Guide](./FORM_INTEGRATION_GUIDE.md) - How to integrate forms
+- [Blog API Usage](./BLOG_API_USAGE.md) - Blog API endpoints and usage
+- [Job Posts API Usage](./JOB_POSTS_API_USAGE.md) - Job posts API documentation
+- [Roles and Permissions](./ROLES_AND_PERMISSIONS.md) - Detailed access control
+- [Testing Guide](./TESTING_GUIDE.md) - Testing strategies and examples
+- [Deployment Guide](./DEPLOYMENT.md) - Production deployment instructions
+- [Storage Setup](./STORAGE_SETUP.md) - Media storage configuration
+
+## 🚀 Deployment
+
+### Vercel Deployment (Recommended)
+1. Connect your GitHub repository to Vercel
+2. Configure environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Environment Variables for Production
+```env
+POSTGRES_URL=your_production_postgres_url
+PAYLOAD_SECRET=your_production_secret
+BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+BLOB_STORE_ID=your_vercel_blob_store_id
+NODE_ENV=production
+CRON_SECRET=your_cron_secret_for_scheduled_tasks
+```
+
+### Build Commands
+```bash
+npm run build    # Build the application
+npm run start    # Start production server
+npm run generate:types  # Generate TypeScript types
+npm run generate:importmap  # Generate import map for admin
+```
+
+## 🧪 Testing
 
 ```bash
-pnpx create-payload-app my-project -t website
+npm run test        # Run all tests
+npm run test:int    # Run integration tests
+npm run test:e2e    # Run end-to-end tests
 ```
 
-#### Method 3
-
-Use the `git` CLI to clone this template directly to your machine:
-
-```bash
-git clone -n --depth=1 --filter=tree:0 https://github.com/payloadcms/payload my-project && cd my-project && git sparse-checkout set --no-cone templates/website && git checkout && rm -rf .git && git init && git add . && git mv -f templates/website/{.,}* . && git add . && git commit -m "Initial commit"
-```
-
-### Development
-
-1. First [clone the repo](#clone) if you have not done so already
-1. `cd my-project && cp .env.example .env` to copy the example environment variables
-1. `pnpm install && pnpm dev` to install dependencies and start the dev server
-1. open `http://localhost:3000` to open the app in your browser
-
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
-
-## How it works
-
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
-
-### Collections
-
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
-
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel and unpublished content. See [Access Control](#access-control) for more details.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Posts
-
-  Posts are used to generate blog posts, news articles, or any other type of content that is published over time. All posts are layout builder enabled so you can generate unique layouts for each post using layout-building blocks, see [Layout Builder](#layout-builder) for more details. Posts are also draft-enabled so you can preview them before publishing them to your website, see [Draft Preview](#draft-preview) for more details.
-
-- #### Pages
-
-  All pages are layout builder enabled so you can generate unique layouts for each page using layout-building blocks, see [Layout Builder](#layout-builder) for more details. Pages are also draft-enabled so you can preview them before publishing them to your website, see [Draft Preview](#draft-preview) for more details.
-
-- #### Media
-
-  This is the uploads enabled collection used by pages, posts, and projects to contain media like images, videos, downloads, and other assets. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-- #### Categories
-
-  A taxonomy used to group posts together. Categories can be nested inside of one another, for example "News > Technology". See the official [Payload Nested Docs Plugin](https://payloadcms.com/docs/plugins/nested-docs) for more details.
-
-### Globals
-
-See the [Globals](https://payloadcms.com/docs/configuration/globals) docs for details on how to extend this functionality.
-
-- `Header`
-
-  The data required by the header on your front-end like nav links.
-
-- `Footer`
-
-  Same as above but for the footer of your site.
-
-## Access control
-
-Basic access control is setup to limit access to various content based based on publishing status.
-
-- `users`: Users can access the admin panel and create or edit content.
-- `posts`: Everyone can access published posts, but only users can create, update, or delete them.
-- `pages`: Everyone can access published pages, but only users can create, update, or delete them.
-
-For more details on how to extend this functionality, see the [Payload Access Control](https://payloadcms.com/docs/access-control/overview#access-control) docs.
-
-## Layout Builder
-
-Create unique page layouts for any type of content using a powerful layout builder. This template comes pre-configured with the following layout building blocks:
-
-- Hero
-- Content
-- Media
-- Call To Action
-- Archive
-
-Each block is fully designed and built into the front-end website that comes with this template. See [Website](#website) for more details.
-
-## Lexical editor
-
-A deep editorial experience that allows complete freedom to focus just on writing content without breaking out of the flow with support for Payload blocks, media, links and other features provided out of the box. See [Lexical](https://payloadcms.com/docs/rich-text/overview) docs.
-
-## Draft Preview
-
-All posts and pages are draft-enabled so you can preview them before publishing them to your website. To do this, these collections use [Versions](https://payloadcms.com/docs/configuration/collections#versions) with `drafts` set to `true`. This means that when you create a new post, project, or page, it will be saved as a draft and will not be visible on your website until you publish it. This also means that you can preview your draft before publishing it to your website. To do this, we automatically format a custom URL which redirects to your front-end to securely fetch the draft version of your content.
-
-Since the front-end of this template is statically generated, this also means that pages, posts, and projects will need to be regenerated as changes are made to published documents. To do this, we use an `afterChange` hook to regenerate the front-end when a document has changed and its `_status` is `published`.
-
-For more details on how to extend this functionality, see the official [Draft Preview Example](https://github.com/payloadcms/payload/tree/examples/draft-preview).
-
-## Live preview
-
-In addition to draft previews you can also enable live preview to view your end resulting page as you're editing content with full support for SSR rendering. See [Live preview docs](https://payloadcms.com/docs/live-preview/overview) for more details.
-
-## On-demand Revalidation
-
-We've added hooks to collections and globals so that all of your pages, posts, or footer or header, change they will automatically be updated in the frontend via on-demand revalidation supported by Nextjs.
-
-> Note: if an image has been changed, for example it's been cropped, you will need to republish the page it's used on in order to be able to revalidate the Nextjs image cache.
-
-## SEO
-
-This template comes pre-configured with the official [Payload SEO Plugin](https://payloadcms.com/docs/plugins/seo) for complete SEO control from the admin panel. All SEO data is fully integrated into the front-end website that comes with this template. See [Website](#website) for more details.
-
-## Search
-
-This template also pre-configured with the official [Payload Search Plugin](https://payloadcms.com/docs/plugins/search) to showcase how SSR search features can easily be implemented into Next.js with Payload. See [Website](#website) for more details.
-
-## Redirects
-
-If you are migrating an existing site or moving content to a new URL, you can use the `redirects` collection to create a proper redirect from old URLs to new ones. This will ensure that proper request status codes are returned to search engines and that your users are not left with a broken link. This template comes pre-configured with the official [Payload Redirects Plugin](https://payloadcms.com/docs/plugins/redirects) for complete redirect control from the admin panel. All redirects are fully integrated into the front-end website that comes with this template. See [Website](#website) for more details.
-
-## Jobs and Scheduled Publish
-
-We have configured [Scheduled Publish](https://payloadcms.com/docs/versions/drafts#scheduled-publish) which uses the [jobs queue](https://payloadcms.com/docs/jobs-queue/jobs) in order to publish or unpublish your content on a scheduled time. The tasks are run on a cron schedule and can also be run as a separate instance if needed.
-
-> Note: When deployed on Vercel, depending on the plan tier, you may be limited to daily cron only.
-
-## Website
-
-This template includes a beautifully designed, production-ready front-end built with the [Next.js App Router](https://nextjs.org), served right alongside your Payload app in a instance. This makes it so that you can deploy both your backend and website where you need it.
-
-Core features:
-
-- [Next.js App Router](https://nextjs.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [React Hook Form](https://react-hook-form.com)
-- [Payload Admin Bar](https://github.com/payloadcms/payload/tree/main/packages/admin-bar)
-- [TailwindCSS styling](https://tailwindcss.com/)
-- [shadcn/ui components](https://ui.shadcn.com/)
-- User Accounts and Authentication
-- Fully featured blog
-- Publication workflow
-- Dark mode
-- Pre-made layout building blocks
-- SEO
-- Search
-- Redirects
-- Live preview
-
-### Cache
-
-Although Next.js includes a robust set of caching strategies out of the box, Payload Cloud proxies and caches all files through Cloudflare using the [Official Cloud Plugin](https://www.npmjs.com/package/@payloadcms/payload-cloud). This means that Next.js caching is not needed and is disabled by default. If you are hosting your app outside of Payload Cloud, you can easily reenable the Next.js caching mechanisms by removing the `no-store` directive from all fetch requests in `./src/app/_api` and then removing all instances of `export const dynamic = 'force-dynamic'` from pages files, such as `./src/app/(pages)/[slug]/page.tsx`. For more details, see the official [Next.js Caching Docs](https://nextjs.org/docs/app/building-your-application/caching).
-
-## Development
-
-To spin up this example locally, follow the [Quick Start](#quick-start). Then [Seed](#seed) the database with a few pages, posts, and projects.
-
-### Working with Postgres
-
-Postgres and other SQL-based databases follow a strict schema for managing your data. In comparison to our MongoDB adapter, this means that there's a few extra steps to working with Postgres.
-
-Note that often times when making big schema changes you can run the risk of losing data if you're not manually migrating it.
-
-#### Local development
-
-Ideally we recommend running a local copy of your database so that schema updates are as fast as possible. By default the Postgres adapter has `push: true` for development environments. This will let you add, modify and remove fields and collections without needing to run any data migrations.
-
-If your database is pointed to production you will want to set `push: false` otherwise you will risk losing data or having your migrations out of sync.
-
-#### Migrations
-
-[Migrations](https://payloadcms.com/docs/database/migrations) are essentially SQL code versions that keeps track of your schema. When deploy with Postgres you will need to make sure you create and then run your migrations.
-
-Locally create a migration
-
-```bash
-pnpm payload migrate:create
-```
-
-This creates the migration files you will need to push alongside with your new configuration.
-
-On the server after building and before running `pnpm start` you will want to run your migrations
-
-```bash
-pnpm payload migrate
-```
-
-This command will check for any migrations that have not yet been run and try to run them and it will keep a record of migrations that have been run in the database.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-### Seed
-
-To seed the database with a few pages, posts, and projects you can click the 'seed database' link from the admin panel.
-
-The seed script will also create a demo user for demonstration purposes only:
-
-- Demo Author
-  - Email: `demo-author@payloadcms.com`
-  - Password: `password`
-
-> NOTICE: seeding the database is destructive because it drops your current database to populate a fresh one from the seed template. Only run this command if you are starting a new project or can afford to lose your current data.
-
-## Production
-
-To run Payload in production, you need to build and start the Admin panel. To do so, follow these steps:
-
-1. Invoke the `next build` script by running `pnpm build` or `npm run build` in your project root. This creates a `.next` directory with a production-ready admin bundle.
-1. Finally run `pnpm start` or `npm run start` to run Node in production and serve Payload from the `.build` directory.
-1. When you're ready to go live, see Deployment below for more details.
-
-### Deploying to Payload Cloud
-
-The easiest way to deploy your project is to use [Payload Cloud](https://payloadcms.com/new/import), a one-click hosting solution to deploy production-ready instances of your Payload apps directly from your GitHub repo.
-
-### Deploying to Vercel
-
-This template can also be deployed to Vercel for free. You can get started by choosing the Vercel DB adapter during the setup of the template or by manually installing and configuring it:
-
-```bash
-pnpm add @payloadcms/db-vercel-postgres
-```
-
-```ts
-// payload.config.ts
-import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
-
-export default buildConfig({
-  // ...
-  db: vercelPostgresAdapter({
-    pool: {
-      connectionString: process.env.POSTGRES_URL || '',
-    },
-  }),
-  // ...
-```
-
-We also support Vercel's blob storage:
-
-```bash
-pnpm add @payloadcms/storage-vercel-blob
-```
-
-```ts
-// payload.config.ts
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
-
-export default buildConfig({
-  // ...
-  plugins: [
-    vercelBlobStorage({
-      collections: {
-        [Media.slug]: true,
-      },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
-    }),
-  ],
-  // ...
-```
-
-There is also a simplified [one click deploy](https://github.com/payloadcms/payload/tree/templates/with-vercel-postgres) to Vercel should you need it.
-
-### Self-hosting
-
-Before deploying your app, you need to:
-
-1. Ensure your app builds and serves in production. See [Production](#production) for more details.
-2. You can then deploy Payload as you would any other Node.js or Next.js application either directly on a VPS, DigitalOcean's Apps Platform, via Coolify or more. More guides coming soon.
-
-You can also deploy your app manually, check out the [deployment documentation](https://payloadcms.com/docs/production/deployment) for full details.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+### Testing Strategy
+- **Unit Tests**: Vitest with React Testing Library
+- **Integration Tests**: API endpoint testing
+- **E2E Tests**: Playwright for full user workflows
+- **Test Coverage**: Focus on critical business logic
+
+## 🔄 Development Workflow
+
+### Code Quality
+- **TypeScript**: Strict type checking enabled
+- **ESLint**: Code quality enforcement
+- **Prettier**: Consistent code formatting
+- **Git Hooks**: Pre-commit validation
+
+### Database Management
+- **Development**: Push mode for rapid iteration
+- **Production**: Migration-based schema changes
+- **Backup**: Regular database backups recommended
+
+### Content Workflow
+- **Draft System**: All content starts as drafts
+- **Review Process**: In-review status for editorial workflow
+- **Publication**: Editors control final publication
+- **Archiving**: Old content can be archived
+
+## 🤝 Contributing
+
+1. Follow the existing code structure and patterns
+2. Use TypeScript for all new code
+3. Add tests for new features
+4. Update documentation as needed
+5. Follow the established access control patterns
+6. Use meaningful commit messages
+7. Test thoroughly before submitting changes
+
+## 📞 Support
+
+For questions or issues:
+- Check the documentation files in the project root
+- Review the API usage guides
+- Contact the development team
+- Check the testing guide for troubleshooting
+
+## 🔒 Security Considerations
+
+- **Field-Level Security**: Hooks prevent unauthorized field modifications
+- **Role-Based Access**: Granular permissions based on user roles
+- **API Protection**: CORS and validation on all endpoints
+- **Data Validation**: Input sanitization and format checking
+- **Audit Logging**: User actions tracked for security monitoring
+
+---
+
+**Built with ❤️ using Payload CMS and Next.js**
+
+*This documentation follows [Google's documentation best practices](https://google.github.io/styleguide/docguide/best_practices.html) and [Chromium's documentation guidelines](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/documentation_best_practices.md) for clarity and maintainability.*

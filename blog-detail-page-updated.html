@@ -1043,7 +1043,7 @@ try {
   });
 
   // Fetch 3 other posts excluding current
-  const otherRes = await fetch('https://koto-cms.vercel.app/api/blogs?limit=100');
+  const otherRes = await fetch('https://koto-cms.vercel.app/api/blogs?depth=1&limit=100');
   const { docs: allPosts = [] } = await otherRes.json();
   const otherPosts = allPosts.filter(p => p.id !== blog.id).slice(0, 3);
 
