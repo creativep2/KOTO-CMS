@@ -10,6 +10,10 @@ export const restrictFieldUpdates: CollectionBeforeChangeHook = ({
   const userRole = user?.role
 
   console.log(
+    data
+  )
+
+  console.log(
     `[Field Access] User: ${user?.email}, Role: ${userRole}, Operation: ${originalDoc ? 'update' : 'create'}`,
   )
 
@@ -46,20 +50,20 @@ export const restrictFieldUpdates: CollectionBeforeChangeHook = ({
   }
 
   // For non-authenticated users or other roles, only allow status field updates
-  if (originalDoc) {
-    console.log('[Field Access] Non-authenticated user - restricting to status field only')
+  // if (originalDoc) {
+  //   console.log('[Field Access] Non-authenticated user - restricting to status field only')
 
-    // Keep all original fields except status
-    const restrictedData = { ...originalDoc }
+  //   // Keep all original fields except status
+  //   const restrictedData = { ...originalDoc }
 
-    // Only allow status field to be updated
-    if (data.status !== undefined) {
-      restrictedData.status = data.status
-      console.log(`[Field Access] Status updated to: ${data.status}`)
-    }
+  //   // Only allow status field to be updated
+  //   if (data.status !== undefined) {
+  //     restrictedData.status = data.status
+  //     console.log(`[Field Access] Status updated to: ${data.status}`)
+  //   }
 
-    return restrictedData
-  }
+  //   return restrictedData
+  // }
 
   return data
 }

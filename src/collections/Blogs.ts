@@ -43,6 +43,7 @@ export const Blogs: CollectionConfig = {
       admin: {
         description: 'The title of the blog post',
       },
+      //localized: true,
     },
     {
       name: 'author',
@@ -297,6 +298,14 @@ export const Blogs: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: 'Brief description for SEO purposes',
+      },
+    },
+    {
+      name: 'meta_title',
+      type: 'text',
+      admin: {
+        position: 'sidebar',
+        description: 'Meta title for SEO purposes',
       },
     },
     {

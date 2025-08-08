@@ -110,6 +110,20 @@ export default buildConfig({
     Users,
     YouTubeEmbeds,
   ],
+  localization: {
+    locales: [
+      {
+        label: 'English',
+        code: 'en',
+      },
+      {
+        label: 'Vietnamese',
+        code: 'vi',
+      },
+    ],
+    defaultLocale: 'en', // required
+    fallback: true, // defaults to true
+  },
   cors: '*', // Temporary wildcard for testing - replace with specific domains later
   // globals: [Header, Footer], // Removed for API-only usage
   plugins: [...plugins, ...(storagePlugin ? [storagePlugin] : [])],

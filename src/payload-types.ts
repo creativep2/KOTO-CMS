@@ -106,7 +106,7 @@ export interface Config {
   };
   globals: {};
   globalsSelect: {};
-  locale: null;
+  locale: 'en' | 'vi';
   user: User & {
     collection: 'users';
   };
@@ -184,6 +184,9 @@ export interface Blog {
    */
   gallery?:
     | {
+        /**
+         * Gallery images with captions and alt text
+         */
         images?:
           | {
               /**
@@ -237,6 +240,10 @@ export interface Blog {
    * Brief description for SEO purposes
    */
   meta_description?: string | null;
+  /**
+   * Meta title for SEO purposes
+   */
+  meta_title?: string | null;
   /**
    * Mark this blog post as featured
    */
@@ -980,6 +987,7 @@ export interface BlogsSelect<T extends boolean = true> {
   slug?: T;
   slugLock?: T;
   meta_description?: T;
+  meta_title?: T;
   featured?: T;
   tags?: T;
   meta?:
