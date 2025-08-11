@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate payment method
-    const validPaymentMethods = ['credit-card', 'paypal', 'bank-transfer', 'check', 'cash', 'other']
+    const validPaymentMethods = ['Global Giving', 'PayPal', 'Bank Transfer', 'check', 'Cash', 'GiveNow']
     if (!validPaymentMethods.includes(body.paymentMethod)) {
       const response = NextResponse.json({ error: 'Invalid payment method' }, { status: 400 })
       return addCorsHeaders(response)

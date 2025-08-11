@@ -39,12 +39,12 @@ export async function POST(request: NextRequest) {
       return addCorsHeaders(response)
     }
 
-    // Validate delivery preference
-    const validDeliveryPreferences = ['delivery', 'pickup', 'either']
-    if (!validDeliveryPreferences.includes(body.deliveryPreference)) {
-      const response = NextResponse.json({ error: 'Invalid delivery preference' }, { status: 400 })
-      return addCorsHeaders(response)
-    }
+    // // Validate delivery preference
+    // const validDeliveryPreferences = ['delivery', 'pickup', 'either']
+    // if (!validDeliveryPreferences.includes(body.deliveryPreference)) {
+    //   const response = NextResponse.json({ error: 'Invalid delivery preference' }, { status: 400 })
+    //   return addCorsHeaders(response)
+    // }
 
     // Initialize Payload
     const payload = await getPayload({ config: configPromise })
