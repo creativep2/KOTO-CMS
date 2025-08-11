@@ -53,20 +53,20 @@ export async function POST(request: NextRequest) {
       return addCorsHeaders(response)
     }
 
-    // Validate how did you hear about us
-    const validSources = [
-      'social-media',
-      'website',
-      'friend-family',
-      'search-engine',
-      'advertisement',
-      'event',
-      'other',
-    ]
-    if (!validSources.includes(body.howDidYouHearAboutUs)) {
-      const response = NextResponse.json({ error: 'Invalid source selection' }, { status: 400 })
-      return addCorsHeaders(response)
-    }
+    // // Validate how did you hear about us
+    // const validSources = [
+    //   'social-media',
+    //   'website',
+    //   'friend-family',
+    //   'search-engine',
+    //   'advertisement',
+    //   'event',
+    //   'other',
+    // ]
+    // if (!validSources.includes(body.howDidYouHearAboutUs)) {
+    //   const response = NextResponse.json({ error: 'Invalid source selection' }, { status: 400 })
+    //   return addCorsHeaders(response)
+    // }
 
     // Initialize Payload
     const payload = await getPayload({ config: configPromise })
