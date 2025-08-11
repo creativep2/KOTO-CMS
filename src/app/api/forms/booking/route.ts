@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate restaurant
-    const validRestaurants = ['koto-restaurant', 'koto-cafe', 'koto-bar', 'koto-rooftop', 'other']
+    const validRestaurants = ['KOTO Van Mieu - Private Room', 'KOTO Van Mieu - Dining Area', 'KOTO Van Mieu - Private Room', 'KOTO Van Mieu - Ethnic Oi Bar']
     if (!validRestaurants.includes(body.restaurant)) {
       const response = NextResponse.json({ error: 'Invalid restaurant selection' }, { status: 400 })
       return addCorsHeaders(response)
