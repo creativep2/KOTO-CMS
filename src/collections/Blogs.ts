@@ -42,8 +42,7 @@ export const Blogs: CollectionConfig = {
       required: true,
       admin: {
         description: 'The title of the blog post',
-      },
-      localized: true,
+      }
     },
     {
       name: 'author',
