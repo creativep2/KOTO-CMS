@@ -283,7 +283,6 @@ export const Blogs: CollectionConfig = {
           pickerAppearance: 'dayAndTime',
         },
       },
-      localized: true,
     },
     ...slugField('title', {
       slugOverrides: {

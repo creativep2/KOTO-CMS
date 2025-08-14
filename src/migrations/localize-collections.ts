@@ -230,6 +230,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         _locale VARCHAR(10) NOT NULL,
         organization_name TEXT,
         product_name TEXT,
+        price NUMERIC,
         description TEXT,
         status TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -247,7 +248,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
 
   // Get all existing merchandise
   const merchandise = await db.execute(sql`
-    SELECT id, organization_name, product_name, description, status
+    SELECT id, organization_name, product_name, price, description, status
     FROM merchandise 
     WHERE product_name IS NOT NULL
   `)
@@ -258,11 +259,12 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   for (const item of merchandise.rows) {
     // Insert English version
     await db.execute(sql`
-      INSERT INTO merchandise_locales (_parent_id, _locale, organization_name, product_name, description, status)
-      VALUES (${item.id}, 'en', ${item.organization_name || ''}, ${item.product_name || 'Untitled'}, ${item.description || ''}, ${item.status || 'available'})
+      INSERT INTO merchandise_locales (_parent_id, _locale, organization_name, product_name, price, description, status)
+      VALUES (${item.id}, 'en', ${item.organization_name || ''}, ${item.product_name || 'Untitled'}, ${item.price || 0}, ${item.description || ''}, ${item.status || 'available'})
       ON CONFLICT (_parent_id, _locale) DO UPDATE SET
         organization_name = EXCLUDED.organization_name,
         product_name = EXCLUDED.product_name,
+        price = EXCLUDED.price,
         description = EXCLUDED.description,
         status = EXCLUDED.status,
         updated_at = CURRENT_TIMESTAMP
@@ -270,11 +272,12 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
 
     // Insert Vietnamese version
     await db.execute(sql`
-      INSERT INTO merchandise_locales (_parent_id, _locale, organization_name, product_name, description, status)
-      VALUES (${item.id}, 'vi', ${item.organization_name || ''}, ${item.product_name || 'Untitled'}, ${item.description || ''}, ${item.status || 'available'})
+      INSERT INTO merchandise_locales (_parent_id, _locale, organization_name, product_name, price, description, status)
+      VALUES (${item.id}, 'vi', ${item.organization_name || ''}, ${item.product_name || 'Untitled'}, ${item.price || 0}, ${item.description || ''}, ${item.status || 'available'})
       ON CONFLICT (_parent_id, _locale) DO UPDATE SET
         organization_name = EXCLUDED.organization_name,
         product_name = EXCLUDED.product_name,
+        price = EXCLUDED.price,
         description = EXCLUDED.description,
         status = EXCLUDED.status,
         updated_at = CURRENT_TIMESTAMP
@@ -297,6 +300,10 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   if (merchandiseExistingColumns.includes('product_name')) {
     await db.execute(sql`ALTER TABLE merchandise DROP COLUMN product_name`)
     console.log('Removed product_name column from merchandise table')
+  }
+  if (merchandiseExistingColumns.includes('price')) {
+    await db.execute(sql`ALTER TABLE merchandise DROP COLUMN price`)
+    console.log('Removed price column from merchandise table')
   }
   if (merchandiseExistingColumns.includes('description')) {
     await db.execute(sql`ALTER TABLE merchandise DROP COLUMN description`)
@@ -373,6 +380,7 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
   try {
     await db.execute(sql`ALTER TABLE merchandise ADD COLUMN organization_name TEXT`)
     await db.execute(sql`ALTER TABLE merchandise ADD COLUMN product_name TEXT`)
+    await db.execute(sql`ALTER TABLE merchandise ADD COLUMN price NUMERIC`)
     await db.execute(sql`ALTER TABLE merchandise ADD COLUMN description TEXT`)
     await db.execute(sql`ALTER TABLE merchandise ADD COLUMN status TEXT`)
     
@@ -382,6 +390,7 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
       SET 
         organization_name = ml.organization_name,
         product_name = ml.product_name,
+        price = ml.price,
         description = ml.description,
         status = ml.status
       FROM merchandise_locales ml 

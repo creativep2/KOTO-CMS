@@ -46,7 +46,6 @@ export const Merchandise: CollectionConfig = {
         description: 'Hình ảnh sản phẩm',
       },
       label: 'Hình sản phẩm',
-      localized: true,
     },
     {
       name: 'price',
