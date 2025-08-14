@@ -25,6 +25,7 @@ export async function GET(_request: NextRequest) {
     const limit = searchParams.get('limit') || '5' // Default to 5 latest job posts
     const location = searchParams.get('location')
     const excludeId = searchParams.get('excludeId') // To exclude current job post when showing related
+    const locale = searchParams.get('locale') || 'en'
 
     // Build where clause - only published job posts
     const where: any = {
@@ -56,6 +57,7 @@ export async function GET(_request: NextRequest) {
       sort: '-publishedAt', // Sort by publishedAt in descending order (latest first)
       depth: parseInt(depth),
       limit: parseInt(limit),
+      locale: locale as 'en' | 'vi',
     })
 
     const response = NextResponse.json({
