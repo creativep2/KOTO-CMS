@@ -25,6 +25,7 @@ export const Merchandise: CollectionConfig = {
         description: 'Tên tổ chức (để grouping vào đúng nhóm trên trang)',
       },
       label: 'Tên tổ chức',
+      localized: true,
     },
     {
       name: 'product_name',
@@ -34,6 +35,7 @@ export const Merchandise: CollectionConfig = {
         description: 'Tên sản phẩm',
       },
       label: 'Tên sản phẩm',
+      localized: true,
     },
     {
       name: 'product_image',
@@ -44,6 +46,7 @@ export const Merchandise: CollectionConfig = {
         description: 'Hình ảnh sản phẩm',
       },
       label: 'Hình sản phẩm',
+      localized: true,
     },
     {
       name: 'price',
@@ -55,6 +58,7 @@ export const Merchandise: CollectionConfig = {
       },
       label: 'Giá sản phẩm',
       min: 0,
+      localized: true,
     },
     {
       name: 'description',
@@ -64,6 +68,7 @@ export const Merchandise: CollectionConfig = {
         rows: 4,
       },
       label: 'Mô tả sản phẩm',
+      localized: true,
     },
     {
       name: 'status',
@@ -89,6 +94,7 @@ export const Merchandise: CollectionConfig = {
         description: 'Trạng thái sản phẩm',
       },
       label: 'Trạng thái',
+      localized: true,
     },
   ],
   timestamps: true,

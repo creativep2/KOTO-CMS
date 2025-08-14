@@ -38,6 +38,7 @@ export const JobPosts: CollectionConfig = {
       admin: {
         description: 'Job title',
       },
+      localized: true,
     },
     {
       name: 'location',
@@ -46,6 +47,7 @@ export const JobPosts: CollectionConfig = {
       admin: {
         description: 'Job location (e.g., "Remote", "New York, NY", "London, UK")',
       },
+      localized: true,
     },
     {
       name: 'summary',
@@ -55,6 +57,7 @@ export const JobPosts: CollectionConfig = {
         description: 'Brief summary for job listing display',
         rows: 3,
       },
+      localized: true,
     },
     {
       name: 'description',
@@ -63,6 +66,7 @@ export const JobPosts: CollectionConfig = {
       admin: {
         description: 'Detailed job description with rich content (requirements, benefits, etc.)',
       },
+      localized: true,
     },
     {
       name: 'publishedAt',
