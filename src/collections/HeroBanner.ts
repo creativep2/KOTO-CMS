@@ -37,7 +37,6 @@ export const HeroBanner: CollectionConfig = {
       admin: {
         description: 'The main title of the hero banner',
       },
-      localized: true,
     },
     {
       name: 'tagline',
@@ -45,7 +44,6 @@ export const HeroBanner: CollectionConfig = {
       admin: {
         description: 'A short tagline or subtitle for the hero banner',
       },
-      localized: true,
     },
     {
       name: 'description',
@@ -53,7 +51,6 @@ export const HeroBanner: CollectionConfig = {
       admin: {
         description: 'Detailed description or content for the hero banner',
       },
-      localized: true,
     },
     {
       name: 'button',
@@ -61,7 +58,6 @@ export const HeroBanner: CollectionConfig = {
       admin: {
         description: 'Button text (e.g., Apply, Register, Learn More)',
       },
-      localized: true,
     },
     {
       name: 'buttonLink',
@@ -75,7 +71,6 @@ export const HeroBanner: CollectionConfig = {
         }
         return true
       },
-      localized: true,
     },
     {
       name: 'image',

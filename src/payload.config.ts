@@ -2,9 +2,10 @@ import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
 import { vercelBlobAdapter } from 'payload-cloud-storage-vercel-adapter'
 import { s3Storage } from '@payloadcms/storage-s3'
+
 import sharp from 'sharp' // sharp-import
 import path from 'path'
-import { buildConfig, PayloadComponent, PayloadRequest } from 'payload'
+import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Blogs } from './collections/Blogs'
@@ -24,7 +25,6 @@ import { YouTubeEmbeds } from './collections/YouTubeEmbeds'
 // import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
-// Removed IframeTabs import due to compatibility issues with Payload v3.45.0
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -85,9 +85,6 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
-    // livePreview: {
-    //   url: 'https://p-c45b6377-8b02-41be-80f7-28aebb5f9f8d.apps.webstudio.is/?authToken=d6c754b0-cefc-40e3-9d13-3e95dca5d4ea&mode=content',
-    // },
     // Removed website-specific components and live preview for API-only usage
   },
   // This config helps us configure global or default features that the other editors can inherit
@@ -96,8 +93,8 @@ export default buildConfig({
     pool: {
       connectionString: process.env.POSTGRES_URL || '',
     },
-    // Disable push mode to prevent automatic schema changes and data loss
-    push: false,
+    // Use push mode for development to automatically handle schema changes
+    push: process.env.NODE_ENV === 'development',
   }),
   collections: [
     Blogs,

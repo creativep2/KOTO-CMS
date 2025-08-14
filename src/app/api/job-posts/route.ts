@@ -27,7 +27,6 @@ export async function GET(_request: NextRequest) {
     const page = searchParams.get('page') || '1'
     const location = searchParams.get('location')
     const status = searchParams.get('status') || 'published'
-    const locale = searchParams.get('locale') || 'en'
 
     // Build where clause
     const where: any = {
@@ -50,7 +49,6 @@ export async function GET(_request: NextRequest) {
       depth: parseInt(depth),
       limit: parseInt(limit),
       page: parseInt(page),
-      locale: locale as 'en' | 'vi',
     })
 
     const response = NextResponse.json({

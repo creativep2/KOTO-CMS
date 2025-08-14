@@ -42,8 +42,7 @@ export const Blogs: CollectionConfig = {
       required: true,
       admin: {
         description: 'The title of the blog post',
-      },
-      localized: true,
+      }
     },
     {
       name: 'author',
@@ -141,7 +140,6 @@ export const Blogs: CollectionConfig = {
         description:
           'The main content of the blog post. Use the + button to add images and the relationship button to insert YouTube videos at any position.',
       },
-      localized: true,
     },
     {
       name: 'gallery',
@@ -283,7 +281,6 @@ export const Blogs: CollectionConfig = {
           pickerAppearance: 'dayAndTime',
         },
       },
-      localized: true,
     },
     ...slugField('title', {
       slugOverrides: {
@@ -301,7 +298,6 @@ export const Blogs: CollectionConfig = {
         position: 'sidebar',
         description: 'Brief description for SEO purposes',
       },
-      localized: true,
     },
     {
       name: 'meta_title',
@@ -310,7 +306,6 @@ export const Blogs: CollectionConfig = {
         position: 'sidebar',
         description: 'Meta title for SEO purposes',
       },
-      localized: true,
     },
     {
       name: 'featured',

@@ -26,7 +26,6 @@ export async function GET(_request: NextRequest) {
     const category = searchParams.get('category')
     const featured = searchParams.get('featured')
     const excludeId = searchParams.get('excludeId') // To exclude current blog when showing related
-    const locale = searchParams.get('locale') || 'en'
 
     // Build where clause - only published blogs
     const where: any = {
@@ -65,7 +64,6 @@ export async function GET(_request: NextRequest) {
       sort: '-publishedAt', // Sort by publishedAt in descending order (latest first)
       depth: parseInt(depth),
       limit: parseInt(limit),
-      locale: locale as 'en' | 'vi' | 'all',
     })
 
     const response = NextResponse.json({
