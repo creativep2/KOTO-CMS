@@ -35,6 +35,9 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
     if (!existingColumns.includes('meta_title')) {
       await db.execute(sql`ALTER TABLE blogs_locales ADD COLUMN meta_title TEXT`)
     }
+    if (!existingColumns.includes('published_at')) {
+      await db.execute(sql`ALTER TABLE blogs_locales ADD COLUMN published_at TIMESTAMP`)
+    }
     if (!existingColumns.includes('created_at')) {
       await db.execute(sql`ALTER TABLE blogs_locales ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP`)
     }
@@ -60,6 +63,7 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
         paragraph JSONB,
         meta_description TEXT,
         meta_title TEXT,
+        published_at TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE(_parent_id, _locale)
