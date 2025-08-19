@@ -818,7 +818,7 @@ export interface Page {
    */
   status?: ('draft' | 'published' | 'archived') | null;
   /**
-   * Editable table content - can be imported from CSV or edited directly
+   * Editable table content
    */
   content?: {
     /**

@@ -287,7 +287,7 @@ const TableEditor: React.FC<TableEditorProps> = ({
 
       {localValue.headers.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          <p>No table data. Click "Add Column" to start or import CSV data.</p>
+          <p>No table data. Click &quot;Add Column&quot; to start or import CSV data.</p>
         </div>
       )}
     </div>

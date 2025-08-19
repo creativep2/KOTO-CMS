@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createImporter } from '@/utilities/csvImport'
+import { createImporter, type FieldMapping } from '@/utilities/csvImport'
 import { Blogs } from '@/collections/Blogs'
 import { JobPosts } from '@/collections/JobPosts'
 import { HeroBanner } from '@/collections/HeroBanner'
@@ -23,10 +23,10 @@ const collections = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { collection: string } }
+  { params }: { params: Promise<{ collection: string }> }
 ) {
   try {
-    const { collection } = params
+    const { collection } = await params
     
     // Get collection config
     const collectionConfig = collections[collection as keyof typeof collections]
@@ -82,7 +82,7 @@ export async function GET(
   }
 }
 
-function getSelectFieldDescription(mapping: any, collection: string): string {
+function getSelectFieldDescription(mapping: FieldMapping, collection: string): string {
   const fieldName = mapping.collectionField
   
   switch (collection) {

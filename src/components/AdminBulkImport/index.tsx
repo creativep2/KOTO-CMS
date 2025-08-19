@@ -1,10 +1,19 @@
 import React, { useState, useRef } from 'react'
-import { Upload, Download, AlertCircle, CheckCircle, XCircle, Info } from 'lucide-react'
+import { Upload, Download, CheckCircle, XCircle, Info } from 'lucide-react'
+
+interface ImportResult {
+  success: boolean
+  message: string
+  imported?: number
+  updated?: number
+  skipped?: number
+  errors?: string[]
+}
 
 interface BulkImportProps {
   collection: string
   collectionLabel: string
-  onImportComplete?: (result: any) => void
+  onImportComplete?: (result: ImportResult) => void
 }
 
 export const AdminBulkImport: React.FC<BulkImportProps> = ({
@@ -14,7 +23,7 @@ export const AdminBulkImport: React.FC<BulkImportProps> = ({
 }) => {
   const [file, setFile] = useState<File | null>(null)
   const [isImporting, setIsImporting] = useState(false)
-  const [importResult, setImportResult] = useState<any>(null)
+  const [importResult, setImportResult] = useState<ImportResult | null>(null)
   const [showPreview, setShowPreview] = useState(false)
   const [csvPreview, setCsvPreview] = useState<string[][]>([])
   const [options, setOptions] = useState({
@@ -41,7 +50,6 @@ export const AdminBulkImport: React.FC<BulkImportProps> = ({
       const lines = text.split('\n').slice(0, 6) // Show first 5 data rows + header
       const preview = lines.map(line => {
         // Detect separator (comma or semicolon)
-        const hasComma = line.includes(',')
         const hasSemicolon = line.includes(';')
         const separator = hasSemicolon ? ';' : ','
         
@@ -284,7 +292,7 @@ export const AdminBulkImport: React.FC<BulkImportProps> = ({
               checked={options.dryRun}
               onChange={(e) => setOptions(prev => ({ ...prev, dryRun: e.target.checked }))}
             />
-            <span style={{ fontSize: '14px' }}>Dry Run (validate only, don't import)</span>
+            <span style={{ fontSize: '14px' }}>Dry Run (validate only, don&apos;t import)</span>
           </label>
           <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <input
@@ -398,12 +406,12 @@ export const AdminBulkImport: React.FC<BulkImportProps> = ({
                 <span style={{ fontSize: '14px' }}>
                   <strong>Imported:</strong> {importResult.imported}
                 </span>
-                {importResult.updated > 0 && (
+                {importResult.updated && importResult.updated > 0 && (
                   <span style={{ fontSize: '14px' }}>
                     <strong>Updated:</strong> {importResult.updated}
                   </span>
                 )}
-                {importResult.skipped > 0 && (
+                {importResult.skipped && importResult.skipped > 0 && (
                   <span style={{ fontSize: '14px' }}>
                     <strong>Skipped:</strong> {importResult.skipped}
                   </span>

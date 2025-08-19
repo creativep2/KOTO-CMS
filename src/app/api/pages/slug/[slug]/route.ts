@@ -4,7 +4,7 @@ import configPromise from '@payload-config'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const payload = await getPayloadHMR({ config: configPromise })
   const { searchParams } = new URL(request.url)
@@ -12,11 +12,12 @@ export async function GET(
   const locale = (localeParam === 'vi' || localeParam === 'en') ? localeParam : 'en'
   
   try {
+    const { slug } = await params
     const pages = await payload.find({
       collection: 'pages',
       where: {
         slug: {
-          equals: params.slug,
+          equals: slug,
         },
       },
       locale,
@@ -29,7 +30,7 @@ export async function GET(
         {
           success: false,
           error: 'Page not found',
-          message: `No page found with slug: ${params.slug}`,
+          message: `No page found with slug: ${slug}`,
         },
         { status: 404 }
       )
@@ -51,13 +52,13 @@ export async function GET(
         updatedAt: page.updatedAt,
       },
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching page:', error)
     return Response.json(
       {
         success: false,
         error: 'Failed to fetch page',
-        message: error.message,
+        message: error instanceof Error ? error.message : 'Unknown error occurred',
       },
       { status: 500 }
     )

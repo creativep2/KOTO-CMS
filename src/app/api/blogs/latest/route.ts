@@ -15,12 +15,12 @@ export async function OPTIONS(request: NextRequest) {
   return addCorsHeaders(new NextResponse(null, { status: 200 }))
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const payload = await getPayload({ config: configPromise })
 
     // Parse query parameters from the request URL
-    const { searchParams } = new URL(_request.url)
+    const { searchParams } = new URL(request.url)
     const depth = searchParams.get('depth') || '1' // Default to depth 1 for latest blogs
     const limit = searchParams.get('limit') || '5' // Default to 5 latest blogs
     const category = searchParams.get('category')

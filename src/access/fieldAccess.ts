@@ -16,11 +16,11 @@ export const fieldAccess = {
 }
 
 // Function to check if user is admin for field-level access
-export const isAdmin = ({ user }: { user: any }) => {
+export const isAdmin = ({ user }: { user: User | null }) => {
   return user?.role === 'admin'
 }
 
 // Function to check if user is authenticated for field-level access
-export const isAuthenticated = ({ user }: { user: any }) => {
+export const isAuthenticated = ({ user }: { user: User | null }) => {
   return Boolean(user)
 }

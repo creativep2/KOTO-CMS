@@ -16,7 +16,7 @@ export async function OPTIONS(request: NextRequest) {
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
   try {
@@ -30,7 +30,7 @@ export async function GET(
     const payload = await getPayload({ config: configPromise })
 
     // Parse query parameters from the request URL
-    const { searchParams } = new URL(_request.url)
+    const { searchParams } = new URL(request.url)
     const depth = searchParams.get('depth') || '0'
 
     const result = await payload.find({
