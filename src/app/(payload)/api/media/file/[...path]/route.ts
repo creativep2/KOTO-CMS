@@ -78,7 +78,7 @@ export async function GET(
     }
 
     // Return the file with appropriate headers
-    return new NextResponse(fileBuffer, { headers })
+    return new NextResponse(new Uint8Array(fileBuffer), { headers })
   } catch (error) {
     console.error('Error serving media file:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
