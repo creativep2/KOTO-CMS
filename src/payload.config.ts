@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url'
 
 import { Blogs } from './collections/Blogs'
 import { BookingForm } from './collections/BookingForm'
+import { Categories } from './collections/Categories'
 import { ContactForm } from './collections/ContactForm'
 import { DonationForm } from './collections/DonationForm'
 import { HeroBanner } from './collections/HeroBanner'
@@ -16,6 +17,7 @@ import { InKindSupportForm } from './collections/InKindSupportForm'
 import { JobPosts } from './collections/JobPosts'
 import { Media } from './collections/Media'
 import { Merchandise } from './collections/Merchandise'
+import { Pages } from './collections/Pages'
 import { Partners } from './collections/Partners'
 import { Users } from './collections/Users'
 import { YouTubeEmbeds } from './collections/YouTubeEmbeds'
@@ -109,6 +111,7 @@ export default buildConfig({
     JobPosts,
     Media,
     Merchandise,
+    Pages,
     Partners,
     Users,
     YouTubeEmbeds,

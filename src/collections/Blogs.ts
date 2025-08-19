@@ -127,7 +127,7 @@ export const Blogs: CollectionConfig = {
       name: 'header_image',
       type: 'upload',
       relationTo: 'media',
-      required: true,
+      //required: true,
       admin: {
         description: 'Header image for the blog post',
       },

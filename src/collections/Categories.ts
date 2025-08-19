@@ -13,14 +13,14 @@ export const Categories: CollectionConfig = {
     update: authenticated,
   },
   admin: {
-    useAsTitle: 'title',
+    useAsTitle: 'name',
   },
   fields: [
     {
-      name: 'title',
+      name: 'name',
       type: 'text',
       required: true,
     },
-    ...slugField(),
+    ...slugField('name'),
   ],
 }
