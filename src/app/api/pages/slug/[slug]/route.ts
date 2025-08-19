@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
+import { transformPageData } from '@/utilities/transformTableData'
 
 export async function GET(
   request: NextRequest,
@@ -10,6 +11,7 @@ export async function GET(
   const { searchParams } = new URL(request.url)
   const localeParam = searchParams.get('locale')
   const locale = (localeParam === 'vi' || localeParam === 'en') ? localeParam : 'en'
+  const raw = searchParams.get('raw') === 'true'
   
   try {
     const { slug } = await params
@@ -38,18 +40,21 @@ export async function GET(
 
     const page = pages.docs[0]
 
+    // Transform the table data to be more user-friendly (unless raw is requested)
+    const transformedPage = transformPageData(page, raw)
+
     return Response.json({
       success: true,
       data: {
-        id: page.id,
-        title: page.title,
-        slug: page.slug,
-        meta_title: page.meta_title,
-        meta_description: page.meta_description,
-        meta_image: page.meta_image,
-        content: page.content,
-        createdAt: page.createdAt,
-        updatedAt: page.updatedAt,
+        id: transformedPage.id,
+        title: transformedPage.title,
+        slug: transformedPage.slug,
+        meta_title: transformedPage.meta_title,
+        meta_description: transformedPage.meta_description,
+        meta_image: transformedPage.meta_image,
+        content: transformedPage.content,
+        createdAt: transformedPage.createdAt,
+        updatedAt: transformedPage.updatedAt,
       },
     })
   } catch (error: unknown) {

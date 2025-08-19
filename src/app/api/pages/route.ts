@@ -1,12 +1,14 @@
 import { NextRequest } from 'next/server'
 import { getPayloadHMR } from '@payloadcms/next/utilities'
 import configPromise from '@payload-config'
+import { transformPagesData } from '@/utilities/transformTableData'
 
 export async function GET(request: NextRequest) {
   const payload = await getPayloadHMR({ config: configPromise })
   const { searchParams } = new URL(request.url)
   const localeParam = searchParams.get('locale')
   const locale = (localeParam === 'vi' || localeParam === 'en') ? localeParam : 'en'
+  const raw = searchParams.get('raw') === 'true'
   
   try {
     const pages = await payload.find({
@@ -16,9 +18,12 @@ export async function GET(request: NextRequest) {
       pagination: false,
     })
 
+    // Transform the table data to be more user-friendly (unless raw is requested)
+    const transformedPages = transformPagesData(pages.docs, raw)
+
     return Response.json({
       success: true,
-      data: pages.docs,
+      data: transformedPages,
       totalDocs: pages.totalDocs,
     })
   } catch (error: any) {
