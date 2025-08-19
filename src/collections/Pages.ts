@@ -89,15 +89,54 @@ export const Pages: CollectionConfig = {
       name: 'content',
       type: 'group',
       admin: {
-        description: 'Editable table content',
+        description: 'Editable table content with column grouping - can be imported from CSV or edited directly',
       },
       localized: true,
       fields: [
         {
+          name: 'groups',
+          type: 'array',
+          admin: {
+            description: 'Column groups for organizing table structure',
+          },
+          fields: [
+            {
+              name: 'group_id',
+              type: 'text',
+              admin: {
+                description: 'Unique identifier for the group',
+              },
+              required: true,
+            },
+            {
+              name: 'group_name',
+              type: 'text',
+              admin: {
+                description: 'Display name for the group',
+              },
+              required: true,
+            },
+            {
+              name: 'group_description',
+              type: 'textarea',
+              admin: {
+                description: 'Optional description of the group',
+              },
+            },
+          ],
+          defaultValue: [
+            {
+              group_id: 'default',
+              group_name: 'Default Group',
+              group_description: 'Default column group'
+            }
+          ],
+        },
+        {
           name: 'headers',
           type: 'array',
           admin: {
-            description: 'Table column headers',
+            description: 'Table column headers with grouping',
           },
           fields: [
             {
@@ -106,6 +145,16 @@ export const Pages: CollectionConfig = {
               admin: {
                 description: 'Column header text',
               },
+              required: true,
+            },
+            {
+              name: 'group_id',
+              type: 'text',
+              admin: {
+                description: 'Group this column belongs to',
+              },
+              required: true,
+              defaultValue: 'default',
             },
           ],
         },
@@ -122,11 +171,19 @@ export const Pages: CollectionConfig = {
               admin: {
                 description: 'Row data (pipe-separated values)',
               },
+              required: true,
             },
           ],
         },
       ],
       defaultValue: {
+        groups: [
+          {
+            group_id: 'default',
+            group_name: 'Default Group',
+            group_description: 'Default column group'
+          }
+        ],
         headers: [],
         rows: []
       },

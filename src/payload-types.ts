@@ -818,18 +818,42 @@ export interface Page {
    */
   status?: ('draft' | 'published' | 'archived') | null;
   /**
-   * Editable table content
+   * Editable table content with column grouping - can be imported from CSV or edited directly
    */
   content?: {
     /**
-     * Table column headers
+     * Column groups for organizing table structure
+     */
+    groups?:
+      | {
+          /**
+           * Unique identifier for the group
+           */
+          group_id: string;
+          /**
+           * Display name for the group
+           */
+          group_name: string;
+          /**
+           * Optional description of the group
+           */
+          group_description?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Table column headers with grouping
      */
     headers?:
       | {
           /**
            * Column header text
            */
-          header?: string | null;
+          header: string;
+          /**
+           * Group this column belongs to
+           */
+          group_id: string;
           id?: string | null;
         }[]
       | null;
@@ -841,7 +865,7 @@ export interface Page {
           /**
            * Row data (pipe-separated values)
            */
-          row?: string | null;
+          row: string;
           id?: string | null;
         }[]
       | null;
@@ -1309,10 +1333,19 @@ export interface PagesSelect<T extends boolean = true> {
   content?:
     | T
     | {
+        groups?:
+          | T
+          | {
+              group_id?: T;
+              group_name?: T;
+              group_description?: T;
+              id?: T;
+            };
         headers?:
           | T
           | {
               header?: T;
+              group_id?: T;
               id?: T;
             };
         rows?:
