@@ -76,7 +76,6 @@ export interface Config {
     'job-posts': JobPost;
     media: Media;
     merchandise: Merchandise;
-    pages: Page;
     partners: Partner;
     users: User;
     'youtube-embeds': YoutubeEmbed;
@@ -95,7 +94,6 @@ export interface Config {
     'job-posts': JobPostsSelect<false> | JobPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
-    pages: PagesSelect<false> | PagesSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'youtube-embeds': YoutubeEmbedsSelect<false> | YoutubeEmbedsSelect<true>;
@@ -785,95 +783,6 @@ export interface Merchandise {
   createdAt: string;
 }
 /**
- * Static pages with editable table content
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
-  id: number;
-  /**
-   * The title of the page
-   */
-  title: string;
-  /**
-   * URL-friendly version of the title. Auto-generated from title but can be edited manually.
-   */
-  slug?: string | null;
-  slugLock?: boolean | null;
-  /**
-   * Meta title for SEO purposes
-   */
-  meta_title?: string | null;
-  /**
-   * Brief description for SEO purposes
-   */
-  meta_description?: string | null;
-  /**
-   * Image for social media sharing
-   */
-  meta_image?: (number | null) | Media;
-  /**
-   * Current status of the page
-   */
-  status?: ('draft' | 'published' | 'archived') | null;
-  /**
-   * Editable table content with column grouping - can be imported from CSV or edited directly
-   */
-  content?: {
-    /**
-     * Column groups for organizing table structure
-     */
-    groups?:
-      | {
-          /**
-           * Unique identifier for the group
-           */
-          group_id: string;
-          /**
-           * Display name for the group
-           */
-          group_name: string;
-          /**
-           * Optional description of the group
-           */
-          group_description?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-    /**
-     * Table column headers with grouping
-     */
-    headers?:
-      | {
-          /**
-           * Column header text
-           */
-          header: string;
-          /**
-           * Group this column belongs to
-           */
-          group_id: string;
-          id?: string | null;
-        }[]
-      | null;
-    /**
-     * Table data rows
-     */
-    rows?:
-      | {
-          /**
-           * Row data (pipe-separated values)
-           */
-          row: string;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Partner organizations and collaborations
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -990,10 +899,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'merchandise';
         value: number | Merchandise;
-      } | null)
-    | ({
-        relationTo: 'pages';
-        value: number | Page;
       } | null)
     | ({
         relationTo: 'partners';
@@ -1315,46 +1220,6 @@ export interface MerchandiseSelect<T extends boolean = true> {
   price?: T;
   description?: T;
   status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages_select".
- */
-export interface PagesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  slugLock?: T;
-  meta_title?: T;
-  meta_description?: T;
-  meta_image?: T;
-  status?: T;
-  content?:
-    | T
-    | {
-        groups?:
-          | T
-          | {
-              group_id?: T;
-              group_name?: T;
-              group_description?: T;
-              id?: T;
-            };
-        headers?:
-          | T
-          | {
-              header?: T;
-              group_id?: T;
-              id?: T;
-            };
-        rows?:
-          | T
-          | {
-              row?: T;
-              id?: T;
-            };
-      };
   updatedAt?: T;
   createdAt?: T;
 }

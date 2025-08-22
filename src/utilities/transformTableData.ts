@@ -1,7 +1,51 @@
+/**
+ * TRANSFORM TABLE DATA UTILITY
+ * 
+ * This utility transforms Payload CMS table data into a user-friendly format
+ * that's easy to access and manipulate.
+ * 
+ * NEW IMPROVED TABLE STRUCTURE:
+ * 
+ * The new structure eliminates the confusing separation between groups, headers, and rows.
+ * Instead, it provides a unified approach where:
+ * 
+ * 1. Columns are defined with their properties (name, group, type, required)
+ * 2. Rows contain values that directly correspond to columns
+ * 3. Everything is synchronized and easy to understand
+ * 
+ * EXAMPLE USAGE:
+ * 
+ * // Access specific cell values
+ * const userName = page.tableData["Personal Info"]["Name"][0]        // "John"
+ * const userAge = page.tableData["Personal Info"]["Age"][1]         // "30"
+ * const userEmail = page.tableData["Contact"]["Email"][2]           // "bob@email.com"
+ * 
+ * // Get entire columns
+ * const allNames = page.tableData["Personal Info"]["Name"]          // ["John", "Jane", "Bob"]
+ * const allEmails = page.tableData["Contact"]["Email"]              // ["john@email.com", "jane@email.com", "bob@email.com"]
+ * 
+ * // Iterate through data
+ * Object.entries(page.tableData).forEach(([groupName, columns) => {
+ *   Object.entries(columns).forEach(([columnName, values) => {
+ *     values.forEach((value, rowIndex) => {
+ *       console.log(`${groupName}.${columnName}[${rowIndex}] = ${value}`)
+ *     })
+ *   })
+ * })
+ * 
+ * // Search across all data
+ * const results = searchValues(page.tableData, "john")              // Finds "John" and "john@email.com"
+ * 
+ * // Get metadata
+ * const groups = getGroupNames(page.tableData)                      // ["Personal Info", "Contact"]
+ * const columns = getColumnNames(page.tableData, "Personal Info")  // ["Name", "Age"]
+ * const rowCount = getRowCount(page.tableData)                     // 3
+ * const columnMeta = getColumnMetadata(page.tableData)             // Column definitions with group_name, type, required
+ */
+
 interface RawTableData {
-  groups?: Array<{ group_id: string; group_name: string; group_description?: string }>
-  headers?: Array<{ header: string; group_id: string }>
-  rows?: Array<{ row: string }>
+  columns?: Array<{ name: string; group_name: string; type: string; required: boolean }>
+  rows?: Array<{ rowData: string }>
 }
 
 interface TransformedTableData {
@@ -15,20 +59,16 @@ interface TransformedTableData {
  * 
  * RAW DATA (from Payload CMS):
  * {
- *   "content": {
- *     "groups": [
- *       {"group_id": "personal", "group_name": "Personal Info", "group_description": "Basic personal information"},
- *       {"group_id": "contact", "group_name": "Contact Details", "group_description": "Contact information"}
- *     ],
- *     "headers": [
- *       {"header": "Name", "group_id": "personal"},
- *       {"header": "Age", "group_id": "personal"},
- *       {"header": "Email", "group_id": "contact"},
- *       {"header": "Phone", "group_id": "contact"}
+ *   "tableData": {
+ *     "columns": [
+ *       {"name": "Name", "group_name": "Personal Info", "type": "text", "required": true},
+ *       {"name": "Age", "group_name": "Personal Info", "type": "number", "required": false},
+ *       {"name": "Email", "group_name": "Contact", "type": "text", "required": true},
+ *       {"name": "Phone", "group_name": "Contact", "type": "text", "required": false}
  *     ],
  *     "rows": [
- *       {"row": "John|25|john@email.com|555-0123"},
- *       {"row": "Jane|30|jane@email.com|555-0456"}
+ *       {"rowData": "John|25|john@email.com|555-0123"},
+ *       {"rowData": "Jane|30|jane@email.com|555-0456"}
  *     ]
  *   }
  * }
@@ -39,84 +79,59 @@ interface TransformedTableData {
  *     "Name": ["John", "Jane"],
  *     "Age": ["25", "30"]
  *   },
- *   "Contact Details": {
+ *   "Contact": {
  *     "Email": ["john@email.com", "jane@email.com"],
  *     "Phone": ["555-0123", "555-0456"]
  *   }
  * }
  * 
  * ACCESS PATTERN:
- * page.content["Personal Info"]["Name"][0] = "John"
- * page.content["Contact Details"]["Email"][1] = "jane@email.com"
+ * page.tableData["Personal Info"]["Name"][0] = "John"
+ * page.tableData["Contact"]["Email"][1] = "jane@email.com"
  */
 export function transformTableData(rawData: RawTableData | null | undefined): TransformedTableData {
-  if (!rawData) {
+  if (!rawData || !rawData.columns || !rawData.rows) {
     return {}
   }
 
   const result: TransformedTableData = {}
   
-  // Get groups with their names
-  const groups = rawData.groups || [{ group_id: 'default', group_name: 'Default Group', group_description: 'Default column group' }]
+  // Group columns by their group name
+  const columnsByGroup: { [groupName: string]: Array<{ name: string; index: number }> } = {}
+  
+  rawData.columns.forEach((column, columnIndex) => {
+    const groupName = column.group_name || 'Default'
+    if (!columnsByGroup[groupName]) {
+      columnsByGroup[groupName] = []
+    }
+    columnsByGroup[groupName].push({ name: column.name, index: columnIndex })
+  })
   
   // Initialize result structure
-  groups.forEach(group => {
-    result[group.group_name] = {}
-  })
-  
-  // Get headers organized by group
-  const headersByGroup: { [group_id: string]: string[] } = {}
-  rawData.headers?.forEach(header => {
-    if (!headersByGroup[header.group_id]) {
-      headersByGroup[header.group_id] = []
-    }
-    headersByGroup[header.group_id].push(header.header)
-  })
-  
-  // Transform rows data
-  const rows = rawData.rows?.map(item => {
-    if (!item.row) return []
-    return item.row.split('|').map(cell => cell.trim())
-  }) || []
-  
-  // Populate the result structure
-  groups.forEach(group => {
-    const groupHeaders = headersByGroup[group.group_id] || []
-    
-    groupHeaders.forEach((headerName, headerIndex) => {
-      // Find the column index in the original headers array
-      const originalHeaderIndex = rawData.headers?.findIndex(h => h.header === headerName && h.group_id === group.group_id) || 0
-      
-      // Extract data for this column from all rows
-      result[group.group_name][headerName] = rows.map(row => row[originalHeaderIndex] || '')
+  Object.keys(columnsByGroup).forEach(groupName => {
+    result[groupName] = {}
+    columnsByGroup[groupName].forEach(column => {
+      result[groupName][column.name] = []
     })
+  })
+  
+  // Populate the result structure with row data
+  rawData.rows.forEach(row => {
+    if (row.rowData) {
+      const values = row.rowData.split('|').map(v => v.trim())
+      Object.entries(columnsByGroup).forEach(([groupName, columns]) => {
+        columns.forEach(column => {
+          const cellValue = values[column.index] || ''
+          result[groupName][column.name].push(cellValue)
+        })
+      })
+    }
   })
   
   return result
 }
 
-/**
- * Transforms a page document to include transformed table data
- */
-export function transformPageData(page: any, raw: boolean = false) {
-  if (!page) return page
 
-  if (raw) {
-    return page
-  }
-
-  return {
-    ...page,
-    content: transformTableData(page.content),
-  }
-}
-
-/**
- * Transforms multiple page documents
- */
-export function transformPagesData(pages: any[], raw: boolean = false) {
-  return pages.map(page => transformPageData(page, raw))
-}
 
 /**
  * Helper function to get a simplified table structure with grouped columns
@@ -210,4 +225,38 @@ export function searchValues(transformedData: TransformedTableData, searchTerm: 
   })
   
   return results
+}
+
+/**
+ * Helper function to get column metadata (type, required, etc.)
+ */
+export function getColumnMetadata(rawData: RawTableData | null | undefined): Array<{ name: string; group_name: string; type: string; required: boolean }> {
+  if (!rawData || !rawData.columns) return []
+  return rawData.columns
+}
+
+/**
+ * Helper function to get raw table data for editing
+ */
+export function getRawTableData(transformedData: TransformedTableData): { columns: string[]; rows: string[][] } {
+  const groups = Object.keys(transformedData)
+  if (groups.length === 0) return { columns: [], rows: [] }
+  
+  const firstGroup = groups[0]
+  const columns = Object.keys(transformedData[firstGroup] || {})
+  
+  const rows: string[][] = []
+  const rowCount = getRowCount(transformedData)
+  
+  for (let i = 0; i < rowCount; i++) {
+    const row: string[] = []
+    groups.forEach(groupName => {
+      columns.forEach(columnName => {
+        row.push(transformedData[groupName]?.[columnName]?.[i] || '')
+      })
+    })
+    rows.push(row)
+  }
+  
+  return { columns, rows }
 } 
