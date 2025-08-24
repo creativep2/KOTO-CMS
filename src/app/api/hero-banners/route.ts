@@ -23,7 +23,7 @@ export async function GET(_request: NextRequest) {
 
     // Parse query parameters from the request URL
     const { searchParams } = new URL(_request.url)
-    const depth = searchParams.get('depth') || '0'
+    const depth = searchParams.get('depth') || '2' // Default to depth 2 to get full image data
     const limit = searchParams.get('limit') || '10'
     const page = searchParams.get('page') || '1'
     const status = searchParams.get('status') || 'active'

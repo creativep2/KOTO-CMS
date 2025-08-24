@@ -13,7 +13,10 @@ GET /api/hero-banners
 ### Pagination
 - `page` (optional): Page number for pagination (default: 1)
 - `limit` (optional): Number of items per page (default: 10)
-- `depth` (optional): Depth of relationship population (default: 0)
+- `depth` (optional): Depth of relationship population (default: 2)
+  - Use `depth=2` to get complete image data including all sizes and metadata
+  - Use `depth=1` for basic image information
+  - Use `depth=0` for minimal data (image IDs only)
 
 ### Filtering
 - `status` (optional): Filter by status (default: 'active')
@@ -31,7 +34,7 @@ GET /api/hero-banners
 
 ## Examples
 
-### Get all active hero banners ordered by order field (ascending)
+### Get all active hero banners ordered by order field (ascending) with complete image data
 ```
 GET /api/hero-banners
 ```
@@ -54,6 +57,21 @@ GET /api/hero-banners?status=active&featured=true&sortBy=order&sortOrder=asc&lim
 ### Get hero banners in Vietnamese locale
 ```
 GET /api/hero-banners?locale=vi&sortBy=order&sortOrder=asc
+```
+
+### Get hero banners with minimal image data (IDs only)
+```
+GET /api/hero-banners?depth=0
+```
+
+### Get hero banners with basic image information
+```
+GET /api/hero-banners?depth=1
+```
+
+### Get hero banners with complete image data (default)
+```
+GET /api/hero-banners?depth=2
 ```
 
 ## Response Format
@@ -87,6 +105,37 @@ The API returns a JSON response with the following structure:
   "hasNextPage": "boolean"
 }
 ```
+
+## Image Data Population
+
+The API automatically populates complete image data when using the default `depth=2`:
+
+### Complete Image Fields Available:
+- `id`: Unique identifier
+- `alt`: Alternative text for accessibility
+- `caption`: Rich text caption
+- `url`: Original image URL
+- `filename`: Original filename
+- `mimeType`: File MIME type
+- `filesize`: File size in bytes
+- `width`: Original image width
+- `height`: Original image height
+- `sizes`: Generated image sizes (thumbnail, small, medium, large, xlarge, og)
+- `focalPoint`: Focal point coordinates for cropping
+- `category`: Media category
+- `isPublic`: Public accessibility flag
+- `uploadedBy`: User who uploaded the media
+- `createdAt`: Upload timestamp
+- `updatedAt`: Last update timestamp
+
+### Image Sizes Available:
+- `thumbnail`: 300px width
+- `square`: 500x500px
+- `small`: 600px width
+- `medium`: 900px width
+- `large`: 1400px width
+- `xlarge`: 1920px width
+- `og`: 1200x630px (Open Graph)
 
 ## Order Field Behavior
 
