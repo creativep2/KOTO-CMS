@@ -32,6 +32,14 @@ export async function GET(
     // Parse query parameters from the request URL
     const { searchParams } = new URL(request.url)
     const depth = searchParams.get('depth') || '0'
+    const locale = searchParams.get('locale') || 'en'
+
+    // Validate locale parameter
+    const validLocales = ['en', 'vi']
+    if (!validLocales.includes(locale)) {
+      const response = NextResponse.json({ error: 'Invalid locale. Supported locales: en, vi' }, { status: 400 })
+      return addCorsHeaders(response)
+    }
 
     const result = await payload.find({
       collection: 'job-posts',
@@ -42,6 +50,7 @@ export async function GET(
       },
       depth: parseInt(depth),
       limit: 1,
+      locale: locale as 'en' | 'vi',
     })
 
     if (result.docs.length === 0) {
