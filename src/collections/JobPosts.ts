@@ -2,7 +2,6 @@ import type { CollectionConfig } from 'payload'
 import { populatePublishedAt } from '../hooks/populatePublishedAt'
 import { populateYouTubeEmbeds } from '../hooks/populateYouTubeEmbeds'
 import { slugField } from '../fields/slug'
-import { jobPostsEditor } from '../access/jobPostsEditor'
 
 export const JobPosts: CollectionConfig = {
   slug: 'job-posts',
@@ -13,15 +12,19 @@ export const JobPosts: CollectionConfig = {
     description: 'Job postings and career opportunities',
   },
   access: {
-    read: ({ req: { user } }) => {
-      // Public read access for frontend API, but restrict admin UI access
-      if (!user) return true // Public API access
-      // Only admins, editors, and job-posts-editors can see in admin UI
-      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'job-posts-editor'
+    read: () => true, // Public read access for frontend
+    create: ({ req: { user } }) => {
+      // Only authenticated users can create
+      return Boolean(user)
     },
-    create: jobPostsEditor, // Only admins, editors, and job-posts-editors can create
-    update: jobPostsEditor, // Only admins, editors, and job-posts-editors can update
-    delete: jobPostsEditor, // Only admins, editors, and job-posts-editors can delete
+    update: ({ req: { user } }) => {
+      // Only authenticated users can update
+      return Boolean(user)
+    },
+    delete: ({ req: { user } }) => {
+      // Only authenticated users can delete
+      return Boolean(user)
+    },
   },
   hooks: {
     beforeChange: [populatePublishedAt],

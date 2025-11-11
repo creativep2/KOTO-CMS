@@ -9,8 +9,6 @@ import {
 import { anyone } from '../access/anyone'
 import { authors } from '../access/authors'
 import { editors } from '../access/editors'
-import { blogsEditor } from '../access/blogsEditor'
-import { jobPostsEditor } from '../access/jobPostsEditor'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -20,19 +18,11 @@ export const Media: CollectionConfig = {
   },
   access: {
     create: authors, // Authors and above can upload
-    delete: ({ req: { user } }) => {
-      // Only admins, editors, blogs-editors, and job-posts-editors can delete
-      return Boolean(user && ['admin', 'editor', 'blogs-editor', 'job-posts-editor'].includes(user.role as string))
-    },
-    read: ({ req: { user } }) => {
-      // Public read access for frontend API, but restrict admin UI access
-      if (!user) return true // Public API access
-      // Admins, editors, blogs-editors, job-posts-editors, and authors can see in admin UI
-      return Boolean(user && ['admin', 'editor', 'blogs-editor', 'job-posts-editor', 'author'].includes(user.role as string))
-    },
+    delete: editors, // Only editors and admins can delete
+    read: anyone, // Public read access
     update: ({ req: { user }, id: _id }) => {
-      // Admins, editors, blogs-editors, and job-posts-editors can update any media
-      if (user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'job-posts-editor') return true
+      // Admins and editors can update any media
+      if (user?.role === 'admin' || user?.role === 'editor') return true
 
       // Authors can only update their own uploads
       if (user?.role === 'author') {
@@ -72,7 +62,7 @@ export const Media: CollectionConfig = {
       defaultValue: ({ user }) => user?.id,
       admin: {
         description: 'User who uploaded this media',
-        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'job-posts-editor',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
       },
     },
     {
@@ -114,7 +104,7 @@ export const Media: CollectionConfig = {
       defaultValue: true,
       admin: {
         description: 'Whether this media is publicly accessible',
-        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'job-posts-editor',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
       },
     },
     // Preserve existing database columns to prevent data loss
