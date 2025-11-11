@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { editors } from '../access/editors'
 import { authors } from '../access/authors'
+import { blogsEditor } from '../access/blogsEditor'
 import { blogsLexical } from '../fields/blogsLexical'
 import { populateYouTubeEmbeds } from '../hooks/populateYouTubeEmbeds'
 import { slugField } from '../fields/slug'
@@ -15,11 +16,16 @@ export const Blogs: CollectionConfig = {
     description: 'Blog posts and articles for the website',
   },
   access: {
-    read: () => true, // Public read access for frontend
+    read: ({ req: { user } }) => {
+      // Public read access for frontend API, but restrict admin UI access
+      if (!user) return true // Public API access
+      // Only admins, editors, and blogs-editors can see in admin UI
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'author'
+    },
     create: authors, // Authors and above can create
     update: ({ req: { user }, id: _id }) => {
-      // Admins and editors can update any blog
-      if (user?.role === 'admin' || user?.role === 'editor') return true
+      // Admins, editors, and blogs-editors can update any blog
+      if (user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor') return true
 
       // Authors can only update their own blogs
       if (user?.role === 'author') {
@@ -30,7 +36,7 @@ export const Blogs: CollectionConfig = {
 
       return false
     },
-    delete: editors, // Only editors and admins can delete
+    delete: blogsEditor, // Only editors, admins, and blogs-editors can delete
   },
   hooks: {
     afterRead: [populateYouTubeEmbeds],
@@ -53,7 +59,7 @@ export const Blogs: CollectionConfig = {
       defaultValue: ({ user }) => user?.id,
       admin: {
         description: 'Author of the blog post',
-        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor',
       },
     },
     {
@@ -118,8 +124,8 @@ export const Blogs: CollectionConfig = {
       },
       access: {
         update: ({ req: { user } }) => {
-          // Only editors and admins can change status to published
-          return user?.role === 'admin' || user?.role === 'editor'
+          // Only editors, admins, and blogs-editors can change status to published
+          return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor'
         },
       },
     },
