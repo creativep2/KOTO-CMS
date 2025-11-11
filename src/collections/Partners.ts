@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { editors } from '../access/editors'
 import { authors } from '../access/authors'
+import { blogsEditor } from '../access/blogsEditor'
 import { slugField } from '../fields/slug'
 
 export const Partners: CollectionConfig = {
@@ -13,11 +14,16 @@ export const Partners: CollectionConfig = {
     description: 'Partner organizations and collaborations',
   },
   access: {
-    read: () => true, // Public read access for frontend
+    read: ({ req: { user } }) => {
+      // Public read access for frontend API, but restrict admin UI access
+      if (!user) return true // Public API access
+      // Only admins, editors, and blogs-editors can see in admin UI
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'author'
+    },
     create: authors, // Authors and above can create
     update: ({ req: { user }, id: _id }) => {
-      // Admins and editors can update any partner
-      if (user?.role === 'admin' || user?.role === 'editor') return true
+      // Admins, editors, and blogs-editors can update any partner
+      if (user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor') return true
 
       // Authors can only update partners they created
       if (user?.role === 'author') {
@@ -28,7 +34,7 @@ export const Partners: CollectionConfig = {
 
       return false
     },
-    delete: editors, // Only editors and admins can delete
+    delete: blogsEditor, // Only editors, admins, and blogs-editors can delete
   },
   fields: [
     {
@@ -121,7 +127,7 @@ export const Partners: CollectionConfig = {
       defaultValue: ({ user }) => user?.id,
       admin: {
         description: 'User who created this partner entry',
-        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor',
+        condition: (_, { user }) => user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor',
       },
     },
     {

@@ -1,6 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { authenticated } from '../access/authenticated'
-import { anyone } from '../access/anyone'
+import { blogsEditor } from '../access/blogsEditor'
 
 export const Merchandise: CollectionConfig = {
   slug: 'merchandise',
@@ -11,10 +10,15 @@ export const Merchandise: CollectionConfig = {
     description: 'Merchandise and product catalog',
   },
   access: {
-    read: anyone, // Public read access for frontend
-    create: authenticated, // Only authenticated users can create
-    update: authenticated, // Only authenticated users can update
-    delete: authenticated, // Only authenticated users can delete
+    read: ({ req: { user } }) => {
+      // Public read access for frontend API, but restrict admin UI access
+      if (!user) return true // Public API access
+      // Only admins, editors, and blogs-editors can see in admin UI
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor'
+    },
+    create: blogsEditor, // Only admins, editors, and blogs-editors can create
+    update: blogsEditor, // Only admins, editors, and blogs-editors can update
+    delete: blogsEditor, // Only admins, editors, and blogs-editors can delete
   },
   fields: [
     {

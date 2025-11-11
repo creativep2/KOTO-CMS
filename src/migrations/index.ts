@@ -1,8 +1,8 @@
 
 import * as migration_localize_blogs from './localize-blogs';
 import * as migration_localize_collections from './localize-collections';
-import * as migration_remove_header_image_constraint from './remove-header-image-constraint';
-import * as migration_drop_pages_collection from './drop-pages-collection';
+import * as migration_localize_pages from './localize-pages';
+import * as migration_add_editor_roles from './add-editor-roles';
 
 export const migrations = [
   {
@@ -13,17 +13,16 @@ export const migrations = [
   {
     up: migration_localize_collections.up,
     down: migration_localize_collections.down,
-    name: 'localize-collections',
+    name: 'localize_collections'
   },
   {
-    up: migration_remove_header_image_constraint.up,
-    down: migration_remove_header_image_constraint.down,
-    name: 'remove-header-image-constraint'
+    up: migration_localize_pages.up,
+    down: migration_localize_pages.down,
+    name: 'localize_pages'
   },
-
   {
-    up: migration_drop_pages_collection.up,
-    down: migration_drop_pages_collection.down,
-    name: 'drop-pages-collection'
+    up: migration_add_editor_roles.up,
+    down: migration_add_editor_roles.down,
+    name: 'add_editor_roles'
   },
 ];
