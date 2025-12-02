@@ -130,8 +130,8 @@ export const HeroBanner: CollectionConfig = {
         description: 'URL for the button link',
       },
       validate: (val: unknown) => {
-        if (typeof val === 'string' && val && !/^https?:\/\/.+/.test(val)) {
-          return 'Please enter a valid URL starting with http:// or https://'
+        if (typeof val === 'string' && val && !/^(https?:\/\/.+|\/.+)/.test(val)) {
+          return 'Please enter a valid URL starting with http:// or https://, or a path starting with /'
         }
         return true
       },
