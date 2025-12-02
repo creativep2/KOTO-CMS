@@ -608,6 +608,10 @@ export interface HeroBanner {
    */
   tagline?: string | null;
   /**
+   * Color for the tagline text
+   */
+  taglineColor?: ('color-blue' | 'color-red' | 'color-green' | 'color-yellow' | 'color-orange') | null;
+  /**
    * Detailed description or content for the hero banner
    */
   description?: string | null;
@@ -615,6 +619,10 @@ export interface HeroBanner {
    * Button text (e.g., Apply, Register, Learn More)
    */
   button?: string | null;
+  /**
+   * Color for the button
+   */
+  buttonColor?: ('color-blue' | 'color-red' | 'color-green' | 'color-yellow' | 'color-orange') | null;
   /**
    * URL for the button link
    */
@@ -1057,8 +1065,10 @@ export interface DonationFormsSelect<T extends boolean = true> {
 export interface HeroBannersSelect<T extends boolean = true> {
   title?: T;
   tagline?: T;
+  taglineColor?: T;
   description?: T;
   button?: T;
+  buttonColor?: T;
   buttonLink?: T;
   image?: T;
   status?: T;

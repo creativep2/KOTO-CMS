@@ -48,8 +48,38 @@ export const HeroBanner: CollectionConfig = {
       localized: true,
     },
     {
+      name: 'taglineColor',
+      type: 'select',
+      options: [
+        {
+          label: 'Blue',
+          value: 'color-blue',
+        },
+        {
+          label: 'Red',
+          value: 'color-red',
+        },
+        {
+          label: 'Green',
+          value: 'color-green',
+        },
+        {
+          label: 'Yellow',
+          value: 'color-yellow',
+        },
+        {
+          label: 'Orange',
+          value: 'color-orange',
+        },
+      ],
+      admin: {
+        description: 'Color for the tagline text',
+      },
+    },
+    {
       name: 'description',
       type: 'textarea',
+      maxLength: 255,
       admin: {
         description: 'Detailed description or content for the hero banner',
       },
@@ -58,10 +88,40 @@ export const HeroBanner: CollectionConfig = {
     {
       name: 'button',
       type: 'text',
+      maxLength: 25,
       admin: {
         description: 'Button text (e.g., Apply, Register, Learn More)',
       },
       localized: true,
+    },
+    {
+      name: 'buttonColor',
+      type: 'select',
+      options: [
+        {
+          label: 'Blue',
+          value: 'color-blue',
+        },
+        {
+          label: 'Red',
+          value: 'color-red',
+        },
+        {
+          label: 'Green',
+          value: 'color-green',
+        },
+        {
+          label: 'Yellow',
+          value: 'color-yellow',
+        },
+        {
+          label: 'Orange',
+          value: 'color-orange',
+        },
+      ],
+      admin: {
+        description: 'Color for the button',
+      },
     },
     {
       name: 'buttonLink',
