@@ -88,7 +88,7 @@ export const HeroBanner: CollectionConfig = {
     {
       name: 'button',
       type: 'text',
-      maxLength: 25,
+      maxLength: 50,
       admin: {
         description: 'Button text (e.g., Apply, Register, Learn More)',
       },
