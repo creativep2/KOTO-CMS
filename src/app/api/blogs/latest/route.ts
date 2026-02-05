@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const locale = searchParams.get('locale') || 'en'
 
     // Build where clause - only published blogs
-    const where: Record<string, unknown> = {
+    const where: any = {
       status: {
         equals: 'published',
       },

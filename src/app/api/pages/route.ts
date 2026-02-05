@@ -16,7 +16,6 @@ export async function OPTIONS(_request: NextRequest) {
   return addCorsHeaders(new NextResponse(null, { status: 200 }))
 }
 
-// GET method for fetching pages with custom filtering and pagination
 export async function GET(_request: NextRequest) {
   try {
     const payload = await getPayload({ config: configPromise })
@@ -40,10 +39,10 @@ export async function GET(_request: NextRequest) {
       collection: 'pages',
       where,
       sort: '-updatedAt',
-      depth: parseInt(depth),
-      limit: parseInt(limit),
-      page: parseInt(page),
-      locale: locale as 'en' | 'vi' | 'all',
+      depth: parseInt(depth, 10),
+      limit: parseInt(limit, 10),
+      page: parseInt(page, 10),
+      locale: locale as 'en' | 'vi',
     })
 
     const response = NextResponse.json({
