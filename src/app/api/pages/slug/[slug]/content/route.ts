@@ -31,8 +31,8 @@ export async function GET(
 
     const { searchParams } = new URL(_request.url)
     const status = searchParams.get('status') || 'published'
-    const locale = searchParams.get('locale') || 'en'
 
+    // Use locale: 'all' so content is returned as { en: {...}, vi: {...} }
     const result = await payload.find({
       collection: 'pages',
       where: {
@@ -41,7 +41,7 @@ export async function GET(
       },
       depth: 0,
       limit: 1,
-      locale: locale as 'en' | 'vi',
+      locale: 'all',
     })
 
     const page = result.docs[0]
@@ -51,10 +51,10 @@ export async function GET(
       )
     }
 
-    // Return only the content value (may be object, array, or primitive)
-    const content = 'content' in page ? page.content : undefined
+    // Return only the content value, e.g. { en: {...}, vi: {...} }
+    const content = 'content' in page ? page.content : null
 
-    return addCorsHeaders(NextResponse.json(content ?? null))
+    return addCorsHeaders(NextResponse.json(content))
   } catch (error) {
     console.error('Error fetching page content:', error)
     const response = NextResponse.json(
