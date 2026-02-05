@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const exportFields = fields || fieldMappings
 
     // Build query
-    const query: any = {
+    const query: { limit: number; depth: number; where?: unknown } = {
       limit: 1000, // Adjust as needed
       depth: 0,
     }

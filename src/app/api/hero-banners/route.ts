@@ -33,7 +33,7 @@ export async function GET(_request: NextRequest) {
     const sortOrder = searchParams.get('sortOrder') || 'asc' // Default ascending order
 
     // Build where clause
-    const where: any = {
+    const where: Record<string, unknown> = {
       status: {
         equals: status,
       },

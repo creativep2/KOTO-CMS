@@ -28,7 +28,7 @@ export async function GET(_request: NextRequest) {
     const locale = searchParams.get('locale') || 'en'
 
     // Build where clause - only published job posts
-    const where: any = {
+    const where: Record<string, unknown> = {
       status: {
         equals: 'published',
       },
