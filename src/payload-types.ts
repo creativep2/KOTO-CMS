@@ -76,6 +76,7 @@ export interface Config {
     'job-posts': JobPost;
     media: Media;
     merchandise: Merchandise;
+    pages: Page;
     partners: Partner;
     users: User;
     'youtube-embeds': YoutubeEmbed;
@@ -94,6 +95,7 @@ export interface Config {
     'job-posts': JobPostsSelect<false> | JobPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     merchandise: MerchandiseSelect<false> | MerchandiseSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'youtube-embeds': YoutubeEmbedsSelect<false> | YoutubeEmbedsSelect<true>;
@@ -791,6 +793,46 @@ export interface Merchandise {
   createdAt: string;
 }
 /**
+ * Pages with flexible JSON content structure supporting localization
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  /**
+   * The title of the page
+   */
+  title: string;
+  /**
+   * Flexible JSON content structure with localization support. Structure: { "en": any data, "vi": any data }
+   */
+  content?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Page status
+   */
+  status: 'draft' | 'published' | 'archived';
+  /**
+   * User who created this page
+   */
+  createdBy?: (number | null) | User;
+  /**
+   * URL-friendly version of the page title. Auto-generated from title but can be edited manually.
+   */
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Partner organizations and collaborations
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -907,6 +949,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'merchandise';
         value: number | Merchandise;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'partners';
@@ -1230,6 +1276,20 @@ export interface MerchandiseSelect<T extends boolean = true> {
   price?: T;
   description?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  status?: T;
+  createdBy?: T;
+  slug?: T;
+  slugLock?: T;
   updatedAt?: T;
   createdAt?: T;
 }

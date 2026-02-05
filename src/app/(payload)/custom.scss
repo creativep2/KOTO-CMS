@@ -1,5 +1,8 @@
 /* Custom styles for KOTO CMS */
 
+/* JSON Visual Editor – loaded here so styles apply in Payload admin */
+@import '../../components/JSONEditor/JsonEditor.scss';
+
 /* Gallery component utilities */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */

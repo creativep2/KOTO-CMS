@@ -19,6 +19,7 @@ import { Media } from './collections/Media'
 import { Merchandise } from './collections/Merchandise'
 
 import { Partners } from './collections/Partners'
+import { Pages } from './collections/Pages'
 import { Users } from './collections/Users'
 import { YouTubeEmbeds } from './collections/YouTubeEmbeds'
 // Website-specific globals removed for API-only usage
@@ -111,7 +112,7 @@ export default buildConfig({
     JobPosts,
     Media,
     Merchandise,
-
+    Pages,
     Partners,
     Users,
     YouTubeEmbeds,
