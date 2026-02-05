@@ -29,7 +29,7 @@ export async function GET(_request: NextRequest) {
     const locale = searchParams.get('locale') || 'en'
 
     // Build where clause
-    const where: Record<string, unknown> = {
+    const where: any = {
       status: {
         equals: status,
       },
