@@ -13,7 +13,17 @@ export const HeroBanner: CollectionConfig = {
   },
   access: {
     read: () => true, // Public read access for frontend
-    create: authors, // Authors and above can create
+    create: ({ req: { user } }) => {
+      return Boolean(
+        user &&
+        (
+          user.role === 'admin' ||
+          user.role === 'editor' ||
+          user.role === 'blogs-editor' ||
+          user.role === 'author'
+        )
+      )
+    }, // Authors and above can create
     update: ({ req: { user }, id: _id }) => {
       // Admins and editors can update any hero banner
       if (user?.role === 'admin' || user?.role === 'editor') return true

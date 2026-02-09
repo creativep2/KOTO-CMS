@@ -22,7 +22,17 @@ export const Blogs: CollectionConfig = {
       // Only admins, editors, and blogs-editors can see in admin UI
       return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'author'
     },
-    create: authors, // Authors and above can create
+    create: ({ req: { user } }) => {
+      return Boolean(
+        user &&
+        (
+          user.role === 'admin' ||
+          user.role === 'editor' ||
+          user.role === 'blogs-editor' ||
+          user.role === 'author'
+        )
+      )
+    }, // Authors, blogs-editors, editors, and admins can create
     update: ({ req: { user }, id: _id }) => {
       // Admins, editors, and blogs-editors can update any blog
       if (user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor') return true

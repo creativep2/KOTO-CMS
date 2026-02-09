@@ -19,7 +19,18 @@ export const Media: CollectionConfig = {
     description: 'Images, videos, and other media files',
   },
   access: {
-    create: authors, // Authors and above can upload
+    create: ({ req: { user } }) => {
+      return Boolean(
+        user &&
+        (
+          user.role === 'admin' ||
+          user.role === 'editor' ||
+          user.role === 'blogs-editor' ||
+          user.role === 'job-posts-editor' ||
+          user.role === 'author'
+        )
+      )
+    }, // Authors, blogs-editors, editors, and admins can create
     delete: ({ req: { user } }) => {
       // Only admins, editors, blogs-editors, and job-posts-editors can delete
       return Boolean(user && ['admin', 'editor', 'blogs-editor', 'job-posts-editor'].includes(user.role as string))

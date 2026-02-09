@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { editors } from '../access/editors'
+import { admins } from '../access/admins'
 import { authors } from '../access/authors'
 import { slugField } from '../fields/slug'
 
@@ -14,7 +14,7 @@ export const Pages: CollectionConfig = {
   },
   access: {
     read: () => true, // Public read access for frontend
-    create: authors, // Authors and above can create
+    create: admins, // Authors and above can create
     update: ({ req: { user }, id: _id }) => {
       // Admins and editors can update any page
       if (user?.role === 'admin' || user?.role === 'editor') return true
@@ -28,7 +28,7 @@ export const Pages: CollectionConfig = {
 
       return false
     },
-    delete: editors, // Only editors and admins can delete
+    delete: admins, // Only editors and admins can delete
   },
   fields: [
     {

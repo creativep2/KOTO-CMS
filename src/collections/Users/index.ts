@@ -15,12 +15,7 @@ export const Users: CollectionConfig = {
     admin: authenticated,
     create: admins,
     delete: admins,
-    read: ({ req: { user } }) => {
-      // Public read access for frontend API, but restrict admin UI access
-      if (!user) return true // Public API access
-      // Only admins, editors, and authors can see in admin UI (not blogs-editor or job-posts-editor)
-      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
-    },
+    read: admins,
     update: ({ req: { user } }) => {
       if (user?.role === 'admin') return true
       return {
