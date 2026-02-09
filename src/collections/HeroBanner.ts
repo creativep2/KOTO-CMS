@@ -19,21 +19,13 @@ export const HeroBanner: CollectionConfig = {
         (
           user.role === 'admin' ||
           user.role === 'editor' ||
-          user.role === 'blogs-editor' ||
-          user.role === 'author'
+          user.role === 'blogs-editor'
         )
       )
     }, // Authors and above can create
     update: ({ req: { user }, id: _id }) => {
       // Admins and editors can update any hero banner
       if (user?.role === 'admin' || user?.role === 'editor') return true
-
-      // Authors can only update hero banners they created
-      if (user?.role === 'author') {
-        return {
-          createdBy: { equals: user.id },
-        }
-      }
 
       return false
     },

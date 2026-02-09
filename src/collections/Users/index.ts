@@ -34,7 +34,7 @@ export const Users: CollectionConfig = {
       name: 'role',
       type: 'select',
       required: true,
-      defaultValue: 'viewer',
+      defaultValue: 'admin',
       options: [
         {
           label: 'Super Admin',
@@ -51,15 +51,7 @@ export const Users: CollectionConfig = {
         {
           label: 'Job Post Editor',
           value: 'job-posts-editor',
-        },
-        {
-          label: 'Author',
-          value: 'author',
-        },
-        {
-          label: 'Viewer',
-          value: 'viewer',
-        },
+        }
       ],
       admin: {
         description: 'User role determines what actions they can perform',

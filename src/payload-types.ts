@@ -273,7 +273,7 @@ export interface User {
   /**
    * User role determines what actions they can perform
    */
-  role: 'admin' | 'editor' | 'blogs-editor' | 'job-posts-editor' | 'author' | 'viewer';
+  role: 'admin' | 'editor' | 'blogs-editor' | 'job-posts-editor';
   /**
    * Whether the user account is active
    */

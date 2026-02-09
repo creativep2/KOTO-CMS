@@ -19,13 +19,6 @@ export const Pages: CollectionConfig = {
       // Admins and editors can update any page
       if (user?.role === 'admin' || user?.role === 'editor') return true
 
-      // Authors can only update pages they created
-      if (user?.role === 'author') {
-        return {
-          createdBy: { equals: user.id },
-        }
-      }
-
       return false
     },
     delete: admins, // Only editors and admins can delete

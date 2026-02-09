@@ -20,7 +20,7 @@ export const Blogs: CollectionConfig = {
       // Public read access for frontend API, but restrict admin UI access
       if (!user) return true // Public API access
       // Only admins, editors, and blogs-editors can see in admin UI
-      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'author'
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor'
     },
     create: ({ req: { user } }) => {
       return Boolean(
@@ -28,21 +28,13 @@ export const Blogs: CollectionConfig = {
         (
           user.role === 'admin' ||
           user.role === 'editor' ||
-          user.role === 'blogs-editor' ||
-          user.role === 'author'
+          user.role === 'blogs-editor'
         )
       )
     }, // Authors, blogs-editors, editors, and admins can create
     update: ({ req: { user }, id: _id }) => {
       // Admins, editors, and blogs-editors can update any blog
       if (user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor') return true
-
-      // Authors can only update their own blogs
-      if (user?.role === 'author') {
-        return {
-          author: { equals: user.id },
-        }
-      }
 
       return false
     },
