@@ -20,12 +20,12 @@ export const InKindSupportForm: CollectionConfig = {
   access: {
     read: ({ req: { user } }) => {
       // Allow editors, authors, and admins to read
-      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+      return user?.role === 'admin' || user?.role === 'editor'
     },
     create: () => true, // Public can submit forms
     update: ({ req: { user } }) => {
       // Allow editors, authors, and admins to update (but hook will restrict what they can edit)
-      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'author'
+      return user?.role === 'admin' || user?.role === 'editor'
     },
     delete: ({ req: { user } }) => {
       // Only editors and admins can delete

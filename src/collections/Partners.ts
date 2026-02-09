@@ -18,19 +18,12 @@ export const Partners: CollectionConfig = {
       // Public read access for frontend API, but restrict admin UI access
       if (!user) return true // Public API access
       // Only admins, editors, and blogs-editors can see in admin UI
-      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor' || user?.role === 'author'
+      return user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor'
     },
     create: authors, // Authors and above can create
     update: ({ req: { user }, id: _id }) => {
       // Admins, editors, and blogs-editors can update any partner
       if (user?.role === 'admin' || user?.role === 'editor' || user?.role === 'blogs-editor') return true
-
-      // Authors can only update partners they created
-      if (user?.role === 'author') {
-        return {
-          createdBy: { equals: user.id },
-        }
-      }
 
       return false
     },
